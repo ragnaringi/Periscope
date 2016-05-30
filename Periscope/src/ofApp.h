@@ -26,15 +26,19 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
 #ifdef _USE_LIVE_VIDEO
-        ofVideoGrabber cam;
+		ofVideoGrabber cam;
 #else
-        ofVideoPlayer cam;
+		ofVideoPlayer cam;
 #endif
-        ofPixels previous;
-        ofImage diff;
-        
-        // a scalar is like an ofVec4f but normally used for storing color information
-        cv::Scalar diffMean;
-    
-        cv::Mat columnMean;
+		ofPixels previous;
+		ofImage diff;
+		
+		// a scalar is like an ofVec4f but normally used for storing color information
+		cv::Scalar diffMean;
+		cv::Mat columnMean;
+	
+		// Countour tracking
+		ofxCv::ContourFinder contourFinder;
+		bool showLabels;
+		bool analyseDiff;
 };
