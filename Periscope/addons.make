@@ -1,2 +1,3 @@
 ofxCv
+ofxDatGui
 ofxOpenCv

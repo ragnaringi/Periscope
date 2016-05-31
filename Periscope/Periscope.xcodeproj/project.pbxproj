@@ -3999,6 +3999,501 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
+			<key>65FBBC6B9CE02B9A5AE756D0</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxDatGuiThemes.h</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/themes/ofxDatGuiThemes.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>911FE1C75E520EE70A7B4830</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>A53CB7F81ED03E95B44F0F14</string>
+					<string>65FBBC6B9CE02B9A5AE756D0</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>themes</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>A53CB7F81ED03E95B44F0F14</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxDatGuiTheme.h</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/themes/ofxDatGuiTheme.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>886770C5CBA25F578010E477</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxDatGui.h</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/ofxDatGui.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>B0EA70886144652DC6FEE64A</key>
+			<dict>
+				<key>fileRef</key>
+				<string>005BDE931845C48C4BCDD485</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>005BDE931845C48C4BCDD485</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxDatGui.cpp</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/ofxDatGui.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>B75CDAE1D62FD448651E311E</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxSmartFont.h</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/libs/ofxSmartFont/ofxSmartFont.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>0EF29D3ABD6E4147AE024D7A</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>4A74FDCF1A4A472638079103</string>
+					<string>B75CDAE1D62FD448651E311E</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>ofxSmartFont</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>69146F0BA46E48E576618E5E</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>0EF29D3ABD6E4147AE024D7A</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>libs</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>2B535FFB508D27DD6AA16CC0</key>
+			<dict>
+				<key>fileRef</key>
+				<string>4A74FDCF1A4A472638079103</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>4A74FDCF1A4A472638079103</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxSmartFont.cpp</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/libs/ofxSmartFont/ofxSmartFont.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>18607109EC6B9497E93334A5</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxDatGuiIntObject.h</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/core/ofxDatGuiIntObject.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>69AE7C8A660855F264BE2E7E</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxDatGuiEvents.h</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/core/ofxDatGuiEvents.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>35CB61D2A37877D17B64F14C</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxDatGuiConstants.h</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/core/ofxDatGuiConstants.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>C19C6AF23E1527FB74878241</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxDatGuiComponent.h</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/core/ofxDatGuiComponent.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>8870759BC9CAEA1E4E9EA3A8</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>BEB369DA005971B0AB5503C2</string>
+					<string>C19C6AF23E1527FB74878241</string>
+					<string>35CB61D2A37877D17B64F14C</string>
+					<string>69AE7C8A660855F264BE2E7E</string>
+					<string>18607109EC6B9497E93334A5</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>core</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>BD3FB9BC1E7EB67ED33A7585</key>
+			<dict>
+				<key>fileRef</key>
+				<string>BEB369DA005971B0AB5503C2</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>BEB369DA005971B0AB5503C2</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxDatGuiComponent.cpp</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/core/ofxDatGuiComponent.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>E97E8A30E171BD55F3A33939</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxDatGuiTimeGraph.h</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/components/ofxDatGuiTimeGraph.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>75CF0191067319CDCDF48CCC</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxDatGuiTextInputField.h</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/components/ofxDatGuiTextInputField.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>E1929CF6F26A693FB5C3FB11</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxDatGuiTextInput.h</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/components/ofxDatGuiTextInput.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>31B1E31C1AEF4E8F033C3871</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxDatGuiSlider.h</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/components/ofxDatGuiSlider.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>7EB9E3B97ECE1E2BAB057156</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxDatGuiScrollView.h</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/components/ofxDatGuiScrollView.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>C321B40A9068CB3CEA9A2FCD</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxDatGuiMatrix.h</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/components/ofxDatGuiMatrix.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>36C7E7CDADF3A38CC547B4D3</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxDatGuiLabel.h</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/components/ofxDatGuiLabel.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>53C2FF41A1F2F67E5A17F40D</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxDatGuiGroups.h</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/components/ofxDatGuiGroups.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>B51D35BB9CC7136E1A163A92</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxDatGuiFRM.h</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/components/ofxDatGuiFRM.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>61E39A198C5BBC1EF23958F0</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxDatGuiControls.h</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/components/ofxDatGuiControls.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>79BE38279A51D498CDE01246</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxDatGuiColorPicker.h</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/components/ofxDatGuiColorPicker.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>4F0AAAB0252AFFDD293C3465</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxDatGuiButton.h</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/components/ofxDatGuiButton.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>947FCD1248D8B0A16B53C1AA</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>62167261B8EF82CDD501B2EA</string>
+					<string>4F0AAAB0252AFFDD293C3465</string>
+					<string>79BE38279A51D498CDE01246</string>
+					<string>61E39A198C5BBC1EF23958F0</string>
+					<string>B51D35BB9CC7136E1A163A92</string>
+					<string>53C2FF41A1F2F67E5A17F40D</string>
+					<string>36C7E7CDADF3A38CC547B4D3</string>
+					<string>C321B40A9068CB3CEA9A2FCD</string>
+					<string>7EB9E3B97ECE1E2BAB057156</string>
+					<string>31B1E31C1AEF4E8F033C3871</string>
+					<string>E1929CF6F26A693FB5C3FB11</string>
+					<string>75CF0191067319CDCDF48CCC</string>
+					<string>E97E8A30E171BD55F3A33939</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>components</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>E9B32C117486580389FAFF01</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>947FCD1248D8B0A16B53C1AA</string>
+					<string>8870759BC9CAEA1E4E9EA3A8</string>
+					<string>69146F0BA46E48E576618E5E</string>
+					<string>005BDE931845C48C4BCDD485</string>
+					<string>886770C5CBA25F578010E477</string>
+					<string>911FE1C75E520EE70A7B4830</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>src</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>D8DD1043C333F6F63C8685E6</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>E9B32C117486580389FAFF01</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>ofxDatGui</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>62167261B8EF82CDD501B2EA</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>30</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxDatGui2dPad.h</string>
+				<key>path</key>
+				<string>../openFrameworks/addons/ofxDatGui/src/components/ofxDatGui2dPad.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>F0C07A618FF496A18408C205</key>
 			<dict>
 				<key>fileRef</key>
@@ -4835,6 +5330,12 @@ fi
 						<string>../openFrameworks/addons/ofxCv/libs/ofxCv/include</string>
 						<string>../openFrameworks/addons/ofxCv/libs/CLD/include/CLD</string>
 						<string>../openFrameworks/addons/ofxCv/src</string>
+						<string>../openFrameworks/addons/ofxDatGui/src</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/components</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/core</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/libs</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/libs/ofxSmartFont</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/themes</string>
 						<string>../openFrameworks/addons/ofxOpenCv/libs</string>
 						<string>../openFrameworks/addons/ofxOpenCv/libs/ippicv</string>
 						<string>../openFrameworks/addons/ofxOpenCv/libs/ippicv/include</string>
@@ -4937,6 +5438,12 @@ fi
 						<string>../openFrameworks/addons/ofxCv/libs/ofxCv/include</string>
 						<string>../openFrameworks/addons/ofxCv/libs/CLD/include/CLD</string>
 						<string>../openFrameworks/addons/ofxCv/src</string>
+						<string>../openFrameworks/addons/ofxDatGui/src</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/components</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/core</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/libs</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/libs/ofxSmartFont</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/themes</string>
 						<string>../openFrameworks/addons/ofxOpenCv/libs</string>
 						<string>../openFrameworks/addons/ofxOpenCv/libs/ippicv</string>
 						<string>../openFrameworks/addons/ofxOpenCv/libs/ippicv/include</string>
@@ -5016,6 +5523,7 @@ fi
 				<key>children</key>
 				<array>
 					<string>6025FAF6414C2CA589764D26</string>
+					<string>D8DD1043C333F6F63C8685E6</string>
 					<string>A0B90D3B0ADB9C1716816714</string>
 				</array>
 				<key>isa</key>
@@ -5180,6 +5688,12 @@ fi
 						<string>../openFrameworks/addons/ofxCv/libs/ofxCv/include</string>
 						<string>../openFrameworks/addons/ofxCv/libs/CLD/include/CLD</string>
 						<string>../openFrameworks/addons/ofxCv/src</string>
+						<string>../openFrameworks/addons/ofxDatGui/src</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/components</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/core</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/libs</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/libs/ofxSmartFont</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/themes</string>
 						<string>../openFrameworks/addons/ofxOpenCv/libs</string>
 						<string>../openFrameworks/addons/ofxOpenCv/libs/ippicv</string>
 						<string>../openFrameworks/addons/ofxOpenCv/libs/ippicv/include</string>
@@ -5280,6 +5794,12 @@ fi
 						<string>../openFrameworks/addons/ofxCv/libs/ofxCv/include</string>
 						<string>../openFrameworks/addons/ofxCv/libs/CLD/include/CLD</string>
 						<string>../openFrameworks/addons/ofxCv/src</string>
+						<string>../openFrameworks/addons/ofxDatGui/src</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/components</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/core</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/libs</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/libs/ofxSmartFont</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/themes</string>
 						<string>../openFrameworks/addons/ofxOpenCv/libs</string>
 						<string>../openFrameworks/addons/ofxOpenCv/libs/ippicv</string>
 						<string>../openFrameworks/addons/ofxOpenCv/libs/ippicv/include</string>
@@ -5383,6 +5903,9 @@ fi
 					<string>DC0FA398D1C3D71F963CCD9E</string>
 					<string>F18E9EDFB746D18F6E2410DA</string>
 					<string>F0C07A618FF496A18408C205</string>
+					<string>BD3FB9BC1E7EB67ED33A7585</string>
+					<string>2B535FFB508D27DD6AA16CC0</string>
+					<string>B0EA70886144652DC6FEE64A</string>
 					<string>039D3E5BA2A6A3BEA46BF03B</string>
 					<string>BB5E214B32E344F8B7A26B29</string>
 					<string>7ADFCFBC71DD5E2DD2E21675</string>
@@ -5484,6 +6007,12 @@ fi
 						<string>../openFrameworks/addons/ofxCv/libs/ofxCv/include</string>
 						<string>../openFrameworks/addons/ofxCv/libs/CLD/include/CLD</string>
 						<string>../openFrameworks/addons/ofxCv/src</string>
+						<string>../openFrameworks/addons/ofxDatGui/src</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/components</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/core</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/libs</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/libs/ofxSmartFont</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/themes</string>
 						<string>../openFrameworks/addons/ofxOpenCv/libs</string>
 						<string>../openFrameworks/addons/ofxOpenCv/libs/ippicv</string>
 						<string>../openFrameworks/addons/ofxOpenCv/libs/ippicv/include</string>
@@ -5574,6 +6103,12 @@ fi
 						<string>../openFrameworks/addons/ofxCv/libs/ofxCv/include</string>
 						<string>../openFrameworks/addons/ofxCv/libs/CLD/include/CLD</string>
 						<string>../openFrameworks/addons/ofxCv/src</string>
+						<string>../openFrameworks/addons/ofxDatGui/src</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/components</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/core</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/libs</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/libs/ofxSmartFont</string>
+						<string>../openFrameworks/addons/ofxDatGui/src/themes</string>
 						<string>../openFrameworks/addons/ofxOpenCv/libs</string>
 						<string>../openFrameworks/addons/ofxOpenCv/libs/ippicv</string>
 						<string>../openFrameworks/addons/ofxOpenCv/libs/ippicv/include</string>
