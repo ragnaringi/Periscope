@@ -1,7 +1,9 @@
+
 #pragma once
 
 #include "ofMain.h"
 #include "ofxCv.h"
+#include "ofxDatGui.h"
 
 //#define _USE_LIVE_VIDEO		// uncomment this to use a live camera
 // otherwise, we'll use a movie file
@@ -41,4 +43,8 @@ class ofApp : public ofBaseApp{
 		ofxCv::ContourFinder contourFinder;
 		bool showLabels;
 		bool analyseDiff;
+	
+		// GUI
+		ofxDatGui* gui;
+		ofxDatGuiLabel *rgbLabel, *lightnessLabel, *brightnessLabel;
 };

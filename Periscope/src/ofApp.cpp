@@ -1,3 +1,4 @@
+
 #include "ofApp.h"
 
 using namespace ofxCv;
@@ -6,10 +7,20 @@ using namespace cv;
 //--------------------------------------------------------------
 void ofApp::setup(){
 	
-	ofSetVerticalSync(true);
-	ofBackground(0);
+	ofSetWindowTitle("PERISCOPE");
 	ofSetWindowShape(1152, 768);
 	ofSetWindowPosition(40, 20);
+	
+	ofSetVerticalSync(true);
+	ofSetFrameRate(30);
+	
+	gui = new ofxDatGui( 0, 0 );
+	gui->setAssetPath(ofToDataPath(""));
+	gui->addHeader(":: Periscope Debug ::", false);
+	rgbLabel = gui->addLabel("RGB: 0 | 0 | 0 | 0");
+//	lightnessLabel = gui->addLabel("Lightness: 0");
+//	brightnessLabel = gui->addLabel("Brightness: 0");
+	gui->addFRM();
 
 #ifdef _USE_LIVE_VIDEO
 	cam.setVerbose(true);
