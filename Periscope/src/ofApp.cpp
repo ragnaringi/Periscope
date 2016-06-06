@@ -1,8 +1,6 @@
 
 #include "ofApp.h"
-
-using namespace ofxCv;
-using namespace cv;
+#include "Periscope.h"
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -12,47 +10,57 @@ void ofApp::setup(){
 	ofSetWindowPosition(40, 20);
 	
 	ofSetVerticalSync(true);
-	ofSetFrameRate(30);
-	
-	gui = new ofxDatGui( 0, 0 );
-	gui->setAssetPath(ofToDataPath(""));
-	gui->addHeader(":: Periscope Debug ::", false);
-	rgbLabel = gui->addLabel("RGB: 0 | 0 | 0 | 0");
-//	lightnessLabel = gui->addLabel("Lightness: 0");
-//	brightnessLabel = gui->addLabel("Brightness: 0");
-	gui->addFRM();
+	ofSetFrameRate(60);
 
-#ifdef _USE_LIVE_VIDEO
-	cam.setVerbose(true);
-	cam.setup(320,240);
-#else
-	cam.load("movie.mov");
-	cam.play();
-	cam.setLoopState(OF_LOOP_NORMAL);
-#endif
+	periscope.loadMovie("fingers.mov");
+//	Threshold *t = new Threshold();
+//	periscope.addComponent(t);
+	
+//	Classifier *c = new Classifier();
+//	periscope.addComponent(c);
+//	Background *b = new Background();
+//	periscope.addComponent(b);
+	Resize *resize = new Resize();
+	GrayScale *grayScale = new GrayScale();
+	Difference *d = new Difference();
+	Threshold *t = new Threshold();
+	Blur *blur = new Blur();
+	Contours *c = new Contours();
+	periscope.addComponent(resize);
+	periscope.addComponent(grayScale);
+	periscope.addComponent(d);
+	periscope.addComponent(t);
+	periscope.addComponent(blur);
+	periscope.addComponent(c);
 	
 	// imitate() will set up previous and diff
 	// so they have the same size and type as cam
 	imitate(previous, cam);
 	imitate(diff, cam);
 	
-	
-	// Countour following
-	contourFinder.setMinAreaRadius(1);
-	contourFinder.setMaxAreaRadius(200);
-	contourFinder.setThreshold(30);
-	// wait for half a frame before forgetting something
-	contourFinder.getTracker().setPersistence(15);
-	// an object can move up to 32 pixels per frame
-	contourFinder.getTracker().setMaximumDistance(32);
-	
-	showLabels = true;
+//	lkMaxLevel.set("lkMaxLevel", 3, 0, 8);
+//	lkMaxFeatures.set("lkMaxFeatures", 200, 1, 1000);
+//	lkQualityLevel.set("lkQualityLevel", 0.01, 0.001, .02);
+//	lkMinDistance.set("lkMinDistance", 4, 1, 16);
+//	lkWinSize.set("lkWinSize", 8, 4, 64);
+//	usefb.set("Use Farneback", false);
+//	fbPyrScale.set("fbPyrScale", .5, 0, .99);
+//	fbLevels.set("fbLevels", 4, 1, 8);
+//	fbIterations.set("fbIterations", 2, 1, 8);
+//	fbPolyN.set("fbPolyN", 7, 5, 10);
+//	fbPolySigma.set("fbPolySigma", 1.5, 1.1, 2);
+//	fbUseGaussian.set("fbUseGaussian", false);
+//	fbWinSize.set("winSize", 32, 4, 64);
+//	curFlow = &lk;
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
 
+	periscope.update();
 	cam.update();
+	return;
+//	t->compute(nullptr);
 	if(cam.isFrameNew()) {
 		// take the absolute difference of prev and cam and save it inside diff
 		absdiff(cam, previous, diff);
@@ -71,9 +79,27 @@ void ofApp::update(){
 		// this is the key line: get the average of each column
 		columnMean = meanCols(diff);
 		
-		// Contour following
-		blur(cam, 10);
-		contourFinder.findContours(cam); // TODO: Try with Diff
+		// Flow
+//		if(usefb) {
+//			curFlow = &fb;
+//			fb.setPyramidScale(fbPyrScale);
+//			fb.setNumLevels(fbLevels);
+//			fb.setWindowSize(fbWinSize);
+//			fb.setNumIterations(fbIterations);
+//			fb.setPolyN(fbPolyN);
+//			fb.setPolySigma(fbPolySigma);
+//			fb.setUseGaussian(fbUseGaussian);
+//		} else {
+//			curFlow = &lk;
+//			lk.setMaxFeatures(lkMaxFeatures);
+//			lk.setQualityLevel(lkQualityLevel);
+//			lk.setMinDistance(lkMinDistance);
+//			lk.setWindowSize(lkWinSize);
+//			lk.setMaxLevel(lkMaxLevel);
+//		}
+//			
+//		// you can use Flow polymorphically
+//		curFlow->calcOpticalFlow(cam);
 	}
 }
 
@@ -81,7 +107,9 @@ void ofApp::update(){
 void ofApp::draw(){
     
 	ofSetColor(255);
-	cam.draw(0, 0);
+	periscope.draw();
+//	cam.draw(0, 0);
+	return;
 //    diff.draw(320, 0);
 //    
 //    // use the [] operator to get elements from a Scalar
@@ -121,68 +149,7 @@ void ofApp::draw(){
 	}
 	
 	// Countour following
-	ofSetBackgroundAuto(showLabels);
-	RectTracker& tracker = contourFinder.getTracker();
-	
-	if(showLabels) {
-		ofSetColor(255);
-		contourFinder.draw();
-		for(int i = 0; i < contourFinder.size(); i++) {
-			ofPoint center = toOf(contourFinder.getCenter(i));
-			ofPushMatrix();
-			ofTranslate(center.x, center.y);
-			int label = contourFinder.getLabel(i);
-			string msg = ofToString(label) + ":" + ofToString(tracker.getAge(label));
-			ofDrawBitmapString(msg, 0, 0);
-			ofVec2f velocity = toOf(contourFinder.getVelocity(i));
-			ofScale(5, 5);
-			ofDrawLine(0, 0, velocity.x, velocity.y);
-			ofPopMatrix();
-		}
-	} else {
-		for(int i = 0; i < contourFinder.size(); i++) {
-			unsigned int label = contourFinder.getLabel(i);
-			// only draw a line if this is not a new label
-			if(tracker.existsPrevious(label)) {
-				// use the label to pick a random color
-				ofSeedRandom(label << 24);
-				ofSetColor(ofColor::fromHsb(ofRandom(255), 255, 255));
-				// get the tracked object (cv::Rect) at current and previous position
-				const cv::Rect& previous = tracker.getPrevious(label);
-				const cv::Rect& current = tracker.getCurrent(label);
-				// get the centers of the rectangles
-				ofVec2f previousPosition(previous.x + previous.width / 2, previous.y + previous.height / 2);
-				ofVec2f currentPosition(current.x + current.width / 2, current.y + current.height / 2);
-				ofDrawLine(previousPosition, currentPosition);
-			}
-		}
-	}
-	
-	// this chunk of code visualizes the creation and destruction of labels
-	const vector<unsigned int>& currentLabels = tracker.getCurrentLabels();
-	const vector<unsigned int>& previousLabels = tracker.getPreviousLabels();
-	const vector<unsigned int>& newLabels = tracker.getNewLabels();
-	const vector<unsigned int>& deadLabels = tracker.getDeadLabels();
-	ofSetColor(cyanPrint);
-	for(int i = 0; i < currentLabels.size(); i++) {
-		int j = currentLabels[i];
-		ofDrawLine(j, 0, j, 4);
-	}
-	ofSetColor(magentaPrint);
-	for(int i = 0; i < previousLabels.size(); i++) {
-		int j = previousLabels[i];
-		ofDrawLine(j, 4, j, 8);
-	}
-	ofSetColor(yellowPrint);
-	for(int i = 0; i < newLabels.size(); i++) {
-		int j = newLabels[i];
-		ofDrawLine(j, 8, j, 12);
-	}
-	ofSetColor(ofColor::white);
-	for(int i = 0; i < deadLabels.size(); i++) {
-		int j = deadLabels[i];
-		ofDrawLine(j, 12, j, 16);
-	}
+//	curFlow->draw(0,0);
 }
 
 //--------------------------------------------------------------

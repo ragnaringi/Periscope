@@ -2,8 +2,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxCv.h"
-#include "ofxDatGui.h"
+#include "Periscope.h"
 
 //#define _USE_LIVE_VIDEO		// uncomment this to use a live camera
 // otherwise, we'll use a movie file
@@ -27,24 +26,33 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-#ifdef _USE_LIVE_VIDEO
-		ofVideoGrabber cam;
-#else
+//#ifdef _USE_LIVE_VIDEO
+//		ofVideoGrabber cam;
+//#else
 		ofVideoPlayer cam;
-#endif
+//#endif
 		ofPixels previous;
 		ofImage diff;
 		
 		// a scalar is like an ofVec4f but normally used for storing color information
 		cv::Scalar diffMean;
 		cv::Mat columnMean;
+
+		// Flow
+		ofxCv::FlowFarneback fb;
+		ofxCv::FlowPyrLK lk;
 	
-		// Countour tracking
-		ofxCv::ContourFinder contourFinder;
-		bool showLabels;
-		bool analyseDiff;
+		ofxCv::Flow* curFlow;
 	
-		// GUI
-		ofxDatGui* gui;
-		ofxDatGuiLabel *rgbLabel, *lightnessLabel, *brightnessLabel;
+		Periscope periscope;
+	
+//		ofParameter<float> fbPyrScale, lkQualityLevel, fbPolySigma;
+//		ofParameter<int> fbLevels, lkWinSize, fbIterations, fbPolyN, fbWinSize, lkMaxLevel, lkMaxFeatures, lkMinDistance;
+//		ofParameter<bool> fbUseGaussian, usefb;
+//		// Flow Keypoints
+//		ofVideoGrabber grabber;
+//		cv::Mat grabberGray;
+//		ofxCv::FlowPyrLK flow;
+//		ofVec2f p1;
+//		ofRectangle rect;
 };
