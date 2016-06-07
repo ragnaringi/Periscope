@@ -66,37 +66,21 @@ void Periscope::update()
 
 void Periscope::draw()
 {
-	if (debugMode) {
-		int numComponents = components.size();
-//		if (numComponents == 0) return;
+	if (!debugMode || components.size() == 0) {
+		source->draw(0, 0);
+	}
 		
-		float width = source->getWidth();
-		float height = source->getHeight();
-//		source->draw(0, 0);//, width, height);
-//		for (int i = 1; i < numComponents; i++) {
-//			
-//			auto c = components[i];
-//			int x = (i %  (numComponents/2) == 0) ? width : 0;
-//			int y = (i >= (numComponents/2)) ? height : 0;
-//			
-//			c->draw(x, y, width, height);
-//		}
-		if (numComponents == 0) {
-			src.draw(0, 0);
-			return;
+	float width = src.getWidth();
+	float height = src.getHeight();
+
+	int col = 0, row = 0;
+	for (int i = 0; i < components.size(); i++) {
+		components[i]->draw(col * width, row * height);
+		if ((col++ * width) > ofGetWidth()) {
+			row++;
+			col = 0;
 		}
-		components[0]->draw(0, 0);
-		components[1]->draw(width, 0);
-		components[2]->draw(width * 2, 0);
-		
-		components[3]->draw(0, height);
-		components[4]->draw(width, height);
-		components[5]->draw(width * 2, height);
-		
-		gui.draw();
-		
-		return;
 	}
 	
-	source->draw(0, 0);
+	gui.draw();
 }
