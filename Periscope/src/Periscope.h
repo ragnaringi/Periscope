@@ -13,6 +13,7 @@
 #include "ofMain.h"
 #include "ofxCv.h"
 #include "ofxGui.h"
+#include "ofxOsc.h"
 
 using namespace ofxCv;
 using namespace cv;
@@ -21,6 +22,9 @@ class PeriscopeComponent {
 public:
 	virtual ~PeriscopeComponent() {};
 	virtual void loadGui(ofxPanel *gui) = 0; // TODO: Make protected
+	virtual void loadOsc(ofxOscSender *sender) {
+		this->sender = sender;
+	};
 	virtual void compute(ofImage &src) = 0;
 	virtual void draw(int x, int y) {
 		if (!cpy.isAllocated()) return;
@@ -32,6 +36,7 @@ public:
 	virtual String getDescription() = 0;
 protected:
 	ofImage cpy;
+	ofxOscSender *sender;
 };
 
 class Periscope {
@@ -41,15 +46,18 @@ public:
 	void loadMovie(string title);
 	void useWebcam();
 	void addComponent(PeriscopeComponent *c);
-	void enableDebugMode(bool debug);
+	void removeLast();
+	void setDebug(bool debug);
+	bool& getDebug() { return debugMode; };
 	void update();
 	void draw();
 private:
 	bool debugMode;
 	ofxPanel gui;
-	vector<PeriscopeComponent *> components;
+	vector<unique_ptr<PeriscopeComponent>> components;
 	unique_ptr<ofBaseVideoDraws> source;
 	ofImage src;
+	ofxOscSender sender;
 };
 
 #pragma mark - Resize
@@ -57,6 +65,7 @@ class Resize : public PeriscopeComponent
 {
 public:
 	void loadGui(ofxPanel *gui) {};
+	void loadOsc(ofxOscSender *sender) {}
 	void compute(ofImage &src) {
 		// TODO: Resize
 		copy(src, cpy);
@@ -146,7 +155,6 @@ public:
 		gui->add(t.set("Threshold", 128, 0, 255));
 		gui->add(autoT.set("Auto", false));
 	}
-
 	void compute(ofImage &src) {
 		copyGray(src, cpy);
 		if(autoT) {
@@ -221,6 +229,35 @@ public:
 		contourFinder.findContours(cpy);
 		contourFinder.setFindHoles(holes);
 		copy(cpy, src);
+		
+		// Send Osc
+		void addMessage( const ofxOscMessage& message );
+		ofxOscBundle b;
+		ofxOscMessage m;
+		m.setAddress("/contours/size");
+		m.addIntArg(contourFinder.size());
+		b.addMessage(m);
+		for (int i = 0; i < contourFinder.size(); i++) {
+			m.clear();
+			m.setAddress("/contours/label");
+			m.addIntArg(contourFinder.getLabel(i));
+			b.addMessage(m);
+			m.clear();
+			m.setAddress("/contours/center");
+			m.addFloatArg(contourFinder.getCenter(i).x / cpy.getWidth());
+			m.addFloatArg(contourFinder.getCenter(i).y / cpy.getHeight());
+			b.addMessage(m);
+			m.clear();
+			m.setAddress("/contours/velocity");
+			m.addFloatArg(contourFinder.getVelocity(i)[0]);
+			m.addFloatArg(contourFinder.getVelocity(i)[1]);
+			b.addMessage(m);
+			m.clear();
+			m.setAddress("/contours/length");
+			m.addIntArg(contourFinder.getArcLength(i));
+			b.addMessage(m);
+		}
+		sender->sendBundle(b);
 	}
 	void draw(int x, int y) {
 		PeriscopeComponent::draw(x, y);

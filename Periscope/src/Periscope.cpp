@@ -6,18 +6,20 @@
 //
 //
 
+#define HOST "localhost"
+#define PORT 9999
+
 #include "Periscope.h"
 
 Periscope::Periscope() : debugMode(true)
 {
 	gui.setup();
 	gui.setPosition(900, 0);
+	sender.setup(HOST, PORT);
 }
 
 Periscope::~Periscope()
 {
-	for (auto c : components)
-		delete c;
 	components.clear();
 }
 
@@ -39,13 +41,20 @@ void Periscope::useWebcam()
 	source = move(cam);
 }
 
-void Periscope::addComponent(PeriscopeComponent *c)
+void Periscope::addComponent(PeriscopeComponent *c_)
 {
-	c->loadGui(&gui);
-	components.push_back(c);
+	c_->loadGui(&gui);
+	c_->loadOsc(&sender);
+	unique_ptr<PeriscopeComponent> c( c_ );
+	components.push_back(move(c));
 }
 
-void Periscope::enableDebugMode(bool debug)
+void Periscope::removeLast()
+{
+	components.pop_back();
+}
+
+void Periscope::setDebug(bool debug)
 {
 	debugMode = debug;
 }
@@ -59,8 +68,8 @@ void Periscope::update()
 	copy(*source, src);
 	src.update();
 	
-	for (auto c : components) {
-		c->compute(src);
+	for (int i = 0; i < components.size(); i++) {
+		components[i]->compute(src);
 	}
 }
 
@@ -68,6 +77,7 @@ void Periscope::draw()
 {
 	if (!debugMode || components.size() == 0) {
 		source->draw(0, 0);
+		return;
 	}
 		
 	float width = src.getWidth();
@@ -76,7 +86,7 @@ void Periscope::draw()
 	int col = 0, row = 0;
 	for (int i = 0; i < components.size(); i++) {
 		components[i]->draw(col * width, row * height);
-		if ((col++ * width) > ofGetWidth()) {
+		if ((col++ * width) > ofGetWidth() - width) {
 			row++;
 			col = 0;
 		}
