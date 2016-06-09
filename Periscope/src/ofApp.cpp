@@ -13,18 +13,12 @@ void ofApp::setup(){
 
 	periscope.loadMovie("fingers.mov");
 
-	Resize *resize = new Resize();
-	GrayScale *grayScale = new GrayScale();
-	Difference *d = new Difference();
-	Threshold *t = new Threshold();
-	Blur *blur = new Blur();
-	Contours *c = new Contours();
-	periscope.addComponent(resize);
-	periscope.addComponent(grayScale);
-	periscope.addComponent(d);
-	periscope.addComponent(t);
-	periscope.addComponent(blur);
-	periscope.addComponent(c);
+	periscope.addComponent(new Resize());
+	periscope.addComponent(new GrayScale());
+	periscope.addComponent(new Difference());
+	periscope.addComponent(new Threshold());
+	periscope.addComponent(new Blur());
+	periscope.addComponent(new Contours());
 }
 
 //--------------------------------------------------------------
@@ -42,10 +36,10 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+	
 	switch (key) {
 		case ' ':
-			cam.firstFrame();
+			periscope.setDebug( !periscope.getDebug() );
 			break;
 		case 'f':
 			ofToggleFullscreen();
