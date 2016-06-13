@@ -68,8 +68,8 @@ void Periscope::update()
 	copy(*source, src);
 	src.update();
 	
-	for (int i = 0; i < components.size(); i++) {
-		components[i]->compute(src);
+	for (auto const &c : components) {
+		c->compute(src);
 	}
 }
 
@@ -84,8 +84,8 @@ void Periscope::draw()
 	float height = src.getHeight();
 
 	int col = 0, row = 0;
-	for (int i = 0; i < components.size(); i++) {
-		components[i]->draw(col * width, row * height);
+	for (auto const &c : components) {
+		c->draw(col * width, row * height);
 		if ((col++ * width) > ofGetWidth() - width) {
 			row++;
 			col = 0;

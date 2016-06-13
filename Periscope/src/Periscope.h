@@ -1,5 +1,5 @@
 //
-//  Periscope.hpp
+//  Periscope.h
 //  Periscope
 //
 //  Created by Ragnar Hrafnkelsson on 04/06/2016.
@@ -9,7 +9,6 @@
 #ifndef Periscope_h
 #define Periscope_h
 
-#include <stdio.h>
 #include "ofMain.h"
 #include "ofxCv.h"
 #include "ofxGui.h"
@@ -64,15 +63,79 @@ private:
 class Resize : public PeriscopeComponent
 {
 public:
-	void loadGui(ofxPanel *gui) {};
-	void loadOsc(ofxOscSender *sender) {}
-	void compute(ofImage &src) {
-		// TODO: Resize
-		copy(src, cpy);
+	void loadGui(ofxPanel *gui) {
+		gui->add(scale.set("Scale", 1, 0, 1));
+	};
+	void compute(ofImage &src)
+	{
+		src.resize(320,240);
+		cpy = src;
+		
+		ofPixels pix = cpy.getPixels();
+		
+		int width = pix.getWidth();
+		int height = pix.getHeight();
+		int numChannels = pix.getNumChannels();
+		const int numPixels = width * height;
+		
+		unsigned char* pixels = pix.getData();
+		
+		float red = 0.f;
+		float green = 0.f;
+		float blue = 0.f;
+		
+		if (numChannels >= 3)
+		{
+			int totalR = 0;
+			int totalG = 0;
+			int totalB = 0;
+			
+			for (int i = 0; i < numPixels; i++)
+			{
+				int base = i * numChannels;
+				
+				unsigned char r = pixels[base];
+				unsigned char g = pixels[base + 1];
+				unsigned char b = pixels[base + 2];
+				
+				totalR	+= r;
+				totalG	+= g;
+				totalB	+= b;
+			}
+			
+			red = totalR / numPixels;
+			green = totalG / numPixels;
+			blue = totalB / numPixels;
+		}
+		
+		// Send Osc
+		ofxOscMessage m;
+		m.setAddress("/colours");
+		m.addFloatArg(red);
+		m.addFloatArg(green);
+		m.addFloatArg(blue);
+		sender->sendMessage(m);
 	};
 	String getDescription() {
 		return "Resize";
 	}
+protected:
+	ofParameter<float> scale;
+	int width = 0;
+};
+
+#pragma mark - Grayscale
+class Colours : public PeriscopeComponent
+{
+public:
+	void loadGui(ofxPanel *gui) {};
+	void compute(ofImage &src) {
+		cpy = src;
+	};
+	String getDescription() {
+		return "Colours";
+	}
+protected:
 };
 
 #pragma mark - Grayscale
@@ -188,6 +251,18 @@ public:
 		absdiff(src, bg, diff);
 		src = diff;
 		cpy = src;
+		
+		cv::Scalar diffMean;
+		diffMean = mean(toCv(diff));
+		cout << diffMean << endl;
+		
+		// Send Osc
+		ofxOscMessage m;
+		m.setAddress("/difference");
+		m.addFloatArg(diffMean[0]);
+		m.addFloatArg(diffMean[1]);
+		m.addFloatArg(diffMean[2]);
+		sender->sendMessage(m);
 	}
 	void draw(int x, int y) {
 		diff.update();
@@ -231,7 +306,6 @@ public:
 		copy(cpy, src);
 		
 		// Send Osc
-		void addMessage( const ofxOscMessage& message );
 		ofxOscBundle b;
 		ofxOscMessage m;
 		m.setAddress("/contours/size");
