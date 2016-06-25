@@ -55,7 +55,7 @@ void ofApp::keyReleased(int key){
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){
-
+	periscope.mouseMoved(x, y);
 }
 
 //--------------------------------------------------------------

@@ -6,7 +6,7 @@
 //
 //
 
-#define HOST "localhost"
+#define HOST "localhost" //"10.2.65.114"
 #define PORT 9999
 
 #include "Periscope.h"
@@ -108,6 +108,15 @@ void Periscope::draw()
 }
 
 //--------------------------------------------------------------
+void Periscope::mouseMoved(int x, int y ){
+	for (auto const &c : components) {
+		c->setHighlighted(c->pointInside(x, y));
+	}
+}
+
+//--------------------------------------------------------------
 void Periscope::mousePressed(int x, int y, int button){
-	components.pop_back();
+//	for (auto const &c : components) {
+//		c->setHighlighted(c->pointInside(x, y));
+//	}
 }

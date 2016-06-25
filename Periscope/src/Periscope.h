@@ -34,6 +34,8 @@ public:
 	void draw();
 	
 	void mousePressed(int x, int y, int button);
+	void mouseMoved(int x, int y);
+
 private:
 	bool debugMode;
 	ofxPanel gui;
@@ -55,13 +57,22 @@ public:
 	virtual void compute(ofImage &src) = 0;
 	virtual void draw(int x, int y) {
 		if (!cpy.isAllocated()) return;
+		this->x = x; this->y = y;
+		ofSetColor(ofColor::white);
+		if (highlight) ofSetColor(ofColor::red);
 		cpy.update();
 		cpy.draw(x, y);
-		ofSetColor(ofColor::white);
 		ofDrawBitmapString(getDescription(), x + 10, y + 10);
 	}
 	virtual String getDescription() = 0;
+	virtual bool pointInside(int x_, int y_) {
+		return ((x_ > x && x_ < x + cpy.getWidth())
+						&& (y_ > y && y_ < y + cpy.getHeight()));
+	}
+	virtual void setHighlighted(bool h) { highlight = h; }
 protected:
+	int x, y, w, h;
+	bool highlight = false;
 	ofImage cpy;
 	ofxOscSender *sender;
 };
@@ -73,8 +84,7 @@ public:
 	void loadGui(ofxPanel *gui) {
 		gui->add(scale.set("Scale", 1, 0, 1));
 	};
-	void compute(ofImage &src)
-	{
+	void compute(ofImage &src) {
 		src.resize(320,240);
 		cpy = src;
 	};
@@ -224,7 +234,6 @@ public:
 		
 		cv::Scalar diffMean;
 		diffMean = mean(toCv(diff));
-		cout << diffMean << endl;
 		
 		// Send Osc
 		ofxOscMessage m;
@@ -235,9 +244,13 @@ public:
 		sender->sendMessage(m);
 	}
 	void draw(int x, int y) {
+		PeriscopeComponent::draw(x, y);
+		ofSetColor(ofColor::white);
+		if (highlight) {
+				ofSetColor(ofColor::red);
+		}
 		diff.update();
 		diff.draw(x, y);
-		ofSetColor(ofColor::white);
 		ofDrawBitmapString(getDescription(), x + 10, y + 10);
 	}
 	String getDescription() {
@@ -284,23 +297,18 @@ public:
 		b.addMessage(m);
 		for (int i = 0; i < contourFinder.size(); i++) {
 			m.clear();
-			m.setAddress("/contours/label");
+			m.setAddress("/contours/all");
 			m.addIntArg(contourFinder.getLabel(i));
-			b.addMessage(m);
-			m.clear();
-			m.setAddress("/contours/center");
+			// Normalised center
 			m.addFloatArg(contourFinder.getCenter(i).x / cpy.getWidth());
 			m.addFloatArg(contourFinder.getCenter(i).y / cpy.getHeight());
-			b.addMessage(m);
-			m.clear();
-			m.setAddress("/contours/velocity");
+			// Velocity
 			m.addFloatArg(contourFinder.getVelocity(i)[0]);
 			m.addFloatArg(contourFinder.getVelocity(i)[1]);
-			b.addMessage(m);
-			m.clear();
-			m.setAddress("/contours/length");
+			// Circumference
 			m.addIntArg(contourFinder.getArcLength(i));
-			b.addMessage(m);
+			sender->sendMessage(m);
+			// TODO: send bundle?
 		}
 		sender->sendBundle(b);
 	}
