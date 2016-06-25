@@ -25,8 +25,9 @@ public:
 	Periscope();
 	~Periscope();
 	void openPanel();
+	void loadGui();
 	void loadMovie(string title);
-	void useWebcam();
+	void selectWebCam();
 	void addComponent(PeriscopeComponent *c);
 	void removeLast();
 	void setDebug(bool debug);
@@ -40,8 +41,7 @@ public:
 private:
 	bool debugMode;
 	ofxPanel gui;
-	ofxButton loadVidBtn;
-	ofxButton webCamBtn;
+	ofParameter<bool> useWebCam, loadVideo;
 	vector<unique_ptr<ThumbNail>> thumbNails;
 	vector<unique_ptr<PeriscopeComponent>> components;
 	unique_ptr<ofBaseVideoDraws> source;

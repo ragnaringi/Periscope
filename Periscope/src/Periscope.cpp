@@ -13,13 +13,8 @@
 
 Periscope::Periscope() : debugMode(true)
 {
-	webCamBtn.addListener(this, &::Periscope::useWebcam);
-	loadVidBtn.addListener(this, &::Periscope::openPanel);
-	
 	gui.setup();
-	gui.add(loadVidBtn.setup("Load Video"));
-	gui.add(webCamBtn.setup("Use Webcam"));
-	gui.setPosition(900, 0);
+	loadGui();
 	sender.setup(HOST, PORT);
 	
 	for (int i = 0; i < 6; i++) {
@@ -31,6 +26,18 @@ Periscope::Periscope() : debugMode(true)
 Periscope::~Periscope()
 {
 	components.clear();
+	thumbNails.clear();
+}
+
+void Periscope::loadGui()
+{
+	gui.clear();
+	gui.setPosition(900, 0);
+	gui.add(useWebCam.set("Use WebCam", false));
+	gui.add(loadVideo.set("Load Video", false));
+	for (auto const &c : components) {
+		c->loadGui(&gui);
+	}
 }
 
 void Periscope::openPanel()
@@ -51,7 +58,7 @@ void Periscope::loadMovie(string title)
 	source = move(player);
 }
 
-void Periscope::useWebcam()
+void Periscope::selectWebCam()
 {
 	unique_ptr<ofVideoGrabber> cam(new ofVideoGrabber);
 	cam->setup(320, 240);
@@ -78,6 +85,18 @@ void Periscope::setDebug(bool debug)
 
 void Periscope::update()
 {
+	if (useWebCam) {
+		selectWebCam();
+		useWebCam = false;
+		loadVideo = false;
+	}
+	
+	if (loadVideo) {
+		openPanel();
+		useWebCam = false;
+		loadVideo = false;
+	}
+	
 	source->update();
 	
 	if(!source->isFrameNew()) return;
@@ -133,6 +152,8 @@ void Periscope::mousePressed(int x, int y, int button){
 		auto const &c = components[i];
 		if (c->pointInside(x, y)) {
 			components.erase(components.begin() + i);
+			loadGui();
+			break;
 		}
 	}
 	
@@ -163,6 +184,8 @@ void Periscope::mousePressed(int x, int y, int button){
 					break;
 			}
 			addComponent(p);
+			loadGui();
+			break;
 		}
 	}
 }
