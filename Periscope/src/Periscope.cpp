@@ -21,6 +21,11 @@ Periscope::Periscope() : debugMode(true)
 	gui.add(webCamBtn.setup("Use Webcam"));
 	gui.setPosition(900, 0);
 	sender.setup(HOST, PORT);
+	
+	for (int i = 0; i < 6; i++) {
+		unique_ptr<ThumbNail> t( new ThumbNail() );
+		thumbNails.push_back(move(t));
+	}
 }
 
 Periscope::~Periscope()
@@ -87,6 +92,11 @@ void Periscope::update()
 
 void Periscope::draw()
 {
+	for (int i = thumbNails.size(); i --> 0;) {
+		auto const &t = thumbNails[i];
+		t->draw(i * 41, ofGetHeight() - 40);
+	}
+	
 	if (!debugMode || components.size() == 0) {
 		source->draw(0, 0);
 		return;
@@ -112,14 +122,47 @@ void Periscope::mouseMoved(int x, int y ){
 	for (auto const &c : components) {
 		c->setHighlighted(c->pointInside(x, y));
 	}
+	for (auto const &t : thumbNails) {
+		t->setHighlighted(t->pointInside(x, y));
+	}
 }
 
 //--------------------------------------------------------------
 void Periscope::mousePressed(int x, int y, int button){
-	for (int i = components.size(); i --> 0; ) {
+	for (int i = components.size(); i --> 0;) {
 		auto const &c = components[i];
 		if (c->pointInside(x, y)) {
 			components.erase(components.begin() + i);
+		}
+	}
+	
+	for (int i = thumbNails.size(); i --> 0;) {
+		auto const &t = thumbNails[i];
+		if (t->pointInside(x, y)) {
+			PeriscopeComponent *p;
+			switch (i) {
+				case 0:
+					p = new Resize();
+					break;
+				case 1:
+					p = new Colours();
+					break;
+				case 2:
+					p = new Difference();
+					break;
+				case 3:
+					p = new Threshold();
+					break;
+				case 4:
+					p = new Blur();
+					break;
+				case 5:
+					p = new Contours();
+					break;
+				default:
+					break;
+			}
+			addComponent(p);
 		}
 	}
 }

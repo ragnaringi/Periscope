@@ -18,6 +18,7 @@ using namespace ofxCv;
 using namespace cv;
 
 class PeriscopeComponent;
+class ThumbNail;
 
 class Periscope {
 public:
@@ -41,10 +42,29 @@ private:
 	ofxPanel gui;
 	ofxButton loadVidBtn;
 	ofxButton webCamBtn;
+	vector<unique_ptr<ThumbNail>> thumbNails;
 	vector<unique_ptr<PeriscopeComponent>> components;
 	unique_ptr<ofBaseVideoDraws> source;
 	ofImage src;
 	ofxOscSender sender;
+};
+
+class ThumbNail {
+public:
+	virtual void draw(int x, int y) {
+		this->x = x; this->y = y;
+		ofSetColor(ofColor::blue);
+		if (highlight) ofSetColor(ofColor::green);
+		ofDrawRectangle(x, y, 40, 40);
+	}
+	virtual bool pointInside(int x_, int y_) {
+		return ((x_ > x && x_ < x + 40)
+						&& (y_ > y && y_ < y + 40));
+	}
+	virtual void setHighlighted(bool h) { highlight = h; }
+private:
+	int x, y;
+	bool highlight = false;
 };
 
 class PeriscopeComponent {
