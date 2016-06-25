@@ -42,6 +42,7 @@ class Periscope {
 public:
 	Periscope();
 	~Periscope();
+	void openPanel();
 	void loadMovie(string title);
 	void useWebcam();
 	void addComponent(PeriscopeComponent *c);
@@ -53,6 +54,8 @@ public:
 private:
 	bool debugMode;
 	ofxPanel gui;
+	ofxButton loadVidBtn;
+	ofxButton webCamBtn;
 	vector<unique_ptr<PeriscopeComponent>> components;
 	unique_ptr<ofBaseVideoDraws> source;
 	ofImage src;
@@ -69,6 +72,22 @@ public:
 	void compute(ofImage &src)
 	{
 		src.resize(320,240);
+		cpy = src;
+	};
+	String getDescription() {
+		return "Resize";
+	}
+protected:
+	ofParameter<float> scale;
+	int width = 0;
+};
+
+#pragma mark - Grayscale
+class Colours : public PeriscopeComponent
+{
+public:
+	void loadGui(ofxPanel *gui) {};
+	void compute(ofImage &src) {
 		cpy = src;
 		
 		ofPixels pix = cpy.getPixels();
@@ -115,22 +134,6 @@ public:
 		m.addFloatArg(green);
 		m.addFloatArg(blue);
 		sender->sendMessage(m);
-	};
-	String getDescription() {
-		return "Resize";
-	}
-protected:
-	ofParameter<float> scale;
-	int width = 0;
-};
-
-#pragma mark - Grayscale
-class Colours : public PeriscopeComponent
-{
-public:
-	void loadGui(ofxPanel *gui) {};
-	void compute(ofImage &src) {
-		cpy = src;
 	};
 	String getDescription() {
 		return "Colours";

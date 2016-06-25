@@ -3,6 +3,7 @@
 
 #include "ofMain.h"
 #include "Periscope.h"
+#include "ofxButton.h"
 
 class ofApp : public ofBaseApp{
 

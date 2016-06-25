@@ -13,7 +13,12 @@
 
 Periscope::Periscope() : debugMode(true)
 {
+	webCamBtn.addListener(this, &::Periscope::useWebcam);
+	loadVidBtn.addListener(this, &::Periscope::openPanel);
+	
 	gui.setup();
+	gui.add(loadVidBtn.setup("Load Video"));
+	gui.add(webCamBtn.setup("Use Webcam"));
 	gui.setPosition(900, 0);
 	sender.setup(HOST, PORT);
 }
@@ -21,6 +26,13 @@ Periscope::Periscope() : debugMode(true)
 Periscope::~Periscope()
 {
 	components.clear();
+}
+
+void Periscope::openPanel()
+{
+	ofFileDialogResult result = ofSystemLoadDialog();
+	cout << result.getPath() << endl;
+	loadMovie(result.getPath());
 }
 
 void Periscope::loadMovie(string title)
