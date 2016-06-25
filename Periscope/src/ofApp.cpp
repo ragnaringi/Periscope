@@ -11,7 +11,7 @@ void ofApp::setup(){
 	ofSetVerticalSync(true);
 	ofSetFrameRate(30);
 
-	periscope.loadMovie("fingers.mov");
+	periscope.loadMovie("video.mov");
 
 	periscope.addComponent(new Resize());
 	periscope.addComponent(new Colours());
@@ -65,7 +65,7 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-
+	periscope.mousePressed(x, y, button);
 }
 
 //--------------------------------------------------------------

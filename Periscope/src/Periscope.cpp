@@ -106,3 +106,8 @@ void Periscope::draw()
 	
 	gui.draw();
 }
+
+//--------------------------------------------------------------
+void Periscope::mousePressed(int x, int y, int button){
+	components.pop_back();
+}
