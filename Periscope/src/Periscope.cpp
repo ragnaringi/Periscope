@@ -116,7 +116,10 @@ void Periscope::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void Periscope::mousePressed(int x, int y, int button){
-//	for (auto const &c : components) {
-//		c->setHighlighted(c->pointInside(x, y));
-//	}
+	for (int i = components.size(); i --> 0; ) {
+		auto const &c = components[i];
+		if (c->pointInside(x, y)) {
+			components.erase(components.begin() + i);
+		}
+	}
 }
