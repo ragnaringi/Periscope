@@ -69,20 +69,28 @@ private:
 
 class PeriscopeComponent {
 public:
+	PeriscopeComponent() {
+		localGui.setup();
+		localGui.add(bypass.set("Bypass", false));
+		localGui.add(close.set("Close", false));
+	}
 	virtual ~PeriscopeComponent() {};
-	virtual void loadGui(ofxPanel *gui) = 0; // TODO: Make protected
+	virtual void loadGui(ofxPanel *gui) = 0;
 	virtual void loadOsc(ofxOscSender *sender) {
 		this->sender = sender;
 	};
 	virtual void compute(ofImage &src) = 0;
 	virtual void draw(int x, int y) {
-		if (!cpy.isAllocated()) return;
 		this->x = x; this->y = y;
 		ofSetColor(ofColor::white);
-		if (highlight) ofSetColor(ofColor::red);
-		cpy.update();
-		cpy.draw(x, y);
+		if (cpy.isAllocated()) {
+			if (highlight) ofSetColor(ofColor::red);
+			cpy.update();
+			cpy.draw(x, y);
+		}
 		ofDrawBitmapString(getDescription(), x + 10, y + 10);
+		localGui.setPosition(x, y);
+		localGui.draw();
 	}
 	virtual String getDescription() = 0;
 	virtual bool pointInside(int x_, int y_) {
@@ -90,11 +98,15 @@ public:
 						&& (y_ > y && y_ < y + cpy.getHeight()));
 	}
 	virtual void setHighlighted(bool h) { highlight = h; }
+	bool shouldClose() { return close; };
 protected:
 	int x, y, w, h;
+	ofParameter<bool> bypass;
+	ofParameter<bool> close;
 	bool highlight = false;
 	ofImage cpy;
 	ofxOscSender *sender;
+	ofxPanel localGui;
 };
 
 #pragma mark - Resize
@@ -248,12 +260,11 @@ public:
 			learn = false;
 		}
 		// take the absolute difference of prev and current and save it inside diff
-		absdiff(src, bg, diff);
-		src = diff;
-		cpy = src;
+		absdiff(src, bg, cpy);
+		src = cpy;
 		
 		cv::Scalar diffMean;
-		diffMean = mean(toCv(diff));
+		diffMean = mean(toCv(cpy));
 		
 		// Send Osc
 		ofxOscMessage m;
@@ -263,22 +274,11 @@ public:
 		m.addFloatArg(diffMean[2]);
 		sender->sendMessage(m);
 	}
-	void draw(int x, int y) {
-		PeriscopeComponent::draw(x, y);
-		ofSetColor(ofColor::white);
-		if (highlight) {
-				ofSetColor(ofColor::red);
-		}
-		diff.update();
-		diff.draw(x, y);
-		ofDrawBitmapString(getDescription(), x + 10, y + 10);
-	}
 	String getDescription() {
 		return "Difference";
 	}
 protected:
 	ofImage bg;
-	ofImage diff;
 	ofParameter<bool> learn;
 };
 
