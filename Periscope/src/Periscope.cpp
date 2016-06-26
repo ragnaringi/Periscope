@@ -104,10 +104,11 @@ void Periscope::update()
 	copy(*source, src);
 	src.update();
 	
-	std::vector<int> toRemove;
+	std::vector<int> toRemove; 
 	
 	for (int i = 0; i < components.size(); i++) {
 		auto const &c = components[i];
+		if (c->isBypassed()) continue;
 		c->compute(src);
 		if (c->shouldClose()) {
 			toRemove.push_back(i);

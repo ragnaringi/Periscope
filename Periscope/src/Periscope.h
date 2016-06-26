@@ -99,6 +99,7 @@ public:
 	}
 	virtual void setHighlighted(bool h) { highlight = h; }
 	bool shouldClose() { return close; };
+	bool isBypassed() { return bypass; };
 protected:
 	int x, y, w, h;
 	ofParameter<bool> bypass;
