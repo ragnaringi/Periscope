@@ -42,7 +42,7 @@ Periscope::~Periscope()
 void Periscope::loadGui()
 {
 	gui.clear();
-	gui.setPosition(ofGetWidth(), 500);
+	gui.setPosition(ofGetWidth() - 200, 500);
 	gui.add(useWebCam.set("Use WebCam", false));
 	gui.add(loadVideo.set("Load Video", false));
 	for (auto const &c : components) {
