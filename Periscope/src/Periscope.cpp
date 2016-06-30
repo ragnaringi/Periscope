@@ -11,6 +11,16 @@
 
 #include "Periscope.h"
 
+string titles[7] = {
+"Resize",
+"Colours",
+"Flow",
+"Difference",
+"Threshold",
+"Blur",
+"Contours",
+};
+
 Periscope::Periscope() : debugMode(true)
 {
 	gui.setup();
@@ -18,7 +28,7 @@ Periscope::Periscope() : debugMode(true)
 	sender.setup(HOST, PORT);
 	
 	for (int i = 0; i < 6; i++) {
-		unique_ptr<ThumbNail> t( new ThumbNail() );
+		unique_ptr<ThumbNail> t( new ThumbNail(titles[i]) );
 		thumbNails.push_back(move(t));
 	}
 }
@@ -32,7 +42,7 @@ Periscope::~Periscope()
 void Periscope::loadGui()
 {
 	gui.clear();
-	gui.setPosition(900, 0);
+	gui.setPosition(ofGetWidth(), 500);
 	gui.add(useWebCam.set("Use WebCam", false));
 	gui.add(loadVideo.set("Load Video", false));
 	for (auto const &c : components) {
@@ -127,7 +137,7 @@ void Periscope::draw()
 {
 	for (int i = thumbNails.size(); i --> 0;) {
 		auto const &t = thumbNails[i];
-		t->draw(i * 41, ofGetHeight() - 40);
+		t->draw(i * (THUMBNAIL_SIZE + 1), ofGetHeight() - THUMBNAIL_SIZE);
 	}
 	
 	if (!debugMode || components.size() == 0) {
@@ -182,15 +192,18 @@ void Periscope::mousePressed(int x, int y, int button){
 					p = new Colours();
 					break;
 				case 2:
-					p = new Difference();
+					p = new OpticalFlow();
 					break;
 				case 3:
-					p = new Threshold();
+					p = new Difference();
 					break;
 				case 4:
-					p = new Blur();
+					p = new Threshold();
 					break;
 				case 5:
+					p = new Blur();
+					break;
+				case 6:
 					p = new Contours();
 					break;
 				default:

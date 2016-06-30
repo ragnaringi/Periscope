@@ -6,16 +6,17 @@
 void ofApp::setup(){
 	
 	ofSetWindowTitle("PERISCOPE");
-	ofSetWindowShape(1152, 768);
-	ofSetWindowPosition(40, 20);
+	ofSetWindowShape(1280, 768);
+	ofSetWindowPosition(10, 20);
 	ofSetVerticalSync(true);
 	ofSetFrameRate(30);
 
-	periscope.loadMovie("video.mov");
+	periscope.loadMovie("fingers.mov");
 
 	periscope.addComponent(new Resize());
 	periscope.addComponent(new Colours());
 	periscope.addComponent(new GrayScale());
+	periscope.addComponent(new OpticalFlow());
 	periscope.addComponent(new Difference());
 	periscope.addComponent(new Threshold());
 	periscope.addComponent(new Blur());

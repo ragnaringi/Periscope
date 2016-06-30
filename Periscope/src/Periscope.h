@@ -14,6 +14,8 @@
 #include "ofxGui.h"
 #include "ofxOsc.h"
 
+static const int THUMBNAIL_SIZE = 90;
+
 using namespace ofxCv;
 using namespace cv;
 
@@ -51,20 +53,26 @@ private:
 
 class ThumbNail {
 public:
+	ThumbNail(string title) : title(title) {
+		
+	}
 	virtual void draw(int x, int y) {
 		this->x = x; this->y = y;
 		ofSetColor(ofColor::blue);
 		if (highlight) ofSetColor(ofColor::green);
-		ofDrawRectangle(x, y, 40, 40);
+		ofDrawRectangle(x, y, THUMBNAIL_SIZE, THUMBNAIL_SIZE);
+		ofSetColor(ofColor::white);
+		ofDrawBitmapString(title, x + 10, y + 10);
 	}
 	virtual bool pointInside(int x_, int y_) {
-		return ((x_ > x && x_ < x + 40)
-						&& (y_ > y && y_ < y + 40));
+		return ((x_ > x && x_ < x + THUMBNAIL_SIZE)
+						&& (y_ > y && y_ < y + THUMBNAIL_SIZE));
 	}
 	virtual void setHighlighted(bool h) { highlight = h; }
 private:
 	int x, y;
 	bool highlight = false;
+	string title;
 };
 
 class PeriscopeComponent {
@@ -383,6 +391,82 @@ protected:
 	ofParameter<int> minArea, maxArea;
 	ofParameter<bool> holes, showLabels;
 	ContourFinder contourFinder;
+};
+
+#pragma mark - Flow
+class OpticalFlow : public PeriscopeComponent
+{
+public:
+	OpticalFlow() {};
+	void loadGui(ofxPanel *gui) {
+		lkMaxLevel.set("lkMaxLevel", 3, 0, 8);
+		lkMaxLevel.set("lkMaxLevel", 3, 0, 8);
+		lkMaxFeatures.set("lkMaxFeatures", 200, 1, 1000);
+		lkQualityLevel.set("lkQualityLevel", 0.01, 0.001, .02);
+		lkMinDistance.set("lkMinDistance", 4, 1, 16);
+		lkWinSize.set("lkWinSize", 8, 4, 64);
+		fbPyrScale.set("fbPyrScale", .5, 0, .99);
+		fbLevels.set("fbLevels", 4, 1, 8);
+		fbIterations.set("fbIterations", 2, 1, 8);
+		fbPolyN.set("fbPolyN", 7, 5, 10);
+		fbPolySigma.set("fbPolySigma", 1.5, 1.1, 2);
+		fbUseGaussian.set("fbUseGaussian", false);
+		fbWinSize.set("winSize", 32, 4, 64);
+		usefb.set("Use Farneback", true);
+		
+		curFlow = &fb;
+	};
+	void compute(ofImage &src) {
+		cpy = src;
+		
+		if(usefb) {
+			curFlow = &fb;
+			fb.setPyramidScale(fbPyrScale);
+			fb.setNumLevels(fbLevels);
+			fb.setWindowSize(fbWinSize);
+			fb.setNumIterations(fbIterations);
+			fb.setPolyN(fbPolyN);
+			fb.setPolySigma(fbPolySigma);
+			fb.setUseGaussian(fbUseGaussian);
+		} else {
+			curFlow = &lk;
+			lk.setMaxFeatures(lkMaxFeatures);
+			lk.setQualityLevel(lkQualityLevel);
+			lk.setMinDistance(lkMinDistance);
+			lk.setWindowSize(lkWinSize);
+			lk.setMaxLevel(lkMaxLevel);
+		}
+		
+		curFlow->calcOpticalFlow(cpy);
+		
+		// Send Osc
+		ofVec2f flow = fb.getAverageFlow();
+		ofxOscMessage m;
+		m.setAddress("/flow");
+		m.addFloatArg(flow.x);
+		m.addFloatArg(flow.y);
+		sender->sendMessage(m);
+	};
+	void draw(int x, int y) {
+		PeriscopeComponent::draw(x, y);
+		ofPushMatrix();
+		ofTranslate(x, y);
+		curFlow->draw(0,0,cpy.getWidth(),cpy.getHeight());
+		ofPopMatrix();
+	}
+	String getDescription() {
+		return "Flow";
+	}
+protected:
+	ofxCv::FlowFarneback fb;
+	ofxCv::FlowPyrLK lk;
+	
+	ofxCv::Flow* curFlow;
+	
+	ofxPanel gui;
+	ofParameter<float> fbPyrScale, lkQualityLevel, fbPolySigma;
+	ofParameter<int> fbLevels, lkWinSize, fbIterations, fbPolyN, fbWinSize, lkMaxLevel, lkMaxFeatures, lkMinDistance;
+	ofParameter<bool> fbUseGaussian, usefb;
 };
 
 //#pragma mark - Filter
