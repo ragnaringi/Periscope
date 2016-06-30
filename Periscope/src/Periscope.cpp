@@ -11,7 +11,8 @@
 
 #include "Periscope.h"
 
-string titles[7] = {
+const int NUM_THUMBNAILS = 7;
+string titles[NUM_THUMBNAILS] = {
 "Resize",
 "Colours",
 "Flow",
@@ -27,7 +28,7 @@ Periscope::Periscope() : debugMode(true)
 	loadGui();
 	sender.setup(HOST, PORT);
 	
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < NUM_THUMBNAILS; i++) {
 		unique_ptr<ThumbNail> t( new ThumbNail(titles[i]) );
 		thumbNails.push_back(move(t));
 	}
