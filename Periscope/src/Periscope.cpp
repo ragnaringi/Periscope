@@ -151,7 +151,7 @@ void Periscope::draw()
 	int col = 0, row = 0;
 	for (auto const &c : components) {
 		c->draw(col * width, row * height);
-		if ((col++ * width) > ofGetWidth() - width) {
+		if ((col++ * width) >= ofGetWidth() - width) {
 			row++;
 			col = 0;
 		}
