@@ -469,6 +469,45 @@ protected:
 	ofParameter<bool> fbUseGaussian, usefb;
 };
 
+#pragma mark - Erode
+class Erode : public PeriscopeComponent
+{
+public:
+	void loadGui(ofxPanel *gui) {
+		gui->add(iterations.set("Erode", 1, 0, 5));
+	};
+	void compute(ofImage &src) {
+		erode(src, cpy, iterations);
+		src = cpy;
+	};
+	String getDescription() {
+		return "Erode";
+	}
+protected:
+	ofParameter<int> iterations;
+};
+
+#pragma mark - Dilate
+class Dilate : public PeriscopeComponent
+{
+public:
+	void loadGui(ofxPanel *gui) {
+		gui->add(iterations.set("Dilate", 1, 0, 5));
+	};
+	void compute(ofImage &src) {
+		dilate(src, cpy, iterations);
+		src = cpy;
+	};
+	String getDescription() {
+		return "Dilate";
+	}
+protected:
+		ofParameter<int> iterations;
+};
+
+#endif /* Periscope_h */
+
+
 //#pragma mark - Filter
 //class Filter : public PeriscopeComponent
 //{
@@ -485,25 +524,3 @@ protected:
 //protected:
 //	ofParameter<int> hipass;
 //};
-
-//#pragma mark - Erode
-//class Erode : public PeriscopeComponent
-//{
-//public:
-//	Erode() {};
-//	void loadGui(ofxPanel *gui) {
-//		gui->add(erode.set("Erode", 5, 0, 25));
-//		gui->add(erode.set("Dilate", 5, 0, 25));
-//	};
-//	void compute(ofImage &src) {
-//		copy(src, cpy);
-//	};
-//	String getDescription() {
-//		return "Erode";
-//	}
-//protected:
-//	ofParameter<int> erode;
-//	ofParameter<int> dilate;
-//};
-
-#endif /* Periscope_h */
