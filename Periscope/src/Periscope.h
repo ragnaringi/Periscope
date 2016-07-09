@@ -268,9 +268,11 @@ class Difference : public PeriscopeComponent
 public:
 	Difference() {
 		learn.set("Learn", true);
+		destructive.set("Destructive", true);
 	}
 	void loadGui(ofxPanel *gui) {
 		gui->add(learn);
+		gui->add(destructive);
 	}
 	void compute(ofImage &src) {
 		if (learn) {
@@ -279,7 +281,7 @@ public:
 		}
 		// take the absolute difference of prev and current and save it inside diff
 		absdiff(src, bg, cpy);
-		src = cpy;
+		if (destructive) src = cpy;
 		
 		cv::Scalar diffMean;
 		diffMean = mean(toCv(cpy));
@@ -298,6 +300,7 @@ public:
 protected:
 	ofImage bg;
 	ofParameter<bool> learn;
+	ofParameter<bool> destructive;
 };
 
 #pragma mark - Contours
