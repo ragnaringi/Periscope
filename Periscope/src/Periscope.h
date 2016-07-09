@@ -58,11 +58,13 @@ public:
 	}
 	virtual void draw(int x, int y) {
 		this->x = x; this->y = y;
-		ofSetColor(ofColor::blue);
-		if (highlight) ofSetColor(ofColor::green);
-		ofDrawRectangle(x, y, THUMBNAIL_SIZE, THUMBNAIL_SIZE);
 		ofSetColor(ofColor::white);
-		ofDrawBitmapString(title, x + 10, y + 10);
+		ofDrawRectangle(x, y, THUMBNAIL_SIZE, THUMBNAIL_SIZE);
+		ofSetColor(ofColor::black);
+		if (highlight) ofSetColor(ofColor::gray);
+		ofDrawRectangle(x+1, y+1, THUMBNAIL_SIZE-2, THUMBNAIL_SIZE-2);
+		ofSetColor(ofColor::white);
+		ofDrawBitmapString(title, x + 4, y + 20);
 	}
 	virtual bool pointInside(int x_, int y_) {
 		return ((x_ > x && x_ < x + THUMBNAIL_SIZE)
@@ -126,7 +128,7 @@ public:
 		gui->add(scale.set("Scale", 1, 0, 1));
 	};
 	void compute(ofImage &src) {
-		src.resize(320,240);
+		src.resize(320, 240);
 		cpy = src;
 	};
 	String getDescription() {
@@ -235,9 +237,13 @@ protected:
 class Threshold : public PeriscopeComponent
 {
 public:
+	Threshold() {
+		t.set("Threshold", 128, 0, 255);
+		autoT.set("Auto", false);
+	}
 	void loadGui(ofxPanel *gui) {
-		gui->add(t.set("Threshold", 128, 0, 255));
-		gui->add(autoT.set("Auto", false));
+		gui->add(t);
+		gui->add(autoT);
 	}
 	void compute(ofImage &src) {
 		copyGray(src, cpy);
@@ -260,8 +266,11 @@ protected:
 class Difference : public PeriscopeComponent
 {
 public:
+	Difference() {
+		learn.set("Learn", true);
+	}
 	void loadGui(ofxPanel *gui) {
-		gui->add(learn.set("Learn", true));
+		gui->add(learn);
 	}
 	void compute(ofImage &src) {
 		if (learn) {
@@ -337,7 +346,6 @@ public:
 			// Circumference
 			m.addIntArg(contourFinder.getArcLength(i));
 			sender->sendMessage(m);
-			// TODO: send bundle?
 		}
 		sender->sendBundle(b);
 	}

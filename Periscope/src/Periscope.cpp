@@ -138,6 +138,8 @@ void Periscope::update()
 
 void Periscope::draw()
 {
+	ofSetBackgroundColor(ofColor::black);
+	
 	for (int i = thumbNails.size(); i --> 0;) {
 		auto const &t = thumbNails[i];
 		t->draw(i * (THUMBNAIL_SIZE + 1), ofGetHeight() - THUMBNAIL_SIZE);
