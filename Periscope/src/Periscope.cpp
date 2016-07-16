@@ -155,7 +155,13 @@ void Periscope::draw()
 
 	int col = 0, row = 0;
 	for (auto const &c : components) {
-		c->draw(col * width, row * height);
+		int x = col * width;
+		int y = row * height;
+		if (c->selected) {
+			x = mouseX - (c->getBounds().getWidth() * 0.5f);
+			y = mouseY - (c->getBounds().getHeight() * 0.5f);;
+		}
+		c->draw(x, y);
 		if ((col++ * width) >= ofGetWidth() - width) {
 			row++;
 			col = 0;
@@ -166,7 +172,37 @@ void Periscope::draw()
 }
 
 //--------------------------------------------------------------
-void Periscope::mouseMoved(int x, int y ){
+void Periscope::mouseDragged(int x, int y, int button)
+{
+	mouseX = x; mouseY = y;
+	for (int i = 0; i < components.size(); ++i) {
+		
+		auto const &c = components[i];
+		if (!c->selected) continue;
+			
+		auto const &prev = components[(i-1)%components.size()];
+		auto const &next = components[(i+1)%components.size()];
+		// Moving left
+		if (c->getBounds().getCenter().x < prev->getBounds().getMaxX()
+				&& c->getBounds().getMinY() >= prev->getBounds().getMinY() - 20
+				&& c->getBounds().getMinY() <= prev->getBounds().getMinY() + 20) {
+			std::swap(components[i], components[i-1]);
+			break;
+		}
+		// Moving right
+		else if (c->getBounds().getCenter().x > next->getBounds().getMinX()
+				&& c->getBounds().getMinY() >= next->getBounds().getMinY() - 20
+				&& c->getBounds().getMinY() <= next->getBounds().getMinY() + 20) {
+			std::swap(components[i], components[i+1]);
+			break;
+		}
+	}
+}
+
+//--------------------------------------------------------------
+void Periscope::mouseMoved(int x, int y)
+{
+	mouseX = x; mouseY = y;
 	for (auto const &c : components) {
 		c->setHighlighted(c->pointInside(x, y));
 	}
@@ -176,16 +212,28 @@ void Periscope::mouseMoved(int x, int y ){
 }
 
 //--------------------------------------------------------------
-void Periscope::mousePressed(int x, int y, int button){
-}
-
-//--------------------------------------------------------------
-void Periscope::mouseReleased(int x, int y, int button){
+void Periscope::mousePressed(int x, int y, int button)
+{
+	mouseX = x; mouseY = y;
 	for (int i = components.size(); i --> 0;) {
 		auto const &c = components[i];
 		if (c->pointInside(x, y)) {
-			// TODO: Show full size
+			c->selected = true;
 			break;
+		}
+	}
+}
+
+//--------------------------------------------------------------
+void Periscope::mouseReleased(int x, int y, int button)
+{
+	mouseX = x; mouseY = y;
+	
+	for (int i = components.size(); i --> 0;) {
+		auto const &c = components[i];
+		c->selected = false;
+		if (c->pointInside(x, y)) {
+			// TODO: Show full size
 		}
 	}
 	

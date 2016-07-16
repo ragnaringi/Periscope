@@ -37,6 +37,7 @@ public:
 	void update();
 	void draw();
 	
+	void mouseDragged(int x, int y, int button);
 	void mousePressed(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
 	void mouseMoved(int x, int y);
@@ -50,6 +51,7 @@ private:
 	unique_ptr<ofBaseVideoDraws> source;
 	ofImage src;
 	ofxOscSender sender;
+	int mouseX, mouseY = 0;
 };
 
 class ThumbNail {
@@ -113,6 +115,7 @@ public:
 	void setHighlighted(bool h) { highlight = h; }
 	bool shouldClose() { return close; };
 	bool isBypassed() { return bypass; };
+	bool selected = false;
 protected:
 	ofRectangle bounds;
 	ofParameter<bool> bypass;
