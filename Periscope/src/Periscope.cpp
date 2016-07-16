@@ -122,11 +122,10 @@ void Periscope::update()
 	
 	for (int i = 0; i < components.size(); i++) {
 		auto const &c = components[i];
-		if (c->isBypassed()) continue;
-		c->compute(src);
-		if (c->shouldClose()) {
-			toRemove.push_back(i);
+		if (!c->isBypassed()) {
+			c->compute(src);
 		}
+		if (c->shouldClose()) toRemove.push_back(i);
 	}
 	
 	if (toRemove.size() > 0) {
@@ -151,7 +150,7 @@ void Periscope::draw()
 		return;
 	}
 		
-	float width = src.getWidth();
+	float width  = src.getWidth();
 	float height = src.getHeight();
 
 	int col = 0, row = 0;
@@ -178,6 +177,10 @@ void Periscope::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void Periscope::mousePressed(int x, int y, int button){
+}
+
+//--------------------------------------------------------------
+void Periscope::mouseReleased(int x, int y, int button){
 	for (int i = components.size(); i --> 0;) {
 		auto const &c = components[i];
 		if (c->pointInside(x, y)) {
