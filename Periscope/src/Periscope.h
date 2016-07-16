@@ -92,7 +92,7 @@ public:
 	};
 	virtual void compute(ofImage &src) = 0;
 	virtual void draw(int x, int y) {
-		this->x = x; this->y = y;
+		bounds.set(x, y, cpy.getWidth(), cpy.getHeight());
 		ofSetColor(ofColor::white);
 		if (cpy.isAllocated()) {
 			if (highlight) ofSetColor(ofColor::red);
@@ -104,15 +104,17 @@ public:
 		localGui.draw();
 	}
 	virtual String getDescription() = 0;
-	virtual bool pointInside(int x_, int y_) {
-		return ((x_ > x && x_ < x + cpy.getWidth())
-						&& (y_ > y && y_ < y + cpy.getHeight()));
+	ofRectangle& getBounds() {
+		return bounds;
 	}
-	virtual void setHighlighted(bool h) { highlight = h; }
+	bool pointInside(int x, int y) {
+		return getBounds().inside(x, y);
+	}
+	void setHighlighted(bool h) { highlight = h; }
 	bool shouldClose() { return close; };
 	bool isBypassed() { return bypass; };
 protected:
-	int x, y, w, h;
+	ofRectangle bounds;
 	ofParameter<bool> bypass;
 	ofParameter<bool> close;
 	bool highlight = false;
