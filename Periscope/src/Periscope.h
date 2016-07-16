@@ -147,49 +147,14 @@ public:
 	void compute(ofImage &src) {
 		cpy = src;
 		
-		ofPixels pix = cpy.getPixels();
-		
-		int width = pix.getWidth();
-		int height = pix.getHeight();
-		int numChannels = pix.getNumChannels();
-		const int numPixels = width * height;
-		
-		unsigned char* pixels = pix.getData();
-		
-		float red = 0.f;
-		float green = 0.f;
-		float blue = 0.f;
-		
-		if (numChannels >= 3)
-		{
-			int totalR = 0;
-			int totalG = 0;
-			int totalB = 0;
-			
-			for (int i = 0; i < numPixels; i++)
-			{
-				int base = i * numChannels;
-				
-				unsigned char r = pixels[base];
-				unsigned char g = pixels[base + 1];
-				unsigned char b = pixels[base + 2];
-				
-				totalR	+= r;
-				totalG	+= g;
-				totalB	+= b;
-			}
-			
-			red = totalR / numPixels;
-			green = totalG / numPixels;
-			blue = totalB / numPixels;
-		}
+		cv::Scalar colours = mean(toCv(cpy));
 		
 		// Send Osc
 		ofxOscMessage m;
 		m.setAddress("/colours");
-		m.addFloatArg(red);
-		m.addFloatArg(green);
-		m.addFloatArg(blue);
+		m.addFloatArg(colours[0]);
+		m.addFloatArg(colours[1]);
+		m.addFloatArg(colours[2]);
 		sender->sendMessage(m);
 	};
 	String getDescription() {
@@ -217,8 +182,11 @@ protected:
 class Blur : public PeriscopeComponent
 {
 public:
+	Blur() {
+		blurAmt.set("Blur", 5, 0, 25);
+	}
 	void loadGui(ofxPanel *gui) {
-		gui->add(blurAmt.set("Blur", 5, 0, 25));
+		gui->add(blurAmt);
 	};
 	void compute(ofImage &src) {
 		if (blurAmt > 0) {;
@@ -268,11 +236,9 @@ class Difference : public PeriscopeComponent
 public:
 	Difference() {
 		learn.set("Learn", true);
-		destructive.set("Destructive", true);
 	}
 	void loadGui(ofxPanel *gui) {
 		gui->add(learn);
-		gui->add(destructive);
 	}
 	void compute(ofImage &src) {
 		if (learn) {
@@ -281,10 +247,9 @@ public:
 		}
 		// take the absolute difference of prev and current and save it inside diff
 		absdiff(src, bg, cpy);
-		if (destructive) src = cpy;
+		src = cpy;
 		
-		cv::Scalar diffMean;
-		diffMean = mean(toCv(cpy));
+		cv::Scalar diffMean = mean(toCv(cpy));
 		
 		// Send Osc
 		ofxOscMessage m;
@@ -300,7 +265,6 @@ public:
 protected:
 	ofImage bg;
 	ofParameter<bool> learn;
-	ofParameter<bool> destructive;
 };
 
 #pragma mark - Contours
@@ -310,17 +274,22 @@ public:
 	Contours() {
 		contourFinder.setMinAreaRadius(1);
 		contourFinder.setMaxAreaRadius(200);
-		contourFinder.setThreshold(0); // No thresholding as that's available as separete component
+		contourFinder.setThreshold(0); // No thresholding as that's available as separate component
 		// wait for half a frame before forgetting something
 		contourFinder.getTracker().setPersistence(15);
 		// an object can move up to 32 pixels per frame
 		contourFinder.getTracker().setMaximumDistance(32);
+		
+		minArea.set("Min area", 10, 1, 100);
+		maxArea.set("Max area", 200, 1, 500);
+		holes.set("Holes", false);
+		showLabels.set("Show labels", false);
 	}
 	void loadGui(ofxPanel *gui) {
-		gui->add(minArea.set("Min area", 10, 1, 100));
-		gui->add(maxArea.set("Max area", 200, 1, 500));
-		gui->add(holes.set("Holes", false));
-		gui->add(showLabels.set("Show labels", false));
+		gui->add(minArea);
+		gui->add(maxArea);
+		gui->add(holes);
+		gui->add(showLabels);
 	}
 	void compute(ofImage &src) {
 		copyGray(src, cpy);
@@ -408,8 +377,7 @@ protected:
 class OpticalFlow : public PeriscopeComponent
 {
 public:
-	OpticalFlow() {};
-	void loadGui(ofxPanel *gui) {
+	OpticalFlow() {
 		lkMaxLevel.set("lkMaxLevel", 3, 0, 8);
 		lkMaxLevel.set("lkMaxLevel", 3, 0, 8);
 		lkMaxFeatures.set("lkMaxFeatures", 200, 1, 1000);
@@ -426,6 +394,8 @@ public:
 		usefb.set("Use Farneback", true);
 		
 		curFlow = &fb;
+	};
+	void loadGui(ofxPanel *gui) {
 	};
 	void compute(ofImage &src) {
 		cpy = src;
@@ -484,8 +454,11 @@ protected:
 class Erode : public PeriscopeComponent
 {
 public:
+	Erode() {
+		iterations.set("Erode", 1, 0, 5);
+	}
 	void loadGui(ofxPanel *gui) {
-		gui->add(iterations.set("Erode", 1, 0, 5));
+		gui->add(iterations);
 	};
 	void compute(ofImage &src) {
 		erode(src, cpy, iterations);
@@ -502,8 +475,11 @@ protected:
 class Dilate : public PeriscopeComponent
 {
 public:
+	Dilate() {
+		iterations.set("Dilate", 1, 0, 5);
+	}
 	void loadGui(ofxPanel *gui) {
-		gui->add(iterations.set("Dilate", 1, 0, 5));
+		gui->add(iterations);
 	};
 	void compute(ofImage &src) {
 		dilate(src, cpy, iterations);
@@ -514,6 +490,32 @@ public:
 	}
 protected:
 		ofParameter<int> iterations;
+};
+
+
+#pragma mark - Canny Lines
+class CannyEdges : public PeriscopeComponent
+{
+public:
+	CannyEdges() {
+		thresh1.set("Threshold 1", 1, 0, 200);
+		thresh2.set("Threshold 2", 30, 0, 200);
+	}
+	void loadGui(ofxPanel *gui) {
+		gui->add(thresh1);
+		gui->add(thresh2);
+	};
+	void compute(ofImage &src) {
+		copyGray(src, cpy); // grayscale 8-bit input and output
+		ofxCv::Canny(cpy, cpy, thresh1, thresh2);
+		src = cpy;
+	};
+	String getDescription() {
+		return "Canny";
+	}
+protected:
+	ofParameter<int> thresh1;
+	ofParameter<int> thresh2;
 };
 
 #endif /* Periscope_h */
