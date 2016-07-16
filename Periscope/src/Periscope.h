@@ -22,6 +22,22 @@ using namespace cv;
 class PeriscopeComponent;
 class ThumbNail;
 
+class MouseAware {
+public:
+	ofRectangle& getBounds() {
+		return bounds;
+	}
+	bool pointInside(int x, int y) {
+		return getBounds().inside(x, y);
+	}
+	void setHighlighted(bool h) {
+		highlight = h;
+	}
+protected:
+	ofRectangle bounds;
+	bool highlight = false;
+};
+
 class Periscope {
 public:
 	Periscope();
@@ -54,33 +70,26 @@ private:
 	int mouseX, mouseY = 0;
 };
 
-class ThumbNail {
+class ThumbNail : public MouseAware {
 public:
 	ThumbNail(string title) : title(title) {
 		
 	}
 	virtual void draw(int x, int y) {
-		this->x = x; this->y = y;
+		bounds.set(x, y, THUMBNAIL_SIZE, THUMBNAIL_SIZE);
 		ofSetColor(ofColor::white);
-		ofDrawRectangle(x, y, THUMBNAIL_SIZE, THUMBNAIL_SIZE);
+		ofDrawRectangle(bounds);
 		ofSetColor(ofColor::black);
 		if (highlight) ofSetColor(ofColor::gray);
 		ofDrawRectangle(x+1, y+1, THUMBNAIL_SIZE-2, THUMBNAIL_SIZE-2);
 		ofSetColor(ofColor::white);
 		ofDrawBitmapString(title, x + 4, y + 20);
 	}
-	virtual bool pointInside(int x_, int y_) {
-		return ((x_ > x && x_ < x + THUMBNAIL_SIZE)
-						&& (y_ > y && y_ < y + THUMBNAIL_SIZE));
-	}
-	virtual void setHighlighted(bool h) { highlight = h; }
 private:
-	int x, y;
-	bool highlight = false;
 	string title;
 };
 
-class PeriscopeComponent {
+class PeriscopeComponent : public MouseAware {
 public:
 	PeriscopeComponent() {
 		localGui.setup();
@@ -106,21 +115,12 @@ public:
 		localGui.draw();
 	}
 	virtual String getDescription() = 0;
-	ofRectangle& getBounds() {
-		return bounds;
-	}
-	bool pointInside(int x, int y) {
-		return getBounds().inside(x, y);
-	}
-	void setHighlighted(bool h) { highlight = h; }
 	bool shouldClose() { return close; };
 	bool isBypassed() { return bypass; };
 	bool selected = false;
 protected:
-	ofRectangle bounds;
 	ofParameter<bool> bypass;
 	ofParameter<bool> close;
-	bool highlight = false;
 	ofImage cpy;
 	ofxOscSender *sender;
 	ofxPanel localGui;
