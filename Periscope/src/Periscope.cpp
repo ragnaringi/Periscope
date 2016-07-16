@@ -25,8 +25,8 @@ string titles[NUM_THUMBNAILS] = {
 	"CannyEdges"
 };
 
-Periscope::Periscope() : debugMode(true)
-{
+//--------------------------------------------------------------
+Periscope::Periscope() : debugMode(true) {
 	gui.setup();
 	loadGui();
 	sender.setup(HOST, PORT);
@@ -37,14 +37,14 @@ Periscope::Periscope() : debugMode(true)
 	}
 }
 
-Periscope::~Periscope()
-{
+//--------------------------------------------------------------
+Periscope::~Periscope() {
 	components.clear();
 	thumbNails.clear();
 }
 
-void Periscope::loadGui()
-{
+//--------------------------------------------------------------
+void Periscope::loadGui() {
 	gui.clear();
 	gui.setPosition(ofGetWidth() - 200, 500);
 	gui.add(useWebCam.set("Use WebCam", false));
@@ -54,15 +54,15 @@ void Periscope::loadGui()
 	}
 }
 
-void Periscope::openPanel()
-{
+//--------------------------------------------------------------
+void Periscope::openPanel() {
 	ofFileDialogResult result = ofSystemLoadDialog();
 	cout << result.getPath() << endl;
 	loadMovie(result.getPath());
 }
 
-void Periscope::loadMovie(string title)
-{
+//--------------------------------------------------------------
+void Periscope::loadMovie(string title) {
 	unique_ptr<ofVideoPlayer> player(new ofVideoPlayer);
 	if (!player->load(title)) {
 		cout << "Error loading movie: " << title << endl;
@@ -72,33 +72,33 @@ void Periscope::loadMovie(string title)
 	source = move(player);
 }
 
-void Periscope::selectWebCam()
-{
+//--------------------------------------------------------------
+void Periscope::selectWebCam() {
 	unique_ptr<ofVideoGrabber> cam(new ofVideoGrabber);
 	cam->setup(320, 240);
 	source = move(cam);
 }
 
-void Periscope::addComponent(PeriscopeComponent *c_)
-{
+//--------------------------------------------------------------
+void Periscope::addComponent(PeriscopeComponent *c_) {
 	c_->loadGui(&gui);
 	c_->loadOsc(&sender);
 	unique_ptr<PeriscopeComponent> c( c_ );
 	components.push_back(move(c));
 }
 
-void Periscope::removeLast()
-{
+//--------------------------------------------------------------
+void Periscope::removeLast() {
 	components.pop_back();
 }
 
-void Periscope::setDebug(bool debug)
-{
+//--------------------------------------------------------------
+void Periscope::setDebug(bool debug) {
 	debugMode = debug;
 }
 
-void Periscope::update()
-{
+//--------------------------------------------------------------
+void Periscope::update() {
 	if (useWebCam) {
 		selectWebCam();
 		useWebCam = false;
@@ -136,8 +136,8 @@ void Periscope::update()
 	}
 }
 
-void Periscope::draw()
-{
+//--------------------------------------------------------------
+void Periscope::draw() {
 	ofSetBackgroundColor(ofColor::black);
 	
 	for (int i = thumbNails.size(); i --> 0;) {
@@ -172,8 +172,7 @@ void Periscope::draw()
 }
 
 //--------------------------------------------------------------
-void Periscope::mouseDragged(int x, int y, int button)
-{
+void Periscope::mouseDragged(int x, int y, int button) {
 	mouseX = x; mouseY = y;
 	
 	for (int i = 0; i < components.size(); ++i) {
@@ -184,19 +183,22 @@ void Periscope::mouseDragged(int x, int y, int button)
 		//
 		// Horizontal
 		//
-		auto const &prev = components[(i-1)%components.size()];
-		auto const &next = components[(i+1)%components.size()];
+		auto const &prev = components[ofClamp((i-1), 0, components.size()-1)];
+		auto const &next = components[ofClamp((i+1), 0, components.size()-1)];
+		
 		// Moving left
 		if (c->getBounds().getCenter().x < prev->getBounds().getRight()
 				&& c->getBounds().getTop() >= prev->getBounds().getTop() - 20
-				&& c->getBounds().getTop() <= prev->getBounds().getTop() + 20) {
+				&& c->getBounds().getTop() <= prev->getBounds().getTop() + 20
+				&& c != prev) {
 			std::swap(components[i], components[i-1]);
 			break;
 		}
 		// Moving right
 		else if (c->getBounds().getCenter().x > next->getBounds().getLeft()
 				&& c->getBounds().getTop() >= next->getBounds().getTop() - 20
-				&& c->getBounds().getTop() <= next->getBounds().getTop() + 20) {
+				&& c->getBounds().getTop() <= next->getBounds().getTop() + 20
+				&& c != next) {
 			std::swap(components[i], components[i+1]);
 			break;
 		}
@@ -228,8 +230,7 @@ void Periscope::mouseDragged(int x, int y, int button)
 }
 
 //--------------------------------------------------------------
-void Periscope::mouseMoved(int x, int y)
-{
+void Periscope::mouseMoved(int x, int y) {
 	mouseX = x; mouseY = y;
 	for (auto const &c : components) {
 		c->setHighlighted(c->pointInside(x, y));
@@ -240,21 +241,18 @@ void Periscope::mouseMoved(int x, int y)
 }
 
 //--------------------------------------------------------------
-void Periscope::mousePressed(int x, int y, int button)
-{
+void Periscope::mousePressed(int x, int y, int button) {
 	mouseX = x; mouseY = y;
 	for (int i = components.size(); i --> 0;) {
 		auto const &c = components[i];
-		if (c->pointInside(x, y)) {
-			c->selected = true;
-			break;
-		}
+		if (!c->pointInside(x, y)) continue;
+		c->selected = true;
+		break;
 	}
 }
 
 //--------------------------------------------------------------
-void Periscope::mouseReleased(int x, int y, int button)
-{
+void Periscope::mouseReleased(int x, int y, int button) {
 	mouseX = x; mouseY = y;
 	
 	for (int i = components.size(); i --> 0;) {
