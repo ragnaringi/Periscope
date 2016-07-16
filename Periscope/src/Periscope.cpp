@@ -175,26 +175,54 @@ void Periscope::draw()
 void Periscope::mouseDragged(int x, int y, int button)
 {
 	mouseX = x; mouseY = y;
+	
 	for (int i = 0; i < components.size(); ++i) {
 		
 		auto const &c = components[i];
 		if (!c->selected) continue;
-			
+		
+		//
+		// Horizontal
+		//
 		auto const &prev = components[(i-1)%components.size()];
 		auto const &next = components[(i+1)%components.size()];
 		// Moving left
-		if (c->getBounds().getCenter().x < prev->getBounds().getMaxX()
-				&& c->getBounds().getMinY() >= prev->getBounds().getMinY() - 20
-				&& c->getBounds().getMinY() <= prev->getBounds().getMinY() + 20) {
+		if (c->getBounds().getCenter().x < prev->getBounds().getRight()
+				&& c->getBounds().getTop() >= prev->getBounds().getTop() - 20
+				&& c->getBounds().getTop() <= prev->getBounds().getTop() + 20) {
 			std::swap(components[i], components[i-1]);
 			break;
 		}
 		// Moving right
-		else if (c->getBounds().getCenter().x > next->getBounds().getMinX()
-				&& c->getBounds().getMinY() >= next->getBounds().getMinY() - 20
-				&& c->getBounds().getMinY() <= next->getBounds().getMinY() + 20) {
+		else if (c->getBounds().getCenter().x > next->getBounds().getLeft()
+				&& c->getBounds().getTop() >= next->getBounds().getTop() - 20
+				&& c->getBounds().getTop() <= next->getBounds().getTop() + 20) {
 			std::swap(components[i], components[i+1]);
 			break;
+		}
+		//
+		// Vertical
+		//
+		int centerY = c->getBounds().getCenter().y;
+		// Moving up
+		for (int j = 0; j < i; ++j) {
+			auto const &anotherC = components[j];
+			if (centerY <=  anotherC->getBounds().getBottom() - 30
+					&& c->getBounds().getCenter().x >= anotherC->getBounds().getCenter().x - 20
+					&& c->getBounds().getCenter().x <= anotherC->getBounds().getCenter().x + 20) {
+				std::swap(components[i], components [j]);
+				break;
+			}
+		}
+		// Moving down
+		for (int y = i+1; y < components.size(); ++y) {
+			auto const &anotherC = components[y];
+			if (centerY >=  anotherC->getBounds().getTop() + 30
+					&& c->getBounds().getCenter().x >= anotherC->getBounds().getCenter().x - 20
+					&& c->getBounds().getCenter().x <= anotherC->getBounds().getCenter().x + 20) {
+				std::swap(components[i], components [y]);
+				break;
+			}
 		}
 	}
 }
