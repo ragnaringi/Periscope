@@ -94,6 +94,7 @@ public:
 		localGui.setup();
 		localGui.add(bypass.set("Bypass", false));
 		localGui.add(close.set("Close", false));
+		localGui.add(useRaw.set("Use Raw", false));
 	}
 	virtual ~PeriscopeComponent() {};
 	virtual void loadGui(ofxPanel *gui) = 0;
@@ -115,11 +116,13 @@ public:
 		localGui.draw();
 	}
 	bool shouldClose() { return close; };
+	bool shouldUseRaw() { return useRaw; };
 	bool isBypassed() { return bypass; };
 	bool selected = false;
 protected:
 	ofParameter<bool> bypass;
 	ofParameter<bool> close;
+	ofParameter<bool> useRaw;
 	ofImage cpy;
 	ofxOscSender *sender;
 	ofxPanel localGui;

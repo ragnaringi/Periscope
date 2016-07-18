@@ -121,8 +121,11 @@ void Periscope::update() {
 	std::vector<int> toRemove; 
 	
 	for (int i = 0; i < components.size(); i++) {
-		auto const &c = components[i];
+		auto const &c = components[i].get();
 		if (!c->isBypassed()) {
+			if (c->shouldUseRaw()) {
+				ofxCv::copy(*source, src);
+			}
 			c->compute(src);
 		}
 		if (c->shouldClose()) toRemove.push_back(i);
