@@ -11,7 +11,7 @@
 
 #include "Periscope.h"
 
-const int NUM_THUMBNAILS = 10;
+const int NUM_THUMBNAILS = 11;
 string titles[NUM_THUMBNAILS] = {
 	"Resize",
 	"Colours",
@@ -22,7 +22,8 @@ string titles[NUM_THUMBNAILS] = {
 	"Contours",
 	"Erode",
 	"Dilate",
-	"Canny"
+	"Canny",
+	"Sobel"
 };
 
 //--------------------------------------------------------------
@@ -300,6 +301,9 @@ void Periscope::mouseReleased(int x, int y, int button) {
 					break;
 				case 9:
 					p = new Canny;
+					break;
+				case 10:
+					p = new Sobel;
 					break;
 				default:
 					break;

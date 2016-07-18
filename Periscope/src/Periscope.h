@@ -501,7 +501,7 @@ protected:
 };
 
 
-#pragma mark - Canny Lines
+#pragma mark - Canny Edge Detection
 class Canny : public PeriscopeComponent
 {
 public:
@@ -525,6 +525,25 @@ protected:
 	ofParameter<int> thresh1;
 	ofParameter<int> thresh2;
 };
+
+#pragma mark - Sobel Edge Detection
+class Sobel : public PeriscopeComponent
+{
+public:
+	Sobel() {
+	}
+	void loadGui(ofxPanel *gui) {
+	};
+	void compute(ofImage &src) {
+		ofxCv::Sobel(src, cpy);
+		src = cpy;
+	};
+	string getTitle() {
+		return "Sobel";
+	}
+protected:
+};
+
 
 #endif /* Periscope_h */
 
