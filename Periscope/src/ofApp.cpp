@@ -17,7 +17,6 @@ void ofApp::setup(){
 	periscope.addComponent(new Resize);
 	periscope.addComponent(new Colours);
 	periscope.addComponent(new GrayScale);
-	periscope.addComponent(new OpticalFlow);
 	periscope.addComponent(new Difference);
 	periscope.addComponent(new Blur);
 	periscope.addComponent(new Threshold);
@@ -26,20 +25,17 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-
 	periscope.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
 	ofSetColor(255);
 	periscope.draw();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-	
 	switch (key) {
 		case ' ':
 			periscope.setDebug( !periscope.getDebug() );
