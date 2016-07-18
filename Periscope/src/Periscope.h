@@ -100,6 +100,7 @@ public:
 	virtual void loadOsc(ofxOscSender *sender) {
 		this->sender = sender;
 	};
+	virtual string getTitle() = 0;
 	virtual void compute(ofImage &src) = 0;
 	virtual void draw(int x, int y) {
 		bounds.set(x, y, cpy.getWidth(), cpy.getHeight());
@@ -109,11 +110,10 @@ public:
 			cpy.update();
 			cpy.draw(x, y);
 		}
-		ofDrawBitmapString(getDescription(), x + 10, y + 10);
+		ofDrawBitmapString(getTitle(), x + 10, y + 10);
 		localGui.setPosition(x, y);
 		localGui.draw();
 	}
-	virtual string getDescription() = 0;
 	bool shouldClose() { return close; };
 	bool isBypassed() { return bypass; };
 	bool selected = false;
@@ -136,7 +136,7 @@ public:
 		src.resize(320, 240);
 		cpy = src;
 	};
-	string getDescription() {
+	string getTitle() {
 		return "Resize";
 	}
 protected:
@@ -162,7 +162,7 @@ public:
 		m.addFloatArg(colours[2]);
 		sender->sendMessage(m);
 	};
-	string getDescription() {
+	string getTitle() {
 		return "Colours";
 	}
 protected:
@@ -177,7 +177,7 @@ public:
 		ofxCv::copyGray(src, cpy);
 		src = cpy;
 	};
-	string getDescription() {
+	string getTitle() {
 		return "Grayscale";
 	}
 protected:
@@ -199,7 +199,7 @@ public:
 		}
 		ofxCv::copy(src, cpy);
 	};
-	string getDescription() {
+	string getTitle() {
 		return "Blur";
 	}
 protected:
@@ -227,7 +227,7 @@ public:
 		}
 		ofxCv::copy(cpy, src);
 	}
-	string getDescription() {
+	string getTitle() {
 		return "Threshold";
 	}
 protected:
@@ -264,7 +264,7 @@ public:
 		m.addFloatArg(diffMean[2]);
 		sender->sendMessage(m);
 	}
-	string getDescription() {
+	string getTitle() {
 		return "Difference";
 	}
 protected:
@@ -369,7 +369,7 @@ public:
 		}
 		ofPopMatrix();
 	}
-	string getDescription() {
+	string getTitle() {
 		return "Contours";
 	}
 protected:
@@ -440,7 +440,7 @@ public:
 		curFlow->draw(0,0,cpy.getWidth(),cpy.getHeight());
 		ofPopMatrix();
 	}
-	string getDescription() {
+	string getTitle() {
 		return "Flow";
 	}
 protected:
@@ -469,7 +469,7 @@ public:
 		ofxCv::erode(src, cpy, iterations);
 		src = cpy;
 	};
-	string getDescription() {
+	string getTitle() {
 		return "Erode";
 	}
 protected:
@@ -490,7 +490,7 @@ public:
 		ofxCv::dilate(src, cpy, iterations);
 		src = cpy;
 	};
-	string getDescription() {
+	string getTitle() {
 		return "Dilate";
 	}
 protected:
@@ -515,7 +515,7 @@ public:
 		ofxCv::Canny(cpy, cpy, thresh1, thresh2);
 		src = cpy;
 	};
-	string getDescription() {
+	string getTitle() {
 		return "Canny";
 	}
 protected:
