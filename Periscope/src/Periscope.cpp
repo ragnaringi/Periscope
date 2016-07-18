@@ -22,7 +22,7 @@ string titles[NUM_THUMBNAILS] = {
 	"Contours",
 	"Erode",
 	"Dilate",
-	"CannyEdges"
+	"Canny"
 };
 
 //--------------------------------------------------------------
@@ -115,7 +115,7 @@ void Periscope::update() {
 	
 	if(!source->isFrameNew()) return;
 	
-	copy(*source, src);
+	ofxCv::copy(*source, src);
 	src.update();
 	
 	std::vector<int> toRemove; 
@@ -269,34 +269,34 @@ void Periscope::mouseReleased(int x, int y, int button) {
 			PeriscopeComponent *p;
 			switch (i) {
 				case 0:
-					p = new Resize();
+					p = new Resize;
 					break;
 				case 1:
-					p = new Colours();
+					p = new Colours;
 					break;
 				case 2:
-					p = new OpticalFlow();
+					p = new OpticalFlow;
 					break;
 				case 3:
-					p = new Difference();
+					p = new Difference;
 					break;
 				case 4:
-					p = new Threshold();
+					p = new Threshold;
 					break;
 				case 5:
-					p = new Blur();
+					p = new Blur;
 					break;
 				case 6:
-					p = new Contours();
+					p = new Contours;
 					break;
 				case 7:
-					p = new Erode();
+					p = new Erode;
 					break;
 				case 8:
-					p = new Dilate();
+					p = new Dilate;
 					break;
 				case 9:
-					p = new CannyEdges();
+					p = new Canny;
 					break;
 				default:
 					break;

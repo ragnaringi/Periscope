@@ -16,8 +16,7 @@
 
 static const int THUMBNAIL_SIZE = 90;
 
-using namespace ofxCv;
-using namespace cv;
+//using namespace cv;
 
 class PeriscopeComponent;
 class ThumbNail;
@@ -114,7 +113,7 @@ public:
 		localGui.setPosition(x, y);
 		localGui.draw();
 	}
-	virtual String getDescription() = 0;
+	virtual string getDescription() = 0;
 	bool shouldClose() { return close; };
 	bool isBypassed() { return bypass; };
 	bool selected = false;
@@ -137,7 +136,7 @@ public:
 		src.resize(320, 240);
 		cpy = src;
 	};
-	String getDescription() {
+	string getDescription() {
 		return "Resize";
 	}
 protected:
@@ -153,7 +152,7 @@ public:
 	void compute(ofImage &src) {
 		cpy = src;
 		
-		cv::Scalar colours = mean(toCv(cpy));
+		cv::Scalar colours = mean(ofxCv::toCv(cpy));
 		
 		// Send Osc
 		ofxOscMessage m;
@@ -163,7 +162,7 @@ public:
 		m.addFloatArg(colours[2]);
 		sender->sendMessage(m);
 	};
-	String getDescription() {
+	string getDescription() {
 		return "Colours";
 	}
 protected:
@@ -175,10 +174,10 @@ class GrayScale : public PeriscopeComponent
 public:
 	void loadGui(ofxPanel *gui) {};
 	void compute(ofImage &src) {
-		copyGray(src, cpy);
+		ofxCv::copyGray(src, cpy);
 		src = cpy;
 	};
-	String getDescription() {
+	string getDescription() {
 		return "Grayscale";
 	}
 protected:
@@ -196,11 +195,11 @@ public:
 	};
 	void compute(ofImage &src) {
 		if (blurAmt > 0) {;
-			blur(src, blurAmt);
+			ofxCv::blur(src, blurAmt);
 		}
-		copy(src, cpy);
+		ofxCv::copy(src, cpy);
 	};
-	String getDescription() {
+	string getDescription() {
 		return "Blur";
 	}
 protected:
@@ -220,15 +219,15 @@ public:
 		gui->add(autoT);
 	}
 	void compute(ofImage &src) {
-		copyGray(src, cpy);
+		ofxCv::copyGray(src, cpy);
 		if(autoT) {
-			autothreshold(cpy);
+			ofxCv::autothreshold(cpy);
 		} else {
-			threshold(cpy, t);
+			ofxCv::threshold(cpy, t);
 		}
-		copy(cpy, src);
+		ofxCv::copy(cpy, src);
 	}
-	String getDescription() {
+	string getDescription() {
 		return "Threshold";
 	}
 protected:
@@ -248,14 +247,14 @@ public:
 	}
 	void compute(ofImage &src) {
 		if (learn) {
-			copy(src, bg);
+			ofxCv::copy(src, bg);
 			learn = false;
 		}
 		// take the absolute difference of prev and current and save it inside diff
-		absdiff(src, bg, cpy);
+		ofxCv::absdiff(src, bg, cpy);
 		src = cpy;
 		
-		cv::Scalar diffMean = mean(toCv(cpy));
+		cv::Scalar diffMean = mean(ofxCv::toCv(cpy));
 		
 		// Send Osc
 		ofxOscMessage m;
@@ -265,7 +264,7 @@ public:
 		m.addFloatArg(diffMean[2]);
 		sender->sendMessage(m);
 	}
-	String getDescription() {
+	string getDescription() {
 		return "Difference";
 	}
 protected:
@@ -298,12 +297,12 @@ public:
 		gui->add(showLabels);
 	}
 	void compute(ofImage &src) {
-		copyGray(src, cpy);
+		ofxCv::copyGray(src, cpy);
 		contourFinder.setMinAreaRadius(minArea);
 		contourFinder.setMaxAreaRadius(maxArea);
 		contourFinder.findContours(cpy);
 		contourFinder.setFindHoles(holes);
-		copy(cpy, src);
+		ofxCv::copy(cpy, src);
 		
 		// Send Osc
 		ofxOscBundle b;
@@ -333,17 +332,17 @@ public:
 		ofTranslate(x, y);
 		ofSetColor(ofColor::red);
 		contourFinder.draw();
-		RectTracker& tracker = contourFinder.getTracker();
+		ofxCv::RectTracker& tracker = contourFinder.getTracker();
 		if(showLabels) {
 			ofSetColor(255);
 			for(int i = 0; i < contourFinder.size(); i++) {
-				ofPoint center = toOf(contourFinder.getCenter(i));
+				ofPoint center = ofxCv::toOf(contourFinder.getCenter(i));
 				ofPushMatrix();
 				ofTranslate(center.x, center.y);
 				int label = contourFinder.getLabel(i);
 				string msg = ofToString(label) + ":" + ofToString(tracker.getAge(label));
 				ofDrawBitmapString(msg, 0, 0);
-				ofVec2f velocity = toOf(contourFinder.getVelocity(i));
+				ofVec2f velocity = ofxCv::toOf(contourFinder.getVelocity(i));
 				ofScale(5, 5);
 				ofDrawLine(0, 0, velocity.x, velocity.y);
 				ofPopMatrix();
@@ -370,13 +369,13 @@ public:
 		}
 		ofPopMatrix();
 	}
-	String getDescription() {
+	string getDescription() {
 		return "Contours";
 	}
 protected:
 	ofParameter<int> minArea, maxArea;
 	ofParameter<bool> holes, showLabels;
-	ContourFinder contourFinder;
+	ofxCv::ContourFinder contourFinder;
 };
 
 #pragma mark - Flow
@@ -441,7 +440,7 @@ public:
 		curFlow->draw(0,0,cpy.getWidth(),cpy.getHeight());
 		ofPopMatrix();
 	}
-	String getDescription() {
+	string getDescription() {
 		return "Flow";
 	}
 protected:
@@ -467,10 +466,10 @@ public:
 		gui->add(iterations);
 	};
 	void compute(ofImage &src) {
-		erode(src, cpy, iterations);
+		ofxCv::erode(src, cpy, iterations);
 		src = cpy;
 	};
-	String getDescription() {
+	string getDescription() {
 		return "Erode";
 	}
 protected:
@@ -488,10 +487,10 @@ public:
 		gui->add(iterations);
 	};
 	void compute(ofImage &src) {
-		dilate(src, cpy, iterations);
+		ofxCv::dilate(src, cpy, iterations);
 		src = cpy;
 	};
-	String getDescription() {
+	string getDescription() {
 		return "Dilate";
 	}
 protected:
@@ -500,10 +499,10 @@ protected:
 
 
 #pragma mark - Canny Lines
-class CannyEdges : public PeriscopeComponent
+class Canny : public PeriscopeComponent
 {
 public:
-	CannyEdges() {
+	Canny() {
 		thresh1.set("Threshold 1", 1, 0, 200);
 		thresh2.set("Threshold 2", 30, 0, 200);
 	}
@@ -512,11 +511,11 @@ public:
 		gui->add(thresh2);
 	};
 	void compute(ofImage &src) {
-		copyGray(src, cpy); // grayscale 8-bit input and output
+		ofxCv::copyGray(src, cpy); // grayscale 8-bit input and output
 		ofxCv::Canny(cpy, cpy, thresh1, thresh2);
 		src = cpy;
 	};
-	String getDescription() {
+	string getDescription() {
 		return "Canny";
 	}
 protected:
@@ -525,7 +524,6 @@ protected:
 };
 
 #endif /* Periscope_h */
-
 
 //#pragma mark - Filter
 //class Filter : public PeriscopeComponent
