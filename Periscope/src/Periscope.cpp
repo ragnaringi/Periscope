@@ -11,7 +11,7 @@
 
 #include "Periscope.h"
 
-const int NUM_THUMBNAILS = 11;
+const int NUM_THUMBNAILS = 12;
 string titles[NUM_THUMBNAILS] = {
 	"Resize",
 	"Colours",
@@ -23,8 +23,11 @@ string titles[NUM_THUMBNAILS] = {
 	"Erode",
 	"Dilate",
 	"Canny",
-	"Sobel"
+	"Sobel",
+	"Hough"
 };
+
+static ofImage input; // TODO
 
 //--------------------------------------------------------------
 Periscope::Periscope() : debugMode(true) {
@@ -116,7 +119,9 @@ void Periscope::update() {
 	
 	if(!source->isFrameNew()) return;
 	
-	ofxCv::copy(*source, src);
+	ofxCv::copy(*source, input);
+	input.update();
+	src = input;
 	src.update();
 	
 	std::vector<int> toRemove; 
@@ -305,6 +310,9 @@ void Periscope::mouseReleased(int x, int y, int button) {
 				case 10:
 					p = new Sobel;
 					break;
+				case 11:
+					p = new Hough;
+					break;
 				default:
 					break;
 			}
@@ -313,4 +321,9 @@ void Periscope::mouseReleased(int x, int y, int button) {
 			break;
 		}
 	}
+}
+
+//--------------------------------------------------------------
+ofImage& Periscope::getInput() {
+	return input;
 }

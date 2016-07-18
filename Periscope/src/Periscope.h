@@ -57,7 +57,8 @@ public:
 	void mousePressed(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
 	void mouseMoved(int x, int y);
-
+	
+	static ofImage& getInput();
 private:
 	bool debugMode;
 	ofxPanel gui;
@@ -543,6 +544,52 @@ public:
 		return "Sobel";
 	}
 protected:
+};
+	
+#pragma mark - HoughLines
+// Provide a binary image by running through Canny Edge detection or Threshold before HoughLines
+// http://stackoverflow.com/questions/9310543/whats-the-use-of-canny-before-houghlines-opencv
+// Default values are obtained from ofxCv::autorotate function in Helpers.h
+class Hough : public Component
+{
+public:
+	Hough() {
+	}
+	void loadGui(ofxPanel *gui) {
+	};
+	void compute(ofImage &src) {
+		cpy = src;
+		ofImage& raw = Periscope::getInput();
+		
+		cv::Mat srcMat = ofxCv::toCv(raw), threshMat = ofxCv::toCv(cpy);
+		
+		lines.clear();
+		double distanceResolution = 1;
+		double angleResolution = CV_PI / 180;
+		int voteThreshold = 10;
+		double minLineLength = (srcMat.rows + srcMat.cols) / 8;
+		double maxLineGap = 3;
+		HoughLinesP(threshMat, lines, distanceResolution, angleResolution, voteThreshold, minLineLength, maxLineGap);
+		
+		src = cpy;
+	};
+	void draw(int x, int y) {
+		Component::draw(x, y);
+		ofPushMatrix();
+		ofTranslate(x, y);
+		// draw lines
+		ofSetColor(ofColor::red);
+		for( size_t i = 0; i < lines.size(); i++ )
+		{
+			ofDrawLine(lines[i][0], lines[i][1], lines[i][2], lines[i][3]);
+		}
+		ofPopMatrix();
+	}
+	string getTitle() {
+		return "Hough Lines";
+	}
+protected:
+	std::vector<cv::Vec4i> lines;
 };
 
 } /* namespace Periscope */
