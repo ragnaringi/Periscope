@@ -16,10 +16,11 @@
 
 static const int THUMBNAIL_SIZE = 90;
 
-//using namespace cv;
+inline namespace PScope
+{
 
-class PeriscopeComponent;
-class ThumbNail;
+class Component;
+class Thumbnail;
 
 class MouseAware {
 public:
@@ -45,7 +46,7 @@ public:
 	void loadGui();
 	void loadMovie(string title);
 	void selectWebCam();
-	void addComponent(PeriscopeComponent *c);
+	void addComponent(Component *c);
 	void removeLast();
 	void setDebug(bool debug);
 	bool& getDebug() { return debugMode; };
@@ -61,17 +62,17 @@ private:
 	bool debugMode;
 	ofxPanel gui;
 	ofParameter<bool> useWebCam, loadVideo;
-	vector<unique_ptr<ThumbNail>> thumbNails;
-	vector<unique_ptr<PeriscopeComponent>> components;
+	vector<unique_ptr<Thumbnail>> thumbnails;
+	vector<unique_ptr<Component>> components;
 	unique_ptr<ofBaseVideoDraws> source;
 	ofImage src;
 	ofxOscSender sender;
 	int mouseX, mouseY = 0;
 };
 
-class ThumbNail : public MouseAware {
+class Thumbnail : public MouseAware {
 public:
-	ThumbNail(string title) : title(title) {
+	Thumbnail(string title) : title(title) {
 		
 	}
 	virtual void draw(int x, int y) {
@@ -88,15 +89,15 @@ private:
 	string title;
 };
 
-class PeriscopeComponent : public MouseAware {
+class Component : public MouseAware {
 public:
-	PeriscopeComponent() {
+	Component() {
 		localGui.setup();
 		localGui.add(bypass.set("Bypass", false));
 		localGui.add(close.set("Close", false));
 		localGui.add(useRaw.set("Use Raw", false));
 	}
-	virtual ~PeriscopeComponent() {};
+	virtual ~Component() {};
 	virtual void loadGui(ofxPanel *gui) = 0;
 	virtual void loadOsc(ofxOscSender *sender) {
 		this->sender = sender;
@@ -129,7 +130,7 @@ protected:
 };
 
 #pragma mark - Resize
-class Resize : public PeriscopeComponent
+class Resize : public Component
 {
 public:
 	void loadGui(ofxPanel *gui) {
@@ -148,7 +149,7 @@ protected:
 };
 
 #pragma mark - Grayscale
-class Colours : public PeriscopeComponent
+class Colours : public Component
 {
 public:
 	void loadGui(ofxPanel *gui) {};
@@ -172,7 +173,7 @@ protected:
 };
 
 #pragma mark - Grayscale
-class GrayScale : public PeriscopeComponent
+class GrayScale : public Component
 {
 public:
 	void loadGui(ofxPanel *gui) {};
@@ -187,7 +188,7 @@ protected:
 };
 
 #pragma mark - Blur
-class Blur : public PeriscopeComponent
+class Blur : public Component
 {
 public:
 	Blur() {
@@ -210,7 +211,7 @@ protected:
 };
 
 #pragma mark - Threshold
-class Threshold : public PeriscopeComponent
+class Threshold : public Component
 {
 public:
 	Threshold() {
@@ -239,7 +240,7 @@ protected:
 };
 
 #pragma mark - Difference
-class Difference : public PeriscopeComponent
+class Difference : public Component
 {
 public:
 	Difference() {
@@ -276,7 +277,7 @@ protected:
 };
 
 #pragma mark - Contours
-class Contours : public PeriscopeComponent
+class Contours : public Component
 {
 public:
 	Contours() {
@@ -330,7 +331,7 @@ public:
 		sender->sendBundle(b);
 	}
 	void draw(int x, int y) {
-		PeriscopeComponent::draw(x, y);
+		Component::draw(x, y);
 		ofPushMatrix();
 		ofTranslate(x, y);
 		ofSetColor(ofColor::red);
@@ -382,7 +383,7 @@ protected:
 };
 
 #pragma mark - Flow
-class OpticalFlow : public PeriscopeComponent
+class OpticalFlow : public Component
 {
 public:
 	OpticalFlow() {
@@ -437,7 +438,7 @@ public:
 		sender->sendMessage(m);
 	};
 	void draw(int x, int y) {
-		PeriscopeComponent::draw(x, y);
+		Component::draw(x, y);
 		ofPushMatrix();
 		ofTranslate(x, y);
 		curFlow->draw(0,0,cpy.getWidth(),cpy.getHeight());
@@ -459,7 +460,7 @@ protected:
 };
 
 #pragma mark - Erode
-class Erode : public PeriscopeComponent
+class Erode : public Component
 {
 public:
 	Erode() {
@@ -480,7 +481,7 @@ protected:
 };
 
 #pragma mark - Dilate
-class Dilate : public PeriscopeComponent
+class Dilate : public Component
 {
 public:
 	Dilate() {
@@ -502,7 +503,7 @@ protected:
 
 
 #pragma mark - Canny Edge Detection
-class Canny : public PeriscopeComponent
+class Canny : public Component
 {
 public:
 	Canny() {
@@ -527,7 +528,7 @@ protected:
 };
 
 #pragma mark - Sobel Edge Detection
-class Sobel : public PeriscopeComponent
+class Sobel : public Component
 {
 public:
 	Sobel() {
@@ -544,6 +545,7 @@ public:
 protected:
 };
 
+} /* namespace Periscope */
 
 #endif /* Periscope_h */
 
