@@ -24,5 +24,10 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 	
+	private:
+	
 		PScope::Periscope periscope;
+	
+		void loadPeriscope();
+		void savePeriscope();
 };

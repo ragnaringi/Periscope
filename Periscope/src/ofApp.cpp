@@ -37,6 +37,12 @@ void ofApp::keyPressed(int key){
 		case 'f':
 			ofToggleFullscreen();
 			break;
+		case 'l':
+			loadPeriscope();
+			break;
+		case 's':
+			savePeriscope();
+			break;
 	}
 }
 
@@ -88,4 +94,18 @@ void ofApp::gotMessage(ofMessage msg){
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){ 
 
+}
+
+//--------------------------------------------------------------
+void ofApp::loadPeriscope(){
+	ofFileDialogResult result = ofSystemLoadDialog();
+	cout << result.getPath() << endl;
+	periscope.loadFromFile(result.getPath());
+}
+
+//--------------------------------------------------------------
+void ofApp::savePeriscope(){
+	ofFileDialogResult result = ofSystemSaveDialog("Periscope.json", "Save your Periscope");
+	cout << result.getPath() << endl;
+	periscope.saveToFile(result.getPath());
 }
