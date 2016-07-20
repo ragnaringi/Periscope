@@ -12,15 +12,9 @@ void ofApp::setup(){
 	ofSetFrameRate(30);
 
 	periscope.loadMovie("fingers.mov");
-
+	
 	// Classic background subtraction
-	periscope.addComponent(new Resize);
-	periscope.addComponent(new Colours);
-	periscope.addComponent(new GrayScale);
-	periscope.addComponent(new Difference);
-	periscope.addComponent(new Blur);
-	periscope.addComponent(new Threshold);
-	periscope.addComponent(new Contours);
+	periscope.loadFromFile(ofToDataPath("BackgroundSubtract.json"));
 }
 
 //--------------------------------------------------------------

@@ -9,12 +9,14 @@
 #define HOST "localhost" //"10.2.65.114"
 #define PORT 9999
 
+#include "Helpers.h"
 #include "Periscope.h"
 
-const int NUM_THUMBNAILS = 12;
+const int NUM_THUMBNAILS = 13;
 string titles[NUM_THUMBNAILS] = {
 	"Resize",
 	"Colours",
+	"Greyscale",
 	"Flow",
 	"Difference",
 	"Threshold",
@@ -45,6 +47,66 @@ Periscope::Periscope() : debugMode(true) {
 Periscope::~Periscope() {
 	components.clear();
 	thumbnails.clear();
+}
+
+//--------------------------------------------------------------
+void Periscope::loadFromFile(string file) {
+	
+	ofxJSON result;
+	
+	bool parsingSuccessful = result.open(file);
+	
+	if (parsingSuccessful) {
+		ofLogNotice("Periscope::loadFromFile") << result.getRawString();
+		
+		const Json::Value& periscope = result["Periscope"];
+		if (periscope.isArray()) {
+			for (Json::ArrayIndex i = 0; i < periscope.size(); ++i) {
+				std::string title = periscope[i]["Title"].asString();
+				cout << "Load: " << title << endl;
+				addComponent(loadFromString(title));
+			}
+		}
+	}
+	else ofLogError("Periscope::loadFromFile")  << "Failed to parse JSON" << endl;
+	
+	/*
+	 bool parsingSuccessful = result.open(file);
+	 
+	 if (parsingSuccessful)
+	 {
+		ofLogNotice("ofApp::setup") << result.getRawString();
+		
+		// now write pretty print
+		if (!result.save(ofToDataPath("example_output_pretty.json"), true))
+		{
+	 ofLogNotice("ofApp::setup") << "example_output_pretty.json written unsuccessfully.";
+		}
+		else
+		{
+	 ofLogNotice("ofApp::setup") << "example_output_pretty.json written successfully.";
+		}
+		
+		// now write without pretty print
+		if (!result.save(ofToDataPath("example_output_fast.json"), false))
+		{
+	 ofLogNotice("ofApp::setup") << "example_output_pretty.json written unsuccessfully.";
+		}
+		else
+		{
+	 ofLogNotice("ofApp::setup") << "example_output_pretty.json written successfully.";
+		}
+	 }
+	 else
+	 {
+		ofLogError("ofApp::setup")  << "Failed to parse JSON" << endl;
+	 }
+	 */
+}
+
+//--------------------------------------------------------------
+void Periscope::saveToFile(string file) {
+	
 }
 
 //--------------------------------------------------------------
@@ -89,11 +151,6 @@ void Periscope::addComponent(Component *c_) {
 	c_->loadOsc(&sender);
 	unique_ptr<Component> c( c_ );
 	components.push_back(move(c));
-}
-
-//--------------------------------------------------------------
-void Periscope::removeLast() {
-	components.pop_back();
 }
 
 //--------------------------------------------------------------
@@ -275,48 +332,7 @@ void Periscope::mouseReleased(int x, int y, int button) {
 	for (int i = thumbnails.size(); i --> 0;) {
 		auto const &t = thumbnails[i];
 		if (t->pointInside(x, y)) {
-			Component *p;
-			switch (i) {
-				case 0:
-					p = new Resize;
-					break;
-				case 1:
-					p = new Colours;
-					break;
-				case 2:
-					p = new OpticalFlow;
-					break;
-				case 3:
-					p = new Difference;
-					break;
-				case 4:
-					p = new Threshold;
-					break;
-				case 5:
-					p = new Blur;
-					break;
-				case 6:
-					p = new Contours;
-					break;
-				case 7:
-					p = new Erode;
-					break;
-				case 8:
-					p = new Dilate;
-					break;
-				case 9:
-					p = new Canny;
-					break;
-				case 10:
-					p = new Sobel;
-					break;
-				case 11:
-					p = new Hough;
-					break;
-				default:
-					break;
-			}
-			addComponent(p);
+			addComponent(loadFromString(t->getTitle()));
 			loadGui();
 			break;
 		}

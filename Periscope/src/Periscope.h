@@ -13,6 +13,7 @@
 #include "ofxCv.h"
 #include "ofxGui.h"
 #include "ofxOsc.h"
+#include "ofxJSON.h"
 
 static const int THUMBNAIL_SIZE = 90;
 
@@ -42,12 +43,12 @@ class Periscope {
 public:
 	Periscope();
 	~Periscope();
-	void openPanel();
+	void loadFromFile(string filePath);
+	void saveToFile(string filePath);
 	void loadGui();
 	void loadMovie(string title);
 	void selectWebCam();
 	void addComponent(Component *c);
-	void removeLast();
 	void setDebug(bool debug);
 	bool& getDebug() { return debugMode; };
 	void update();
@@ -60,6 +61,7 @@ public:
 	
 	static ofImage& getInput();
 private:
+	void openPanel();
 	bool debugMode;
 	ofxPanel gui;
 	ofParameter<bool> useWebCam, loadVideo;
@@ -73,9 +75,7 @@ private:
 
 class Thumbnail : public MouseAware {
 public:
-	Thumbnail(string title) : title(title) {
-		
-	}
+	Thumbnail(string title) : title(title) {}
 	virtual void draw(int x, int y) {
 		bounds.set(x, y, THUMBNAIL_SIZE, THUMBNAIL_SIZE);
 		ofSetColor(ofColor::white);
@@ -86,6 +86,7 @@ public:
 		ofSetColor(ofColor::white);
 		ofDrawBitmapString(title, x + 4, y + 20);
 	}
+	string& getTitle() { return title; };
 private:
 	string title;
 };
@@ -174,7 +175,7 @@ protected:
 };
 
 #pragma mark - Grayscale
-class GrayScale : public Component
+class Greyscale : public Component
 {
 public:
 	void loadGui(ofxPanel *gui) {};
@@ -183,7 +184,7 @@ public:
 		src = cpy;
 	};
 	string getTitle() {
-		return "Grayscale";
+		return "Greyscale";
 	}
 protected:
 };
