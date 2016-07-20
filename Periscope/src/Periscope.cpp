@@ -63,50 +63,28 @@ void Periscope::loadFromFile(string file) {
 		if (periscope.isArray()) {
 			for (Json::ArrayIndex i = 0; i < periscope.size(); ++i) {
 				std::string title = periscope[i]["Title"].asString();
-				cout << "Load: " << title << endl;
-				addComponent(loadFromString(title));
+				Component* c = loadFromString(title);
+				c->loadSettings(periscope[i]);
+				addComponent(c);
 			}
+			loadGui();
 		}
 	}
 	else ofLogError("Periscope::loadFromFile")  << "Failed to parse JSON" << endl;
-	
-	/*
-	 bool parsingSuccessful = result.open(file);
-	 
-	 if (parsingSuccessful)
-	 {
-		ofLogNotice("ofApp::setup") << result.getRawString();
-		
-		// now write pretty print
-		if (!result.save(ofToDataPath("example_output_pretty.json"), true))
-		{
-	 ofLogNotice("ofApp::setup") << "example_output_pretty.json written unsuccessfully.";
-		}
-		else
-		{
-	 ofLogNotice("ofApp::setup") << "example_output_pretty.json written successfully.";
-		}
-		
-		// now write without pretty print
-		if (!result.save(ofToDataPath("example_output_fast.json"), false))
-		{
-	 ofLogNotice("ofApp::setup") << "example_output_pretty.json written unsuccessfully.";
-		}
-		else
-		{
-	 ofLogNotice("ofApp::setup") << "example_output_pretty.json written successfully.";
-		}
-	 }
-	 else
-	 {
-		ofLogError("ofApp::setup")  << "Failed to parse JSON" << endl;
-	 }
-	 */
 }
 
 //--------------------------------------------------------------
 void Periscope::saveToFile(string file) {
 	
+	ofxJSON result;
+	for (int i = 0; i < components.size(); ++i) {
+		result["Periscope"][i] = components[i]->getSettings();
+	}
+	
+	if (result.save(file, true)) {
+		ofLogNotice("Periscope::saveToFile") << result.getRawString();
+	}
+	else ofLogError("Periscope::saveToFile") << "Failed to save JSON." << endl;
 }
 
 //--------------------------------------------------------------
@@ -196,7 +174,7 @@ void Periscope::update() {
 	
 	if (toRemove.size() > 0) {
 		for (int i = toRemove.size(); i --> 0;) {
-				components.erase(components.begin() + toRemove[i]);
+			components.erase(components.begin() + toRemove[i]);
 		}
 		loadGui();
 	}

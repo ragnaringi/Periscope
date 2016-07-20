@@ -122,6 +122,19 @@ public:
 	bool shouldUseRaw() { return useRaw; };
 	bool isBypassed() { return bypass; };
 	bool selected = false;
+	virtual void loadSettings(Json::Value settings) {
+		bypass = settings["Settings"][bypass.getName()].asBool();
+		close  = settings["Settings"][close.getName()].asBool();
+		useRaw = settings["Settings"][useRaw.getName()].asBool();
+	}
+	virtual ofxJSON getSettings() {
+		ofxJSON settings;
+		settings["Title"] = getTitle();
+		settings["Settings"][bypass.getName()] = bypass.get();
+		settings["Settings"][close.getName()]  = close.get();
+		settings["Settings"][useRaw.getName()] = useRaw.get();
+		return settings;
+	};
 protected:
 	ofParameter<bool> bypass;
 	ofParameter<bool> close;
@@ -208,6 +221,14 @@ public:
 	string getTitle() {
 		return "Blur";
 	}
+	void loadSettings(Json::Value settings) {
+		blurAmt = settings["Settings"][blurAmt.getName()].asInt();
+	}
+	ofxJSON getSettings() {
+		ofxJSON settings = Component::getSettings();
+		settings["Settings"][blurAmt.getName()] = blurAmt.get();
+		return settings;
+	};
 protected:
 	ofParameter<int> blurAmt;
 };
@@ -236,6 +257,16 @@ public:
 	string getTitle() {
 		return "Threshold";
 	}
+	void loadSettings(Json::Value settings) {
+		t     = settings["Settings"][t.getName()].asInt();
+		autoT = settings["Settings"][autoT.getName()].asBool();
+	}
+	ofxJSON getSettings() {
+		ofxJSON settings = Component::getSettings();
+		settings["Settings"][t.getName()] = t.get();
+		settings["Settings"][autoT.getName()] = autoT.get();
+		return settings;
+	};
 protected:
 	ofParameter<int> t;
 	ofParameter<bool> autoT;
@@ -273,6 +304,14 @@ public:
 	string getTitle() {
 		return "Difference";
 	}
+	void loadSettings(Json::Value settings) {
+		learn = settings["Settings"][learn.getName()].asBool();
+	}
+	ofxJSON getSettings() {
+		ofxJSON settings = Component::getSettings();
+		settings["Settings"][learn.getName()] = learn.get();
+		return settings;
+	};
 protected:
 	ofImage bg;
 	ofParameter<bool> learn;
@@ -378,6 +417,20 @@ public:
 	string getTitle() {
 		return "Contours";
 	}
+	void loadSettings(ofxJSON& settings) {
+		minArea    = settings["Settings"][minArea.getName()].asInt();
+		maxArea    = settings["Settings"][maxArea.getName()].asInt();
+		holes      = settings["Settings"][holes.getName()].asBool();
+		showLabels = settings["Settings"][showLabels.getName()].asBool();
+	}
+	ofxJSON getSettings() {
+		ofxJSON settings = Component::getSettings();
+		settings["Settings"][minArea.getName()] = minArea.get();
+		settings["Settings"][maxArea.getName()] = maxArea.get();
+		settings["Settings"][holes.getName()] = holes.get();
+		settings["Settings"][showLabels.getName()] = showLabels.get();
+		return settings;
+	};
 protected:
 	ofParameter<int> minArea, maxArea;
 	ofParameter<bool> holes, showLabels;
@@ -478,6 +531,14 @@ public:
 	string getTitle() {
 		return "Erode";
 	}
+	void loadSettings(Json::Value settings) {
+		iterations = settings["Settings"][iterations.getName()].asInt();
+	}
+	ofxJSON getSettings() {
+		ofxJSON settings = Component::getSettings();
+		settings["Settings"][iterations.getName()] = iterations.get();
+		return settings;
+	};
 protected:
 	ofParameter<int> iterations;
 };
@@ -499,6 +560,14 @@ public:
 	string getTitle() {
 		return "Dilate";
 	}
+	void loadSettings(Json::Value settings) {
+		iterations = settings["Settings"][iterations.getName()].asInt();
+	}
+	ofxJSON getSettings() {
+		ofxJSON settings = Component::getSettings();
+		settings["Settings"][iterations.getName()] = iterations.get();
+		return settings;
+	};
 protected:
 		ofParameter<int> iterations;
 };
@@ -524,6 +593,16 @@ public:
 	string getTitle() {
 		return "Canny";
 	}
+	void loadSettings(Json::Value settings) {
+		thresh1 = settings["Settings"][thresh1.getName()].asInt();
+		thresh2 = settings["Settings"][thresh2.getName()].asInt();
+	}
+	ofxJSON getSettings() {
+		ofxJSON settings = Component::getSettings();
+		settings["Settings"][thresh1.getName()] = thresh2.get();
+		settings["Settings"][thresh2.getName()] = thresh2.get();
+		return settings;
+	};
 protected:
 	ofParameter<int> thresh1;
 	ofParameter<int> thresh2;
@@ -580,8 +659,7 @@ public:
 		ofTranslate(x, y);
 		// draw lines
 		ofSetColor(ofColor::red);
-		for( size_t i = 0; i < lines.size(); i++ )
-		{
+		for( size_t i = 0; i < lines.size(); i++ ) {
 			ofDrawLine(lines[i][0], lines[i][1], lines[i][2], lines[i][3]);
 		}
 		ofPopMatrix();
