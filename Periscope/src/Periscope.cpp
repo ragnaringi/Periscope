@@ -32,10 +32,16 @@ string titles[NUM_THUMBNAILS] = {
 static ofImage input; // TODO
 
 //--------------------------------------------------------------
-Periscope::Periscope() : debugMode(true) {
+Periscope::Periscope() : debugMode(true), enableClient(false), enableServer(false) {
 	gui.setup();
 	loadGui();
 	sender.setup(HOST, PORT);
+	
+	// Syphon setup
+	syphonServer.setName("Periscope Output");
+	syphonClient.setup(); //using Syphon app Simple Server, found at http://syphon.v002.info/
+	syphonClient.set("","Simple Server");
+	syphonBuffer.allocate(320, 240, GL_RGBA);
 	
 	for (int i = 0; i < NUM_THUMBNAILS; ++i) {
 		unique_ptr<Thumbnail> t( new Thumbnail(titles[i]) );
@@ -93,6 +99,8 @@ void Periscope::loadGui() {
 	gui.setPosition(ofGetWidth() - 200, 500);
 	gui.add(useWebCam.set("Use WebCam", false));
 	gui.add(loadVideo.set("Load Video", false));
+	gui.add(enableClient.set("Enable Client", enableClient));
+	gui.add(enableServer.set("Enable Server", enableServer));
 	for (auto const &c : components) {
 		c->loadGui(&gui);
 	}
@@ -150,11 +158,29 @@ void Periscope::update() {
 		loadVideo = false;
 	}
 	
-	source->update();
-	
-	if(!source->isFrameNew()) return;
-	
-	ofxCv::copy(*source, input);
+	if (!enableClient) {
+		source->update();
+		if(!source->isFrameNew()) return;
+		ofxCv::copy(*source, input);
+	}
+	else {
+		syphonBuffer.begin();
+		
+		syphonClient.bind();
+		ofClear(0.f);
+		ofSetColor(ofColor::white);
+		syphonClient.draw(0, 0, syphonBuffer.getWidth(), syphonBuffer.getHeight());
+		syphonClient.unbind();
+		
+		syphonBuffer.end();
+		
+		if (syphonBuffer.isAllocated()) {
+			ofPixels pix;
+			syphonBuffer.readToPixels(pix);
+			input.setFromPixels(pix);
+		}
+	}
+
 	input.update();
 	src = input;
 	src.update();
@@ -165,7 +191,7 @@ void Periscope::update() {
 		auto const &c = components[i].get();
 		if (!c->isBypassed()) {
 			if (c->shouldUseRaw()) {
-				ofxCv::copy(*source, src);
+				ofxCv::copy(input, src);
 			}
 			c->compute(src);
 		}
@@ -212,6 +238,11 @@ void Periscope::draw() {
 		}
 	}
 	
+	if (enableServer) {
+		ofTexture &texture = components.back()->getTexture();
+		syphonServer.publishTexture(&texture);
+	}
+
 	gui.draw();
 }
 

@@ -14,6 +14,7 @@
 #include "ofxGui.h"
 #include "ofxOsc.h"
 #include "ofxJSON.h"
+#include "ofxSyphon.h"
 
 static const int THUMBNAIL_SIZE = 90;
 
@@ -64,13 +65,18 @@ private:
 	void openPanel();
 	bool debugMode;
 	ofxPanel gui;
-	ofParameter<bool> useWebCam, loadVideo;
+	ofParameter<bool> useWebCam, loadVideo, enableClient, enableServer;
 	vector<unique_ptr<Thumbnail>> thumbnails;
 	vector<unique_ptr<Component>> components;
 	unique_ptr<ofBaseVideoDraws> source;
 	ofImage src;
 	ofxOscSender sender;
 	int mouseX, mouseY = 0;
+	
+	// Syphon
+	ofxSyphonClient syphonClient;
+	ofxSyphonServer syphonServer;
+	ofFbo syphonBuffer;
 };
 
 class Thumbnail : public MouseAware {
@@ -121,6 +127,7 @@ public:
 	bool shouldClose() { return close; };
 	bool shouldUseRaw() { return useRaw; };
 	bool isBypassed() { return bypass; };
+	ofTexture& getTexture() { return cpy.getTexture(); };
 	bool selected = false;
 	virtual void loadSettings(Json::Value settings) {
 		bypass = settings["Settings"][bypass.getName()].asBool();

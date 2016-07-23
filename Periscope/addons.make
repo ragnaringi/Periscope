@@ -3,3 +3,4 @@ ofxGui
 ofxJSON
 ofxOpenCv
 ofxOsc
+ofxSyphon
