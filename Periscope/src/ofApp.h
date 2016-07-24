@@ -2,6 +2,8 @@
 #pragma once
 
 #include "ofMain.h"
+#include "Input.h"
+#include "Output.h"
 #include "Periscope.h"
 #include "ofxButton.h"
 
@@ -26,8 +28,11 @@ class ofApp : public ofBaseApp{
 	
 	private:
 	
+		PScope::Input input;
+		PScope::Output output;
 		PScope::Periscope periscope;
 	
 		void loadPeriscope();
 		void savePeriscope();
+		void loadMovieFile();
 };

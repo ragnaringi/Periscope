@@ -11,7 +11,7 @@ void ofApp::setup(){
 	ofSetVerticalSync(true);
 	ofSetFrameRate(30);
 
-	periscope.loadMovie("fingers.mov");
+	input.loadMovie("fingers.mov");
 	
 	// Classic background subtraction
 	periscope.loadFromFile(ofToDataPath("BackgroundSubtract.json"));
@@ -19,13 +19,18 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	periscope.update();
+	input.update();
+	ofImage &src = input.getInput();
+	if (src.isAllocated()) {
+		periscope.compute(src);
+	}
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 	ofSetColor(255);
 	periscope.draw();
+	output.send(periscope.getOutput());
 }
 
 //--------------------------------------------------------------
@@ -42,6 +47,15 @@ void ofApp::keyPressed(int key){
 			break;
 		case 's':
 			savePeriscope();
+			break;
+		case 'c':
+			input.selectWebCam();
+			break;
+		case 'v':
+			input.selectSyphon();
+			break;
+		case 'm':
+			loadMovieFile();
 			break;
 	}
 }
@@ -108,4 +122,11 @@ void ofApp::savePeriscope(){
 	ofFileDialogResult result = ofSystemSaveDialog("Periscope.json", "Save your Periscope");
 	cout << result.getPath() << endl;
 	periscope.saveToFile(result.getPath());
+}
+
+//--------------------------------------------------------------
+void ofApp::loadMovieFile() {
+	ofFileDialogResult result = ofSystemLoadDialog();
+	cout << result.getPath() << endl;
+	input.loadMovie(result.getPath());
 }

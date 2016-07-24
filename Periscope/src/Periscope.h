@@ -14,7 +14,6 @@
 #include "ofxGui.h"
 #include "ofxOsc.h"
 #include "ofxJSON.h"
-#include "ofxSyphon.h"
 
 static const int THUMBNAIL_SIZE = 90;
 
@@ -47,12 +46,10 @@ public:
 	void loadFromFile(string filePath);
 	void saveToFile(string filePath);
 	void loadGui();
-	void loadMovie(string title);
-	void selectWebCam();
 	void addComponent(Component *c);
 	void setDebug(bool debug);
 	bool& getDebug() { return debugMode; };
-	void update();
+	void compute(ofImage &src);
 	void draw();
 	
 	void mouseDragged(int x, int y, int button);
@@ -61,22 +58,15 @@ public:
 	void mouseMoved(int x, int y);
 	
 	static ofImage& getInput();
+	ofTexture& getOutput();
 private:
-	void openPanel();
 	bool debugMode;
 	ofxPanel gui;
-	ofParameter<bool> useWebCam, loadVideo, enableClient, enableServer;
 	vector<unique_ptr<Thumbnail>> thumbnails;
 	vector<unique_ptr<Component>> components;
-	unique_ptr<ofBaseVideoDraws> source;
 	ofImage src;
 	ofxOscSender sender;
 	int mouseX, mouseY = 0;
-	
-	// Syphon
-	ofxSyphonClient syphonClient;
-	ofxSyphonServer syphonServer;
-	ofFbo syphonBuffer;
 };
 
 class Thumbnail : public MouseAware {
@@ -678,7 +668,7 @@ protected:
 	std::vector<cv::Vec4i> lines;
 };
 
-} /* namespace Periscope */
+} /* namespace PScope */
 
 #endif /* Periscope_h */
 

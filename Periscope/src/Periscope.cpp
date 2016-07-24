@@ -32,16 +32,10 @@ string titles[NUM_THUMBNAILS] = {
 static ofImage input; // TODO
 
 //--------------------------------------------------------------
-Periscope::Periscope() : debugMode(true), enableClient(false), enableServer(false) {
+Periscope::Periscope() : debugMode(true) {
 	gui.setup();
 	loadGui();
 	sender.setup(HOST, PORT);
-	
-	// Syphon setup
-	syphonServer.setName("Periscope Output");
-	syphonClient.setup(); //using Syphon app Simple Server, found at http://syphon.v002.info/
-	syphonClient.set("","Simple Server");
-	syphonBuffer.allocate(320, 240, GL_RGBA);
 	
 	for (int i = 0; i < NUM_THUMBNAILS; ++i) {
 		unique_ptr<Thumbnail> t( new Thumbnail(titles[i]) );
@@ -97,38 +91,9 @@ void Periscope::saveToFile(string file) {
 void Periscope::loadGui() {
 	gui.clear();
 	gui.setPosition(ofGetWidth() - 200, 500);
-	gui.add(useWebCam.set("Use WebCam", false));
-	gui.add(loadVideo.set("Load Video", false));
-	gui.add(enableClient.set("Enable Client", enableClient));
-	gui.add(enableServer.set("Enable Server", enableServer));
 	for (auto const &c : components) {
 		c->loadGui(&gui);
 	}
-}
-
-//--------------------------------------------------------------
-void Periscope::openPanel() {
-	ofFileDialogResult result = ofSystemLoadDialog();
-	cout << result.getPath() << endl;
-	loadMovie(result.getPath());
-}
-
-//--------------------------------------------------------------
-void Periscope::loadMovie(string title) {
-	unique_ptr<ofVideoPlayer> player(new ofVideoPlayer);
-	if (!player->load(title)) {
-		cout << "Error loading movie: " << title << endl;
-	}
-	player->play();
-	player->setLoopState(OF_LOOP_NORMAL);
-	source = move(player);
-}
-
-//--------------------------------------------------------------
-void Periscope::selectWebCam() {
-	unique_ptr<ofVideoGrabber> cam(new ofVideoGrabber);
-	cam->setup(320, 240);
-	source = move(cam);
 }
 
 //--------------------------------------------------------------
@@ -145,49 +110,15 @@ void Periscope::setDebug(bool debug) {
 }
 
 //--------------------------------------------------------------
-void Periscope::update() {
-	if (useWebCam) {
-		selectWebCam();
-		useWebCam = false;
-		loadVideo = false;
-	}
-	
-	if (loadVideo) {
-		openPanel();
-		useWebCam = false;
-		loadVideo = false;
-	}
-	
-	if (!enableClient) {
-		source->update();
-		if(!source->isFrameNew()) return;
-		ofxCv::copy(*source, input);
-	}
-	else {
-		syphonBuffer.begin();
-		
-		syphonClient.bind();
-		ofClear(0.f);
-		ofSetColor(ofColor::white);
-		syphonClient.draw(0, 0, syphonBuffer.getWidth(), syphonBuffer.getHeight());
-		syphonClient.unbind();
-		
-		syphonBuffer.end();
-		
-		if (syphonBuffer.isAllocated()) {
-			ofPixels pix;
-			syphonBuffer.readToPixels(pix);
-			input.setFromPixels(pix);
-		}
-	}
-
+void Periscope::compute(ofImage &src_) {
+	input = src_;
 	input.update();
 	src = input;
 	src.update();
 	
 	std::vector<int> toRemove; 
 	
-	for (int i = 0; i < components.size(); i++) {
+	for (int i = 0; i < components.size(); ++i) {
 		auto const &c = components[i].get();
 		if (!c->isBypassed()) {
 			if (c->shouldUseRaw()) {
@@ -216,7 +147,7 @@ void Periscope::draw() {
 	}
 	
 	if (!debugMode || components.size() == 0) {
-		source->draw(0, 0);
+		getInput().draw(0, 0);
 		return;
 	}
 		
@@ -236,11 +167,6 @@ void Periscope::draw() {
 			row++;
 			col = 0;
 		}
-	}
-	
-	if (enableServer) {
-		ofTexture &texture = components.back()->getTexture();
-		syphonServer.publishTexture(&texture);
 	}
 
 	gui.draw();
@@ -351,4 +277,9 @@ void Periscope::mouseReleased(int x, int y, int button) {
 //--------------------------------------------------------------
 ofImage& Periscope::getInput() {
 	return input;
+}
+
+//--------------------------------------------------------------
+ofTexture& Periscope::getOutput() {
+	return components.back()->getTexture();
 }
