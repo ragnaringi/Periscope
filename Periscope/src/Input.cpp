@@ -19,6 +19,7 @@ Input::Input() : isSetup(false), angle(RotateNone), x(0), y(0), w(0), h(0) {
 	// Spout setup
 #endif
 	input.allocate(320, 240, OF_IMAGE_COLOR);
+	result = input;
 }
 
 void Input::loadMovie(std::string title) {
@@ -46,7 +47,6 @@ void Input::selectSyphon() {
 void Input::update() {
 	if ( !enableClient ) {
 		if (source == nullptr) {
-			result = input;
 			return;
 		}
 		source->update();
@@ -54,14 +54,15 @@ void Input::update() {
 		ofxCv::copy(*source, input);
 	}
 	else {
-		syphonBuffer.begin();
 #ifdef __APPLE__
+		syphonBuffer.begin();
+
 		syphonClient.bind();
 		ofClear(0.f);
 		ofSetColor(ofColor::white);
 		syphonClient.draw(0, 0, syphonBuffer.getWidth(), syphonBuffer.getHeight());
 		syphonClient.unbind();
-#endif
+
 		syphonBuffer.end();
 		
 		if (syphonBuffer.isAllocated()) {
@@ -69,6 +70,7 @@ void Input::update() {
 			syphonBuffer.readToPixels(pix);
 			input.setFromPixels(pix);
 		}
+#endif
 	}
 	
 	if (!isSetup && w == 0, h == 0) {
