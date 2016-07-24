@@ -18,6 +18,7 @@ Input::Input() : isSetup(false), angle(RotateNone), x(0), y(0), w(0), h(0) {
 #else
 	// Spout setup
 #endif
+	input.allocate(320, 240, OF_IMAGE_COLOR);
 }
 
 void Input::loadMovie(std::string title) {
@@ -44,6 +45,10 @@ void Input::selectSyphon() {
 
 void Input::update() {
 	if ( !enableClient ) {
+		if (source == nullptr) {
+			result = input;
+			return;
+		}
 		source->update();
 		if( !source->isFrameNew() ) return;
 		ofxCv::copy(*source, input);
