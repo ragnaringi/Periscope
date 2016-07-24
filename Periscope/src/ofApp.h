@@ -5,7 +5,6 @@
 #include "Input.h"
 #include "Output.h"
 #include "Periscope.h"
-#include "ofxButton.h"
 
 class ofApp : public ofBaseApp{
 
