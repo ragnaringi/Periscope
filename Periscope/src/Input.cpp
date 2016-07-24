@@ -15,6 +15,8 @@ Input::Input() : isSetup(false), angle(RotateNone), x(0), y(0), w(0), h(0) {
 	syphonClient.setup(); //using Syphon app Simple Server, found at http://syphon.v002.info/
 	syphonClient.set("","Simple Server");
 	syphonBuffer.allocate(320, 240, GL_RGBA);
+#else
+	// Spout setup
 #endif
 }
 
@@ -48,13 +50,13 @@ void Input::update() {
 	}
 	else {
 		syphonBuffer.begin();
-		
+#ifdef __APPLE__
 		syphonClient.bind();
 		ofClear(0.f);
 		ofSetColor(ofColor::white);
 		syphonClient.draw(0, 0, syphonBuffer.getWidth(), syphonBuffer.getHeight());
 		syphonClient.unbind();
-		
+#endif
 		syphonBuffer.end();
 		
 		if (syphonBuffer.isAllocated()) {

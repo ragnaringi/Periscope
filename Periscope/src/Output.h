@@ -12,6 +12,8 @@
 #include <stdio.h>
 #ifdef __APPLE__
 #include "ofxSyphon.h"
+#else
+#include "ofxSpout.h"
 #endif
 
 inline namespace PScope
@@ -24,6 +26,8 @@ public:
 private:
 #ifdef __APPLE__
 	ofxSyphonServer syphonServer;
+#else
+	ofxSpout::Sender sender;
 #endif
 };
 	
