@@ -9,7 +9,7 @@
 #include "ofxCV.h"
 #include "Input.h"
 
-Input::Input() {
+Input::Input() : isSetup(false), angle(RotateNone), x(0), y(0), w(0), h(0) {
 #ifdef __APPLE__
 	// Syphon setup
 	syphonClient.setup(); //using Syphon app Simple Server, found at http://syphon.v002.info/
@@ -63,8 +63,28 @@ void Input::update() {
 			input.setFromPixels(pix);
 		}
 	}
+	
+	if (!isSetup && w == 0, h == 0) {
+		crop(0, 0, input.getWidth(), input.getHeight());
+	}
+	
+	// Rotate
+	result = input;
+	result.rotate90(angle);
+	result.crop(x,y,w,h);
+}
+
+void Input::rotate(InputRotate angle_) {
+	angle = angle_;
+}
+
+void Input::crop(int x_, int y_, int w_, int h_) {
+	x = x_;
+	y = y_;
+	w = w_;
+	h = h_;
 }
 
 ofImage& Input::getInput() {
-	return input;
+	return result;
 }

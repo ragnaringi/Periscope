@@ -16,6 +16,13 @@
 
 inline namespace PScope
 {
+	
+enum InputRotate {
+	RotateNone,
+	Rotate90,
+	Rotate180,
+	Rotate270
+};
 
 class Input {
 public:
@@ -24,6 +31,8 @@ public:
 	void selectWebCam();
 	void selectSyphon();
 	void update();
+	void rotate(InputRotate angle);
+	void crop(int x, int y, int w, int h);
 	ofImage& getInput();
 private:
 #ifdef __APPLE__
@@ -31,8 +40,12 @@ private:
 	ofxSyphonClient syphonClient;
 	ofFbo syphonBuffer;
 #endif
+	bool isSetup;
+	int x, y, w, h;
+	InputRotate angle;
 	unique_ptr<ofBaseVideoDraws> source;
 	ofImage input;
+	ofImage result;
 	ofParameter<bool> enableClient, enableServer;
 };
 	
