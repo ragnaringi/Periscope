@@ -9,35 +9,12 @@
 #ifndef Periscope_h
 #define Periscope_h
 
-#include "ofMain.h"
-#include "ofxCv.h"
-#include "ofxGui.h"
-#include "ofxOsc.h"
-#include "ofxJSON.h"
-
-static const int THUMBNAIL_SIZE = 90;
+#include "Gui.h"
+#include "Component.h"
+#include "EdgeDetect.h"
 
 inline namespace PScope
 {
-
-class Component;
-class Thumbnail;
-
-class MouseAware {
-public:
-	ofRectangle& getBounds() {
-		return bounds;
-	}
-	bool pointInside(int x, int y) {
-		return getBounds().inside(x, y);
-	}
-	void setHighlighted(bool h) {
-		highlight = h;
-	}
-protected:
-	ofRectangle bounds;
-	bool highlight = false;
-};
 
 class Periscope {
 public:
@@ -67,78 +44,6 @@ private:
 	ofImage src;
 	ofxOscSender sender;
 	int mouseX, mouseY = 0;
-};
-
-class Thumbnail : public MouseAware {
-public:
-	Thumbnail(string title) : title(title) {}
-	virtual void draw(int x, int y) {
-		bounds.set(x, y, THUMBNAIL_SIZE, THUMBNAIL_SIZE);
-		ofSetColor(ofColor::white);
-		ofDrawRectangle(bounds);
-		ofSetColor(ofColor::black);
-		if (highlight) ofSetColor(ofColor::gray);
-		ofDrawRectangle(x+1, y+1, THUMBNAIL_SIZE-2, THUMBNAIL_SIZE-2);
-		ofSetColor(ofColor::white);
-		ofDrawBitmapString(title, x + 4, y + 20);
-	}
-	string& getTitle() { return title; };
-private:
-	string title;
-};
-
-class Component : public MouseAware {
-public:
-	Component() {
-		localGui.setup();
-		localGui.add(bypass.set("Bypass", false));
-		localGui.add(close.set("Close", false));
-		localGui.add(useRaw.set("Use Raw", false));
-	}
-	virtual ~Component() {};
-	virtual void loadGui(ofxPanel *gui) = 0;
-	virtual void loadOsc(ofxOscSender *sender) {
-		this->sender = sender;
-	};
-	virtual string getTitle() = 0;
-	virtual void compute(ofImage &src) = 0;
-	virtual void draw(int x, int y) {
-		bounds.set(x, y, cpy.getWidth(), cpy.getHeight());
-		ofSetColor(ofColor::white);
-		if (cpy.isAllocated()) {
-			if (highlight) ofSetColor(ofColor::red);
-			cpy.update();
-			cpy.draw(x, y);
-		}
-		ofDrawBitmapString(getTitle(), x + 10, y + 10);
-		localGui.setPosition(x, y);
-		localGui.draw();
-	}
-	bool shouldClose() { return close; };
-	bool shouldUseRaw() { return useRaw; };
-	bool isBypassed() { return bypass; };
-	ofTexture& getTexture() { return cpy.getTexture(); };
-	bool selected = false;
-	virtual void loadSettings(Json::Value settings) {
-		bypass = settings["Settings"][bypass.getName()].asBool();
-		close  = settings["Settings"][close.getName()].asBool();
-		useRaw = settings["Settings"][useRaw.getName()].asBool();
-	}
-	virtual ofxJSON getSettings() {
-		ofxJSON settings;
-		settings["Title"] = getTitle();
-		settings["Settings"][bypass.getName()] = bypass.get();
-		settings["Settings"][close.getName()]  = close.get();
-		settings["Settings"][useRaw.getName()] = useRaw.get();
-		return settings;
-	};
-protected:
-	ofParameter<bool> bypass;
-	ofParameter<bool> close;
-	ofParameter<bool> useRaw;
-	ofImage cpy;
-	ofxOscSender *sender;
-	ofxPanel localGui;
 };
 
 #pragma mark - Resize
@@ -567,60 +472,6 @@ public:
 	};
 protected:
 		ofParameter<int> iterations;
-};
-
-
-#pragma mark - Canny Edge Detection
-class Canny : public Component
-{
-public:
-	Canny() {
-		thresh1.set("Threshold 1", 1, 0, 200);
-		thresh2.set("Threshold 2", 30, 0, 200);
-	}
-	void loadGui(ofxPanel *gui) {
-		gui->add(thresh1);
-		gui->add(thresh2);
-	};
-	void compute(ofImage &src) {
-		ofxCv::copyGray(src, cpy); // grayscale 8-bit input and output
-		ofxCv::Canny(cpy, cpy, thresh1, thresh2);
-		src = cpy;
-	};
-	string getTitle() {
-		return "Canny";
-	}
-	void loadSettings(Json::Value settings) {
-		thresh1 = settings["Settings"][thresh1.getName()].asInt();
-		thresh2 = settings["Settings"][thresh2.getName()].asInt();
-	}
-	ofxJSON getSettings() {
-		ofxJSON settings = Component::getSettings();
-		settings["Settings"][thresh1.getName()] = thresh2.get();
-		settings["Settings"][thresh2.getName()] = thresh2.get();
-		return settings;
-	};
-protected:
-	ofParameter<int> thresh1;
-	ofParameter<int> thresh2;
-};
-
-#pragma mark - Sobel Edge Detection
-class Sobel : public Component
-{
-public:
-	Sobel() {
-	}
-	void loadGui(ofxPanel *gui) {
-	};
-	void compute(ofImage &src) {
-		ofxCv::Sobel(src, cpy);
-		src = cpy;
-	};
-	string getTitle() {
-		return "Sobel";
-	}
-protected:
 };
 	
 #pragma mark - HoughLines
