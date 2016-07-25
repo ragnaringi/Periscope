@@ -9,7 +9,7 @@
 #include "ofxCV.h"
 #include "Input.h"
 
-Input::Input() : isSetup(false), angle(RotateNone), x(0), y(0), w(0), h(0) {
+Input::Input() : isSetup(false), angle(RotateNone) {
 #ifdef __APPLE__
 	// Syphon setup
 	syphonClient.setup(); //using Syphon app Simple Server, found at http://syphon.v002.info/
@@ -20,6 +20,14 @@ Input::Input() : isSetup(false), angle(RotateNone), x(0), y(0), w(0), h(0) {
 #endif
 	input.allocate(320, 240, OF_IMAGE_COLOR);
 	result = input;
+	
+	// Gui
+	gui.setup();
+	gui.add(x.set("x", 0, 0, 320));
+	gui.add(y.set("y", 0, 0, 240));
+	gui.add(w.set("w", 320, 0, 320));
+	gui.add(h.set("h", 240, 0, 240));
+	gui.add(angle.set("angle", 0, 0, 3));
 }
 
 void Input::loadMovie(std::string title) {
@@ -53,6 +61,7 @@ void Input::update() {
 		source->update();
 		if( !source->isFrameNew() ) return;
 		ofxCv::copy(*source, input);
+		input.update();
 	}
 	else {
 #ifdef __APPLE__
@@ -70,6 +79,7 @@ void Input::update() {
 			ofPixels pix;
 			syphonBuffer.readToPixels(pix);
 			input.setFromPixels(pix);
+			input.update();
 		}
 #endif
 	}
@@ -84,6 +94,53 @@ void Input::update() {
 	result.crop(x,y,w,h);
 }
 
+void Input::draw() {
+	// Center images
+	ofPushMatrix();
+	if (angle % 2 == 0) {
+		ofTranslate(ofGetWidth()  * 0.5 - input.getWidth()  * 0.5,
+								ofGetHeight() * 0.5 - input.getHeight() * 0.5);
+	}
+	else {
+		ofTranslate(ofGetWidth() * 0.5 - input.getHeight() * 0.5,
+								ofGetHeight()* 0.5 - input.getWidth()  * 0.5);
+	}
+	
+	// Draw input with rotation
+	ofPushMatrix();
+	ofSetColor(ofColor::darkGray);
+	ofRotate(angle * 90);
+	switch (angle) {
+  case RotateNone:
+			input.draw(0,0);
+			break;
+	case Rotate90:
+		input.draw(0,-input.getHeight());
+		break;
+	case Rotate180:
+		input.draw(-input.getWidth(),-input.getHeight());
+		break;
+	case Rotate270:
+		input.draw(-input.getWidth(),0);
+		break;
+  default:
+			break;
+	}
+	ofPopMatrix();
+	
+	// Draw bounding box for crop
+	ofSetColor(ofColor::red);
+	ofDrawRectangle(x-1, y-1, w+2, h+2);
+	
+	// Draw processed copy
+	ofSetColor(ofColor::white);
+	result.draw(x, y);
+	
+	ofPopMatrix();
+	
+	gui.draw();
+}
+
 void Input::rotate(InputRotate angle_) {
 	angle = angle_;
 }
@@ -95,6 +152,10 @@ void Input::crop(int x_, int y_, int w_, int h_) {
 	h = h_;
 }
 
-ofImage& Input::getInput() {
+ofImage& Input::raw() {
+	return input;
+}
+
+ofImage& Input::processed() {
 	return result;
 }

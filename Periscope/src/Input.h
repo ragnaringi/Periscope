@@ -9,7 +9,7 @@
 #ifndef Input_h
 #define Input_h
 
-#include <stdio.h>
+#include "ofxGui.h"
 #ifdef __APPLE__
 #include "ofxSyphon.h"
 #endif
@@ -33,19 +33,21 @@ public:
 	void update();
 	void rotate(InputRotate angle);
 	void crop(int x, int y, int w, int h);
-	ofImage& getInput();
+	void draw();
+	ofImage& raw();
+	ofImage& processed();
 private:
 #ifdef __APPLE__
-	// Syphon
 	ofxSyphonClient syphonClient;
 	ofFbo syphonBuffer;
 #endif
 	bool isSetup;
-	int x, y, w, h;
-	InputRotate angle;
+	ofParameter<int> x, y, w, h;
+	ofParameter<int> angle;
 	unique_ptr<ofBaseVideoDraws> source;
 	ofImage input;
 	ofImage result;
+	ofxPanel gui;
 	ofParameter<bool> enableClient, enableServer;
 };
 	

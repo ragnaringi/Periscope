@@ -8,8 +8,7 @@ void ofApp::setup(){
 	ofSetWindowTitle("PERISCOPE");
 	ofSetWindowShape(1280, 768);
 	ofSetWindowPosition(10, 20);
-	ofSetVerticalSync(true);
-	ofSetFrameRate(30);
+	ofSetFrameRate(60);
 
 	input.loadMovie("fingers.mov");
 	
@@ -20,7 +19,7 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
 	input.update();
-	ofImage &src = input.getInput();
+	ofImage &src = input.processed();
 	if (src.isAllocated()) {
 		periscope.compute(src);
 	}
@@ -29,8 +28,13 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	ofSetColor(255);
-	periscope.draw();
+	ofClear(0);
+	
+	if (!periscope.getDebug()) {
+		input.draw();
+	}
+	else periscope.draw();
+	
 	ofSetColor(ofColor::white);
 	ofDrawBitmapString("S = Save Settings to json, L = Load Settings from json, C = Select webcam, V = Select syphon, M = Load movie", 10, ofGetHeight() - 100);
 }
