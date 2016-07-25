@@ -24,13 +24,15 @@ void ofApp::update(){
 	if (src.isAllocated()) {
 		periscope.compute(src);
 	}
+	output.send(periscope.getOutput());
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 	ofSetColor(255);
 	periscope.draw();
-	output.send(periscope.getOutput());
+	ofSetColor(ofColor::white);
+	ofDrawBitmapString("S = Save Settings to json, L = Load Settings from json, C = Select webcam, V = Select syphon, M = Load movie", 10, ofGetHeight() - 100);
 }
 
 //--------------------------------------------------------------
@@ -51,9 +53,11 @@ void ofApp::keyPressed(int key){
 		case 'c':
 			input.selectWebCam();
 			break;
-		case 'v':
-			input.selectSyphon();
+		case 'v': {
+			string server = ofSystemTextBoxDialog("Input Syphon Source", "Simple Server");
+			input.selectSyphon(server);
 			break;
+		}
 		case 'm':
 			loadMovieFile();
 			break;

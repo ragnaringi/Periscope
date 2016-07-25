@@ -33,14 +33,14 @@ static ofImage input; // TODO
 
 //--------------------------------------------------------------
 Periscope::Periscope() : debugMode(true) {
-	gui.setup();
-	loadGui();
 	sender.setup(HOST, PORT);
 	
 	for (int i = 0; i < NUM_THUMBNAILS; ++i) {
 		unique_ptr<Thumbnail> t( new Thumbnail(titles[i]) );
 		thumbnails.push_back(move(t));
 	}
+	gui.setup();
+	loadGui();
 }
 
 //--------------------------------------------------------------

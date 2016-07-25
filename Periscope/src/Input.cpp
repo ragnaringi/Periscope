@@ -40,7 +40,8 @@ void Input::selectWebCam() {
 	source = move(cam);
 }
 
-void Input::selectSyphon() {
+void Input::selectSyphon(std::string server) {
+	syphonClient.set("", server);
 	enableClient = true;
 }
 

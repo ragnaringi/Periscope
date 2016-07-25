@@ -29,7 +29,7 @@ public:
 	Input();
 	void loadMovie(std::string title);
 	void selectWebCam();
-	void selectSyphon();
+	void selectSyphon(std::string server);
 	void update();
 	void rotate(InputRotate angle);
 	void crop(int x, int y, int w, int h);
