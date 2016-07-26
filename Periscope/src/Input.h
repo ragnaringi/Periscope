@@ -30,9 +30,9 @@ public:
 	void loadMovie(std::string title);
 	void selectWebCam();
 	void selectSyphon(std::string server);
-	void update();
 	void rotate(InputRotate angle);
 	void crop(int x, int y, int w, int h);
+	void update();
 	void draw();
 	ofImage& raw();
 	ofImage& processed();
@@ -42,13 +42,13 @@ private:
 	ofFbo syphonBuffer;
 #endif
 	bool isSetup;
-	ofParameter<int> x, y, w, h;
-	ofParameter<int> angle;
+	ofParameter<int> x, y, w, h, angle;
 	unique_ptr<ofBaseVideoDraws> source;
 	ofImage input;
 	ofImage result;
 	ofxPanel gui;
 	ofParameter<bool> enableClient, enableServer;
+	void updateGui();
 };
 	
 } /* namespace PScope */

@@ -9,27 +9,32 @@
 #include "ofxCV.h"
 #include "Input.h"
 
+static const int MAX_WIDTH = 1080;
+static const int MAX_HEIGHT = 720;
+
+//--------------------------------------------------------------
 Input::Input() : isSetup(false), angle(RotateNone) {
 #ifdef __APPLE__
 	// Syphon setup
 	syphonClient.setup(); //using Syphon app Simple Server, found at http://syphon.v002.info/
 	syphonClient.set("","Simple Server");
-	syphonBuffer.allocate(320, 240, GL_RGBA);
+	syphonBuffer.allocate(MAX_WIDTH, MAX_HEIGHT, GL_RGBA);
 #else
 	// Spout setup
 #endif
-	input.allocate(320, 240, OF_IMAGE_COLOR);
+	input.allocate(MAX_WIDTH, MAX_HEIGHT, OF_IMAGE_COLOR);
 	result = input;
 	
 	// Gui
 	gui.setup();
-	gui.add(x.set("x", 0, 0, 320));
-	gui.add(y.set("y", 0, 0, 240));
-	gui.add(w.set("w", 320, 0, 320));
-	gui.add(h.set("h", 240, 0, 240));
-	gui.add(angle.set("angle", 0, 0, 3));
+	gui.add(x.set("x", 0, 0, MAX_WIDTH));
+	gui.add(y.set("y", 0, 0, MAX_WIDTH));
+	gui.add(w.set("w", MAX_WIDTH, 0, MAX_WIDTH));
+	gui.add(h.set("h", MAX_HEIGHT, 0, MAX_HEIGHT));
+	gui.add(angle.set("angle", 0, 0, Rotate270));
 }
 
+//--------------------------------------------------------------
 void Input::loadMovie(std::string title) {
 	enableClient = false;
 	unique_ptr<ofVideoPlayer> player(new ofVideoPlayer);
@@ -39,20 +44,25 @@ void Input::loadMovie(std::string title) {
 	player->play();
 	player->setLoopState(OF_LOOP_NORMAL);
 	source = move(player);
+	isSetup = false;
 }
 
+//--------------------------------------------------------------
 void Input::selectWebCam() {
 	enableClient = false;
 	unique_ptr<ofVideoGrabber> cam(new ofVideoGrabber);
-	cam->setup(320, 240);
+	cam->setup(640, 480);
 	source = move(cam);
+	isSetup = false;
 }
 
+//--------------------------------------------------------------
 void Input::selectSyphon(std::string server) {
 	syphonClient.set("", server);
 	enableClient = true;
 }
 
+//--------------------------------------------------------------
 void Input::update() {
 	if ( !enableClient ) {
 		if (source == nullptr) {
@@ -84,67 +94,76 @@ void Input::update() {
 #endif
 	}
 	
-	if (!isSetup && w == 0, h == 0) {
-		crop(0, 0, input.getWidth(), input.getHeight());
-	}
-	
 	// Rotate
 	result = input;
 	result.rotate90(angle);
 	result.crop(x,y,w,h);
+	
+	updateGui();
 }
 
+//--------------------------------------------------------------
 void Input::draw() {
 	// Center images
+	
 	ofPushMatrix();
-	if (angle % 2 == 0) {
+	
+	if (angle != RotateNone && angle % 2 == 0) {
 		ofTranslate(ofGetWidth()  * 0.5 - input.getWidth()  * 0.5,
 								ofGetHeight() * 0.5 - input.getHeight() * 0.5);
 	}
 	else {
-		ofTranslate(ofGetWidth() * 0.5 - input.getHeight() * 0.5,
-								ofGetHeight()* 0.5 - input.getWidth()  * 0.5);
+		ofTranslate(ofGetWidth()  * 0.5 - input.getHeight() * 0.5,
+								ofGetHeight() * 0.5 - input.getWidth()  * 0.5);
 	}
 	
 	// Draw input with rotation
 	ofPushMatrix();
 	ofSetColor(ofColor::darkGray);
 	ofRotate(angle * 90);
+	
 	switch (angle) {
-  case RotateNone:
-			input.draw(0,0);
+	
+		case RotateNone:
+			input.draw(0, 0); break;
+				
+		case Rotate90:
+			input.draw(0, -input.getHeight());
 			break;
-	case Rotate90:
-		input.draw(0,-input.getHeight());
-		break;
-	case Rotate180:
-		input.draw(-input.getWidth(),-input.getHeight());
-		break;
-	case Rotate270:
-		input.draw(-input.getWidth(),0);
-		break;
-  default:
+				
+		case Rotate180:
+			input.draw(-input.getWidth(), -input.getHeight());
 			break;
+				
+		case Rotate270:
+			input.draw(-input.getWidth(), 0);
+			break;
+	
+		default: break;
 	}
 	ofPopMatrix();
 	
 	// Draw bounding box for crop
+	
 	ofSetColor(ofColor::red);
 	ofDrawRectangle(x-1, y-1, w+2, h+2);
 	
 	// Draw processed copy
+	
 	ofSetColor(ofColor::white);
 	result.draw(x, y);
 	
-	ofPopMatrix();
+	ofPopMatrix(); /* Center images */
 	
 	gui.draw();
 }
 
+//--------------------------------------------------------------
 void Input::rotate(InputRotate angle_) {
 	angle = angle_;
 }
 
+//--------------------------------------------------------------
 void Input::crop(int x_, int y_, int w_, int h_) {
 	x = x_;
 	y = y_;
@@ -152,10 +171,22 @@ void Input::crop(int x_, int y_, int w_, int h_) {
 	h = h_;
 }
 
+//--------------------------------------------------------------
 ofImage& Input::raw() {
 	return input;
 }
 
+//--------------------------------------------------------------
 ofImage& Input::processed() {
 	return result;
+}
+
+//--------------------------------------------------------------
+void Input::updateGui() {
+	if (!isSetup) {
+		if (w != input.getWidth() || h != input.getHeight()) {
+			crop(0, 0, fmin(input.getWidth(), MAX_WIDTH), fmin(input.getHeight(), MAX_HEIGHT));
+		}
+		isSetup = true;
+	}
 }

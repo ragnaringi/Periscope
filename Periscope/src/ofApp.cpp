@@ -32,9 +32,10 @@ void ofApp::draw(){
 	
 	if (!periscope.getDebug()) {
 		input.draw();
+		return;
 	}
-	else periscope.draw();
-	
+
+	periscope.draw();
 	ofSetColor(ofColor::white);
 	ofDrawBitmapString("S = Save Settings to json, L = Load Settings from json, C = Select webcam, V = Select syphon, M = Load movie", 10, ofGetHeight() - 100);
 }
