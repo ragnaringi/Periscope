@@ -108,7 +108,7 @@ void Input::draw() {
 	
 	ofPushMatrix();
 	
-	if (angle != RotateNone && angle % 2 == 0) {
+	if (angle % 2 == 0) {
 		ofTranslate(ofGetWidth()  * 0.5 - input.getWidth()  * 0.5,
 								ofGetHeight() * 0.5 - input.getHeight() * 0.5);
 	}
