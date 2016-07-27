@@ -10,7 +10,8 @@
 
 Output::Output() {
 #ifdef __APPLE__
-	syphonServer.setName("Periscope Output");
+	mainServer.setName("Periscope Main");
+	textureServer.setName("Periscope Processed");
 #else
 	sender.init("Periscope Output");
 #endif
@@ -18,7 +19,15 @@ Output::Output() {
 
 void Output::send(ofTexture &texture) {
 #ifdef __APPLE__
-	syphonServer.publishTexture(&texture);
+	textureServer.publishTexture(&texture);
+#else
+	sender.send(texture);
+#endif
+}
+
+void Output::sendMain(ofTexture &texture) {
+#ifdef __APPLE__
+	mainServer.publishTexture(&texture);
 #else
 	sender.send(texture);
 #endif

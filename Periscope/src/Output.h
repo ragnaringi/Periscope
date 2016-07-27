@@ -23,9 +23,11 @@ class Output {
 public:
 	Output();
 	void send(ofTexture &src);
+	void sendMain(ofTexture &src);
 private:
 #ifdef __APPLE__
-	ofxSyphonServer syphonServer;
+	ofxSyphonServer textureServer;
+	ofxSyphonServer mainServer;
 #else
 	ofxSpout::Sender sender;
 #endif
