@@ -18,10 +18,11 @@ Input::Input() : isSetup(false), angle(RotateNone) {
 	// Syphon setup
 	syphonClient.setup(); //using Syphon app Simple Server, found at http://syphon.v002.info/
 	syphonClient.set("","Simple Server");
-	syphonBuffer.allocate(MAX_WIDTH, MAX_HEIGHT, GL_RGBA);
 #else
 	// Spout setup
+	spoutReceiver.setup();
 #endif
+	frameBuffer.allocate(MAX_WIDTH, MAX_HEIGHT, GL_RGBA);
 	input.allocate(MAX_WIDTH, MAX_HEIGHT, OF_IMAGE_COLOR);
 	result = input;
 	
@@ -60,8 +61,8 @@ void Input::selectWebCam() {
 void Input::selectSyphon(std::string server) {
 #ifdef __APPLE__
 	syphonClient.set("", server);
-	enableClient = true;
 #endif
+	enableClient = true;
 }
 
 //--------------------------------------------------------------
@@ -76,24 +77,25 @@ void Input::update() {
 		input.update();
 	}
 	else {
-#ifdef __APPLE__
-		syphonBuffer.begin();
-
-		syphonClient.bind();
+		frameBuffer.begin();
 		ofClear(0.f);
 		ofSetColor(ofColor::white);
-		syphonClient.draw(0, 0, syphonBuffer.getWidth(), syphonBuffer.getHeight());
+#ifdef __APPLE__
+		syphonClient.bind();
+		syphonClient.draw(0, 0, frameBuffer.getWidth(), frameBuffer.getHeight());
 		syphonClient.unbind();
-
-		syphonBuffer.end();
+#else
+		spoutReceiver.updateTexture();
+		spoutReceiver.getTexture().draw(0, 0);
+#endif
+		frameBuffer.end();
 		
-		if (syphonBuffer.isAllocated()) {
+		if (frameBuffer.isAllocated()) {
 			ofPixels pix;
-			syphonBuffer.readToPixels(pix);
+			frameBuffer.readToPixels(pix);
 			input.setFromPixels(pix);
 			input.update();
 		}
-#endif
 	}
 	
 	// Rotate
