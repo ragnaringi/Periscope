@@ -13,7 +13,7 @@
 #ifdef __APPLE__
 #include "ofxSyphon.h"
 #else
-#include "ofxSpout.h"
+#include "ofxSpout2Sender.h"
 #endif
 
 inline namespace PScope
@@ -29,7 +29,7 @@ private:
 	ofxSyphonServer textureServer;
 	ofxSyphonServer mainServer;
 #else
-	ofxSpout::Sender sender;
+	ofxSpout2::Sender sender;
 #endif
 };
 	
