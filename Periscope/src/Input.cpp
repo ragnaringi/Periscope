@@ -58,8 +58,10 @@ void Input::selectWebCam() {
 
 //--------------------------------------------------------------
 void Input::selectSyphon(std::string server) {
+#ifdef __APPLE__
 	syphonClient.set("", server);
 	enableClient = true;
+#endif
 }
 
 //--------------------------------------------------------------
