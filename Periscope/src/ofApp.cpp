@@ -24,6 +24,7 @@ void ofApp::update(){
 		periscope.compute(src);
 	}
 	output.send(periscope.getOutput());
+	output.sendMain(src.getTexture());
 }
 
 //--------------------------------------------------------------
