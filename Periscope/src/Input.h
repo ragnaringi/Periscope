@@ -12,6 +12,8 @@
 #include "ofxGui.h"
 #ifdef __APPLE__
 #include "ofxSyphon.h"
+#else
+#include "ofxSpout2Receiver.h"
 #endif
 
 inline namespace PScope
@@ -37,9 +39,11 @@ public:
 	ofImage& raw();
 	ofImage& processed();
 private:
+	ofFbo frameBuffer;
 #ifdef __APPLE__
 	ofxSyphonClient syphonClient;
-	ofFbo syphonBuffer;
+#else
+	ofxSpout2::Receiver spoutReceiver;
 #endif
 	bool isSetup;
 	ofParameter<int> x, y, w, h, angle;

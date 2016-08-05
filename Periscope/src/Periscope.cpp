@@ -281,5 +281,8 @@ ofImage& Periscope::getInput() {
 
 //--------------------------------------------------------------
 ofTexture& Periscope::getOutput() {
+	if ( components.empty() ) {
+		return getInput().getTexture();
+	}
 	return components.back()->getTexture();
 }
