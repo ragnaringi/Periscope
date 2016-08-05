@@ -141,19 +141,19 @@ class Threshold : public Component
 {
 public:
 	Threshold() {
-		t.set("Threshold", 128, 0, 255);
-		autoT.set("Auto", false);
+		thresh.set("Threshold", 128, 0, 255);
+		autoThresh.set("Auto", false);
 	}
 	void loadGui(ofxPanel *gui) {
-		gui->add(t);
-		gui->add(autoT);
+		gui->add(thresh);
+		gui->add(autoThresh);
 	}
 	void compute(ofImage &src) {
 		ofxCv::copyGray(src, cpy);
-		if(autoT) {
+		if(autoThresh) {
 			ofxCv::autothreshold(cpy);
 		} else {
-			ofxCv::threshold(cpy, t);
+			ofxCv::threshold(cpy, thresh);
 		}
 		ofxCv::copy(cpy, src);
 	}
@@ -161,18 +161,18 @@ public:
 		return "Threshold";
 	}
 	void loadSettings(Json::Value settings) {
-		t     = settings["Settings"][t.getName()].asInt();
-		autoT = settings["Settings"][autoT.getName()].asBool();
+		thresh     = settings["Settings"][thresh.getName()].asInt();
+		autoThresh = settings["Settings"][autoThresh.getName()].asBool();
 	}
 	ofxJSON getSettings() {
 		ofxJSON settings = Component::getSettings();
-		settings["Settings"][t.getName()] = t.get();
-		settings["Settings"][autoT.getName()] = autoT.get();
+		settings["Settings"][thresh.getName()] = thresh.get();
+		settings["Settings"][autoThresh.getName()] = autoThresh.get();
 		return settings;
 	};
 protected:
-	ofParameter<int> t;
-	ofParameter<bool> autoT;
+	ofParameter<int> thresh;
+	ofParameter<bool> autoThresh;
 };
 
 #pragma mark - Difference
@@ -190,7 +190,7 @@ public:
 			ofxCv::copy(src, bg);
 			learn = false;
 		}
-		// take the absolute difference of prev and current and save it inside diff
+		// take the absolute difference of prev and current and save it inside cpy
 		ofxCv::absdiff(src, bg, cpy);
 		src = cpy;
 		

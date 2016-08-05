@@ -1106,6 +1106,15 @@
 			name = src;
 			sourceTree = "<group>";
 		};
+		C0EBBC031D553F6C0016ACB9 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				C0CFF82E1D468792008D15F4 /* EdgeDetect.h */,
+				C0EBBC021D553A970016ACB9 /* Contours.h */,
+			);
+			name = Components;
+			sourceTree = "<group>";
+		};
 		C58CC92A5283B95AA31D50FB /* video */ = {
 			isa = PBXGroup;
 			children = (
@@ -1237,10 +1246,9 @@
 				C0879B871D44E8CA006D6343 /* Input.h */,
 				C0879B891D44FD21006D6343 /* Output.cpp */,
 				C0879B8A1D44FD21006D6343 /* Output.h */,
-				C0CFF82E1D468792008D15F4 /* EdgeDetect.h */,
-				C0EBBC021D553A970016ACB9 /* Contours.h */,
 				C0CFF8311D4687E0008D15F4 /* Component.h */,
 				C0CFF82B1D468542008D15F4 /* Gui.h */,
+				C0EBBC031D553F6C0016ACB9 /* Components */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
