@@ -13,7 +13,7 @@ static const int MAX_WIDTH = 1080;
 static const int MAX_HEIGHT = 720;
 
 //--------------------------------------------------------------
-Input::Input() : isSetup(false), angle(RotateNone) {
+Input::Input() : isSetup(false), enabled(true), angle(RotateNone) {
 #ifdef __APPLE__
 	// Syphon setup
 	syphonClient.setup(); //using Syphon app Simple Server, found at http://syphon.v002.info/
@@ -67,6 +67,8 @@ void Input::selectSyphon(std::string server) {
 
 //--------------------------------------------------------------
 void Input::update() {
+  if ( !enabled ) return;
+  
 	if ( !enableClient ) {
 		if (source == nullptr) {
 			return;

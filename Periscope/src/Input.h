@@ -36,6 +36,8 @@ public:
 	void crop(int x, int y, int w, int h);
 	void update();
 	void draw();
+  bool& isEnabled() { return enabled; }
+  void setEnabled(bool enable) { enabled = enable; }
 	ofImage& raw();
 	ofImage& processed();
 private:
@@ -46,6 +48,7 @@ private:
 	ofxSpout2::Receiver spoutReceiver;
 #endif
 	bool isSetup;
+  bool enabled;
 	ofParameter<int> x, y, w, h, angle;
 	unique_ptr<ofBaseVideoDraws> source;
 	ofImage input;
