@@ -6,9 +6,6 @@
 //
 //
 
-#define HOST "localhost" //"10.2.65.114"
-#define PORT 9999
-
 #include "Helpers.h"
 #include "Periscope.h"
 

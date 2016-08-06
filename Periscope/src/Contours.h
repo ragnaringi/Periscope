@@ -50,8 +50,8 @@ public:
 				m.addFloatArg(p.x);
 				m.addFloatArg(p.y);
 			}
+			sender->sendMessage(m);
 		}
-		sender->sendMessage(m);
 	}
 	void draw(int x, int y) {
 		Component::draw(x, y);

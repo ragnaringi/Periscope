@@ -5,6 +5,7 @@
 #include "Input.h"
 #include "Output.h"
 #include "Periscope.h"
+#include "ShapeDetector.h"
 
 class ofApp : public ofBaseApp{
 
@@ -26,10 +27,13 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 	
 	private:
+  
+    int drawingMode;
 	
 		PScope::Input input;
 		PScope::Output output;
 		PScope::Periscope periscope;
+    PScope::ShapeDetector shapeDetector;
 	
 		void loadPeriscope();
 		void savePeriscope();

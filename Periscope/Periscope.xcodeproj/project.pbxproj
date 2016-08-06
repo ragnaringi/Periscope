@@ -44,6 +44,7 @@
 		B922B3A97B61BB43C90A789E /* ofxOscReceiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4AF8FA6B9B20FC203A112CD /* ofxOscReceiver.cpp */; };
 		BB18EA69789B6CBCA40B6AEF /* ContourFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B51452C46CEFFDEC675DD0B9 /* ContourFinder.cpp */; };
 		BB5E214B32E344F8B7A26B29 /* ofxCvContourFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B1C1A67EA6897D61AD1A1013 /* ofxCvContourFinder.cpp */; };
+		C0017C8C1D560A0F00283C40 /* ShapeDetector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0017C8A1D560A0F00283C40 /* ShapeDetector.cpp */; };
 		C0879B881D44E8CA006D6343 /* Input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0879B861D44E8CA006D6343 /* Input.cpp */; };
 		C0879B8B1D44FD21006D6343 /* Output.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0879B891D44FD21006D6343 /* Output.cpp */; };
 		D106D0CD3C2AB4D3D5CF9CAA /* ofxOscMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA04A5C303D50204D3AFF029 /* ofxOscMessage.cpp */; };
@@ -336,6 +337,8 @@
 		BCBD948A3282F655F67CD9E5 /* fast_marching.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = fast_marching.hpp; path = ../openFrameworks/addons/ofxOpenCv/libs/opencv/include/opencv2/videostab/fast_marching.hpp; sourceTree = SOURCE_ROOT; };
 		BD864E4CDD31F931379EF3A6 /* hdf5.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = hdf5.h; path = ../openFrameworks/addons/ofxOpenCv/libs/opencv/include/opencv2/flann/hdf5.h; sourceTree = SOURCE_ROOT; };
 		BF7779868805133E65784F9F /* directx.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = directx.hpp; path = ../openFrameworks/addons/ofxOpenCv/libs/opencv/include/opencv2/core/directx.hpp; sourceTree = SOURCE_ROOT; };
+		C0017C8A1D560A0F00283C40 /* ShapeDetector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShapeDetector.cpp; sourceTree = "<group>"; };
+		C0017C8B1D560A0F00283C40 /* ShapeDetector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShapeDetector.h; sourceTree = "<group>"; };
 		C01EC02CAD75F5386947EAA3 /* ofxOscBundle.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxOscBundle.cpp; path = ../openFrameworks/addons/ofxOsc/src/ofxOscBundle.cpp; sourceTree = SOURCE_ROOT; };
 		C0879B861D44E8CA006D6343 /* Input.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Input.cpp; sourceTree = "<group>"; };
 		C0879B871D44E8CA006D6343 /* Input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Input.h; sourceTree = "<group>"; };
@@ -1240,6 +1243,8 @@
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
 				217C06CB5453D6FB36E3D8E5 /* Helpers.h */,
+				C0017C8A1D560A0F00283C40 /* ShapeDetector.cpp */,
+				C0017C8B1D560A0F00283C40 /* ShapeDetector.h */,
 				C6D5EDC86B1069C8A5C62C8E /* Periscope.cpp */,
 				D4E9AE6E32CFF332CCED01B5 /* Periscope.h */,
 				C0879B861D44E8CA006D6343 /* Input.cpp */,
@@ -1483,6 +1488,7 @@
 				B313E9500AF6A0C2EEB66A03 /* jsoncpp.cpp in Sources */,
 				039D3E5BA2A6A3BEA46BF03B /* ofxCvColorImage.cpp in Sources */,
 				BB5E214B32E344F8B7A26B29 /* ofxCvContourFinder.cpp in Sources */,
+				C0017C8C1D560A0F00283C40 /* ShapeDetector.cpp in Sources */,
 				C0879B8B1D44FD21006D6343 /* Output.cpp in Sources */,
 				7ADFCFBC71DD5E2DD2E21675 /* ofxCvFloatImage.cpp in Sources */,
 				7A09653E30ABF4EA76B4117D /* ofxCvGrayscaleImage.cpp in Sources */,

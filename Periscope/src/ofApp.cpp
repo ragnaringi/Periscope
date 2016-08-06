@@ -25,28 +25,37 @@ void ofApp::update(){
 	}
 	output.send(periscope.getOutput());
 	output.sendMain(src.getTexture());
+  
+  shapeDetector.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 	ofClear(0);
+  
+  switch(drawingMode) {
+    case 1:
+      periscope.draw(); break;
+    case 2:
+      shapeDetector.draw(); break;
+    default:
+      input.draw(); break;
+  }
 	
-	if (!periscope.getDebug()) {
-		input.draw();
-		return;
-	}
-
-	periscope.draw();
-	ofSetColor(ofColor::white);
-	ofDrawBitmapString("S = Save Settings to json, L = Load Settings from json, C = Select webcam, V = Select syphon, M = Load movie", 10, ofGetHeight() - 100);
+  ofSetColor(ofColor::white);
+	ofDrawBitmapString("1,2,3 = Change Drawing Mode, S = Save Settings to json, L = Load Settings from json, C = Select webcam, V = Select syphon, M = Load movie", 10, ofGetHeight() - 100);
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 	switch (key) {
-		case ' ':
-			periscope.setDebug( !periscope.getDebug() );
-			break;
+		case '1':
+      drawingMode = 0; break;
+    case '2':
+      drawingMode = 1; break;
+    case '3':
+      drawingMode = 2; break;
+      break;
 		case 'f':
 			ofToggleFullscreen();
 			break;
@@ -67,6 +76,9 @@ void ofApp::keyPressed(int key){
 		case 'm':
 			loadMovieFile();
 			break;
+    case ' ':
+      input.setEnabled( !input.isEnabled() );
+      break;
 	}
 }
 
