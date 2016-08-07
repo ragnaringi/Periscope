@@ -40,6 +40,11 @@ public:
   void setEnabled(bool enable) { enabled = enable; }
 	ofImage& raw();
 	ofImage& processed();
+#ifdef __APPLE__
+  string& syphonServer() {
+    return syphonClient.getApplicationName();
+  }
+#endif
 private:
 	ofFbo frameBuffer;
 #ifdef __APPLE__

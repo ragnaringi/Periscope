@@ -69,7 +69,10 @@ void ofApp::keyPressed(int key){
 			input.selectWebCam();
 			break;
 		case 'v': {
-			string server = ofSystemTextBoxDialog("Input Syphon Source", "Simple Server");
+      string server;
+#ifdef __APPLE__
+      server = ofSystemTextBoxDialog("Input Syphon Source", input.syphonServer());
+#endif
 			input.selectSyphon(server);
 			break;
 		}
