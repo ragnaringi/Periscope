@@ -12,6 +12,9 @@
 static const int MAX_WIDTH = 1080;
 static const int MAX_HEIGHT = 720;
 
+void applyTranslation(ofImage &image, int angle);
+void applyRotation(ofImage &image, int angle);
+
 //--------------------------------------------------------------
 Input::Input() : isSetup(false), enabled(true), frameIsNew(false), angle(RotateNone) {
 #ifdef __APPLE__
@@ -94,40 +97,9 @@ void Input::draw() {
   // Center images
   ofPushMatrix();
   
-  if (angle % 2 == 0) {
-    ofTranslate(ofGetWidth()  * 0.5 - input.getWidth()  * 0.5,
-                ofGetHeight() * 0.5 - input.getHeight() * 0.5);
-  }
-  else {
-    ofTranslate(ofGetWidth()  * 0.5 - input.getHeight() * 0.5,
-                ofGetHeight() * 0.5 - input.getWidth()  * 0.5);
-  }
-  
-  // Draw input with rotation
-  ofPushMatrix();
-  ofSetColor(ofColor::darkGray);
-  ofRotate(angle * 90);
-  
-  switch (angle) {
-      
-    case RotateNone:
-      input.draw(0, 0); break;
-      
-    case Rotate90:
-      input.draw(0, -input.getHeight());
-      break;
-      
-    case Rotate180:
-      input.draw(-input.getWidth(), -input.getHeight());
-      break;
-      
-    case Rotate270:
-      input.draw(-input.getWidth(), 0);
-      break;
-      
-    default: break;
-  }
-  ofPopMatrix();
+  // Translate, rotate to center
+  applyRotation(input, angle);
+  applyTranslation(input, angle);
   
   // Draw bounding box for crop
   
@@ -179,6 +151,7 @@ void Input::updateGui() {
   }
 }
 
+//--------------------------------------------------------------
 void Input::updateTextureIfNeeded() {
   if ( frameIsNew ) return;
   
@@ -219,4 +192,44 @@ void Input::updateTextureIfNeeded() {
   result.crop(x,y,w,h);
   
   frameIsNew = true;
+}
+
+//--------------------------------------------------------------
+void applyTranslation(ofImage& image, int angle) {
+  if (angle % 2 == 0) {
+    ofTranslate(ofGetWidth()  * 0.5 - image.getWidth()  * 0.5,
+                ofGetHeight() * 0.5 - image.getHeight() * 0.5);
+  }
+  else {
+    ofTranslate(ofGetWidth()  * 0.5 - image.getHeight() * 0.5,
+                ofGetHeight() * 0.5 - image.getWidth()  * 0.5);
+  }
+}
+
+//--------------------------------------------------------------
+void applyRotation(ofImage &image, int angle) {
+  ofPushMatrix();
+  ofSetColor(ofColor::darkGray);
+  ofRotate(angle * 90);
+  
+  switch (angle) {
+      
+    case RotateNone:
+      image.draw(0, 0); break;
+      
+    case Rotate90:
+      image.draw(0, -image.getHeight());
+      break;
+      
+    case Rotate180:
+      image.draw(-image.getWidth(), -image.getHeight());
+      break;
+      
+    case Rotate270:
+      image.draw(-image.getWidth(), 0);
+      break;
+      
+    default: break;
+  }
+  ofPopMatrix();
 }
