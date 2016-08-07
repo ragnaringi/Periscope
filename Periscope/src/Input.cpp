@@ -76,6 +76,11 @@ void Input::update() {
     ofxCv::copy(*source, input);
     input.update();
   }
+  else {
+#ifndef __APPLE__
+    spoutReceiver.updateTexture();
+#endif
+  }
 		
   updateGui();
 }
@@ -93,7 +98,6 @@ void Input::draw() {
     texture = &syphonClient.getTexture();
     syphonClient.draw(0, 0);
 #else
-    spoutReceiver.updateTexture();
     texture = &spoutReceiver.getTexture();
     texture->draw(0, 0);
 #endif
