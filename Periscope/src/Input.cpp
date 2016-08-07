@@ -160,6 +160,7 @@ void Input::draw() {
 	
 	// Draw bounding box for crop
 	
+  ofNoFill();
 	ofSetColor(ofColor::red);
 	ofDrawRectangle(x-1, y-1, w+2, h+2);
 	
