@@ -67,9 +67,7 @@ void Input::selectSyphon(std::string server) {
 
 //--------------------------------------------------------------
 void Input::update() {
-  if ( !enabled ) return;
-  
-	if ( !enableClient ) {
+	if ( enabled && !enableClient ) {
 		if (source == nullptr) {
 			return;
 		}
@@ -78,40 +76,39 @@ void Input::update() {
 		ofxCv::copy(*source, input);
 		input.update();
 	}
-	else {
-		frameBuffer.begin();
-		ofClear(0.f);
-		ofSetColor(ofColor::white);
-#ifdef __APPLE__
-		syphonClient.bind();
-		syphonClient.draw(0, 0, frameBuffer.getWidth(), frameBuffer.getHeight());
-		syphonClient.unbind();
-#else
-		spoutReceiver.updateTexture();
-		spoutReceiver.getTexture().draw(0, 0);
-#endif
-		frameBuffer.end();
 		
-		if (frameBuffer.isAllocated()) {
-			ofPixels pix;
-			frameBuffer.readToPixels(pix);
-			input.setFromPixels(pix);
-			input.update();
-		}
-	}
-	
-	// Rotate
-	result = input;
-	result.rotate90(angle);
-	result.crop(x,y,w,h);
-	
 	updateGui();
 }
 
 //--------------------------------------------------------------
 void Input::draw() {
-	// Center images
+	ofClear(0.f);
+  
+  if ( enableClient ) {
+    frameBuffer.begin();
+    ofSetColor(ofColor::white);
+#ifdef __APPLE__
+    syphonClient.draw(0, 0);
+#else
+    spoutReceiver.updateTexture();
+    spoutReceiver.getTexture().draw(0, 0);
+#endif
+    frameBuffer.end();
+    
+    if (frameBuffer.isAllocated()) {
+      ofPixels pix;
+      frameBuffer.readToPixels(pix);
+      input.setFromPixels(pix);
+      input.update();
+    }
+  }
+  
+  // Rotate
+  result = input;
+  result.rotate90(angle);
+  result.crop(x,y,w,h);
 	
+  // Center images
 	ofPushMatrix();
 	
 	if (angle % 2 == 0) {
