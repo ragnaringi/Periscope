@@ -95,7 +95,7 @@ void Input::draw() {
 #else
     spoutReceiver.updateTexture();
     texture = &spoutReceiver.getTexture();
-    texture.draw(0, 0);
+    texture->draw(0, 0);
 #endif
     frameBuffer.end();
     
