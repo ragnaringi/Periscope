@@ -13,7 +13,7 @@ static const int MAX_WIDTH = 1080;
 static const int MAX_HEIGHT = 720;
 
 //--------------------------------------------------------------
-Input::Input() : isSetup(false), enabled(true), angle(RotateNone) {
+Input::Input() : isSetup(false), enabled(true), frameIsNew(false), angle(RotateNone) {
 #ifdef __APPLE__
   // Syphon setup
   syphonClient.setup(); //using Syphon app Simple Server, found at http://syphon.v002.info/
@@ -81,48 +81,15 @@ void Input::update() {
     spoutReceiver.updateTexture();
 #endif
   }
-		
+  frameIsNew = false;
   updateGui();
 }
 
 //--------------------------------------------------------------
 void Input::draw() {
+  updateTextureIfNeeded();
+  
   ofClear(0.f);
-  
-  if ( enableClient ) {
-    
-    frameBuffer.begin();
-    ofSetColor(ofColor::white);
-    ofTexture *texture = nullptr;
-#ifdef __APPLE__
-    texture = &syphonClient.getTexture();
-    syphonClient.draw(0, 0);
-#else
-    texture = &spoutReceiver.getTexture();
-    texture->draw(0, 0);
-#endif
-    frameBuffer.end();
-    
-    // Resize framebuffer if necessary
-    if (texture != nullptr &&
-        frameBuffer.getWidth() != texture->getWidth() &&
-        frameBuffer.getHeight() != texture->getHeight()) {
-      frameBuffer.allocate(texture->getWidth(), texture->getHeight());
-    }
-    
-    // Copy framebuffer to input
-    if (frameBuffer.isAllocated()) {
-      ofPixels pix;
-      frameBuffer.readToPixels(pix);
-      input.setFromPixels(pix);
-      input.update();
-    }
-  }
-  
-  // Rotate
-  result = input;
-  result.rotate90(angle);
-  result.crop(x,y,w,h);
   
   // Center images
   ofPushMatrix();
@@ -198,6 +165,7 @@ ofImage& Input::raw() {
 
 //--------------------------------------------------------------
 ofImage& Input::processed() {
+  updateTextureIfNeeded();
   return result;
 }
 
@@ -209,4 +177,46 @@ void Input::updateGui() {
     }
     isSetup = true;
   }
+}
+
+void Input::updateTextureIfNeeded() {
+  if ( frameIsNew ) return;
+  
+  if ( enableClient ) {
+    
+    frameBuffer.begin();
+    ofClear(0);
+    ofSetColor(ofColor::white);
+    ofTexture *texture = nullptr;
+#ifdef __APPLE__
+    texture = &syphonClient.getTexture();
+    syphonClient.draw(0, 0);
+#else
+    texture = &spoutReceiver.getTexture();
+    texture->draw(0, 0);
+#endif
+    frameBuffer.end();
+    
+    // Resize framebuffer if necessary
+    if (texture != nullptr &&
+        frameBuffer.getWidth() != texture->getWidth() &&
+        frameBuffer.getHeight() != texture->getHeight()) {
+      frameBuffer.allocate(texture->getWidth(), texture->getHeight());
+    }
+    
+    // Copy framebuffer to input
+    if (frameBuffer.isAllocated()) {
+      ofPixels pix;
+      frameBuffer.readToPixels(pix);
+      input.setFromPixels(pix);
+      input.update();
+    }
+  }
+  
+  // Rotate
+  result = input;
+  result.rotate90(angle);
+  result.crop(x,y,w,h);
+  
+  frameIsNew = true;
 }

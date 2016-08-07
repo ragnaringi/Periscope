@@ -61,6 +61,8 @@ private:
 	ofxPanel gui;
 	ofParameter<bool> enableClient, enableServer;
 	void updateGui();
+  void updateTextureIfNeeded();
+  bool frameIsNew;
 };
 	
 } /* namespace PScope */
