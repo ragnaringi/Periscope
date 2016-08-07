@@ -12,11 +12,11 @@
 static const int MAX_WIDTH = 1080;
 static const int MAX_HEIGHT = 720;
 
-void applyTranslation(ofImage &image, int angle);
+void center(ofImage &image, int angle);
 void applyRotation(ofImage &image, int angle);
 
 //--------------------------------------------------------------
-Input::Input() : isSetup(false), enabled(true), frameIsNew(false), angle(RotateNone) {
+Input::Input() : isSetup(false), enabled(true), textureNeedsUpdate(false), angle(RotateNone) {
 #ifdef __APPLE__
   // Syphon setup
   syphonClient.setup(); //using Syphon app Simple Server, found at http://syphon.v002.info/
@@ -84,7 +84,7 @@ void Input::update() {
     spoutReceiver.updateTexture();
 #endif
   }
-  frameIsNew = false;
+  textureNeedsUpdate = true;
   updateGui();
 }
 
@@ -94,21 +94,23 @@ void Input::draw() {
   
   ofClear(0.f);
   
-  // Center images
+  // Center images using original as anchor
   ofPushMatrix();
+  center(input, angle);
   
-  // Translate, rotate to center
+  // Rotate original
+  ofPushMatrix();
   applyRotation(input, angle);
-  applyTranslation(input, angle);
+  ofSetColor(ofColor::darkGray);
+  input.draw(0, 0);
+  ofPopMatrix();
   
   // Draw bounding box for crop
-  
   ofNoFill();
   ofSetColor(ofColor::red);
   ofDrawRectangle(x-1, y-1, w+2, h+2);
   
   // Draw processed copy
-  
   ofSetColor(ofColor::white);
   result.draw(x, y);
   
@@ -153,7 +155,7 @@ void Input::updateGui() {
 
 //--------------------------------------------------------------
 void Input::updateTextureIfNeeded() {
-  if ( frameIsNew ) return;
+  if ( !textureNeedsUpdate ) return;
   
   if ( enableClient ) {
     
@@ -191,45 +193,39 @@ void Input::updateTextureIfNeeded() {
   result.rotate90(angle);
   result.crop(x,y,w,h);
   
-  frameIsNew = true;
+  textureNeedsUpdate = false;
 }
 
 //--------------------------------------------------------------
-void applyTranslation(ofImage& image, int angle) {
+void center(ofImage& image, int angle) {
   if (angle % 2 == 0) {
-    ofTranslate(ofGetWidth()  * 0.5 - image.getWidth()  * 0.5,
-                ofGetHeight() * 0.5 - image.getHeight() * 0.5);
+    ofTranslate(ofGetWidth()  * 0.5f - image.getWidth()  * 0.5f,
+                ofGetHeight() * 0.5f - image.getHeight() * 0.5f);
   }
   else {
-    ofTranslate(ofGetWidth()  * 0.5 - image.getHeight() * 0.5,
-                ofGetHeight() * 0.5 - image.getWidth()  * 0.5);
+    ofTranslate(ofGetWidth()  * 0.5f - image.getHeight() * 0.5f,
+                ofGetHeight() * 0.5f - image.getWidth()  * 0.5f);
   }
 }
 
 //--------------------------------------------------------------
 void applyRotation(ofImage &image, int angle) {
-  ofPushMatrix();
-  ofSetColor(ofColor::darkGray);
   ofRotate(angle * 90);
   
   switch (angle) {
       
-    case RotateNone:
-      image.draw(0, 0); break;
-      
     case Rotate90:
-      image.draw(0, -image.getHeight());
+      ofTranslate( 0, -image.getHeight() );
       break;
       
     case Rotate180:
-      image.draw(-image.getWidth(), -image.getHeight());
+      ofTranslate( -image.getWidth(), -image.getHeight() );
       break;
       
     case Rotate270:
-      image.draw(-image.getWidth(), 0);
+      ofTranslate( -image.getWidth(), 0 );
       break;
       
     default: break;
   }
-  ofPopMatrix();
 }

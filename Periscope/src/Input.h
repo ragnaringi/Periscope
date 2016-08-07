@@ -62,7 +62,7 @@ private:
 	ofParameter<bool> enableClient, enableServer;
 	void updateGui();
   void updateTextureIfNeeded();
-  bool frameIsNew;
+  bool textureNeedsUpdate;
 };
 	
 } /* namespace PScope */
