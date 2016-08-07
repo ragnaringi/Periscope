@@ -22,7 +22,7 @@ Input::Input() : isSetup(false), enabled(true), angle(RotateNone) {
 	// Spout setup
 	spoutReceiver.setup();
 #endif
-	frameBuffer.allocate(MAX_WIDTH, MAX_HEIGHT, GL_RGBA);
+	frameBuffer.allocate(MAX_WIDTH, MAX_HEIGHT);
 	input.allocate(MAX_WIDTH, MAX_HEIGHT, OF_IMAGE_COLOR);
 	result = input;
 	
@@ -85,16 +85,28 @@ void Input::draw() {
 	ofClear(0.f);
   
   if ( enableClient ) {
+    
     frameBuffer.begin();
     ofSetColor(ofColor::white);
+    ofTexture *texture = nullptr;
 #ifdef __APPLE__
+    texture = &syphonClient.getTexture();
     syphonClient.draw(0, 0);
 #else
     spoutReceiver.updateTexture();
-    spoutReceiver.getTexture().draw(0, 0);
+    texture = &spoutReceiver.getTexture();
+    texture.draw(0, 0);
 #endif
     frameBuffer.end();
     
+    // Resize framebuffer if necessary
+    if (texture != nullptr &&
+        frameBuffer.getWidth() != texture->getWidth() &&
+        frameBuffer.getHeight() != texture->getHeight()) {
+      frameBuffer.allocate(texture->getWidth(), texture->getHeight());
+    }
+    
+    // Copy framebuffer to input
     if (frameBuffer.isAllocated()) {
       ofPixels pix;
       frameBuffer.readToPixels(pix);
