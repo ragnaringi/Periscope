@@ -58,7 +58,15 @@ public:
 		gui->add(scale.set("Scale", 1, 0, 1));
 	};
 	void compute(cv::Mat &src) {
-    cv::resize(src, src, cv::Size(), scale, scale);
+    if (scale * src.cols > 320 ||
+        scale * src.rows > 320) {
+      // Force resize
+      // TODO: Scale to max size
+      cv::resize(src, src, cv::Size(320, 320));
+    }
+    else if (scale < 1.f) {
+      cv::resize(src, src, cv::Size(), scale, scale);
+    }
 		ofxCv::copy(src, cpy);
 	};
 	string getTitle() {
@@ -66,7 +74,6 @@ public:
 	}
 protected:
 	ofParameter<float> scale;
-	int width = 0;
 };
 
 #pragma mark - Grayscale
