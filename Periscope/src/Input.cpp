@@ -30,8 +30,8 @@ Input::Input() : isSetup(false), enabled(true), textureNeedsUpdate(false), angle
   
   // Gui
   gui.setup();
-  gui.add(x.set("x", 0, 0, MAX_WIDTH));
-  gui.add(y.set("y", 0, 0, MAX_WIDTH));
+  gui.add(x.set("x", 320, 0, MAX_WIDTH));
+  gui.add(y.set("y", 240, 0, MAX_WIDTH));
   gui.add(w.set("w", MAX_WIDTH, 0, MAX_WIDTH));
   gui.add(h.set("h", MAX_HEIGHT, 0, MAX_HEIGHT));
   gui.add(angle.set("angle", 0, 0, Rotate270));
@@ -189,42 +189,74 @@ void Input::updateTextureIfNeeded() {
     }
   }
   
+  if (frameBuffer.getWidth() != w ||
+      frameBuffer.getHeight() != h) {
+//    if (angle % 2 == 0) {
+      frameBuffer.allocate(w, h);
+//    }
+//    else {
+//      frameBuffer.allocate(h, w);
+//    }
+  }
+  
   // Rotate
-  source->getPixels().cropTo(result, x, y, w, h);
-  result.crop(x,y,w,h);
-  result.rotate90(angle);
+  ofTexture& texture = source->getTexture();
+  frameBuffer.begin();
+  ofClear(0);
+  ofSetColor( ofColor::white );
+  applyRotation(texture, angle);
+  if (angle == 0) {
+    texture.drawSubsection(0, 0, w, h, x, y);
+  }
+  else if (angle == 1) {
+//    int x_ = texture.getWidth() - w;
+//    int y_ = texture.getHeight() - h;
+//    texture.drawSubsection(-y_, 0, h, w, y+y_, x);
+  }
+  else if (angle == 2) {
+    int x_ = texture.getWidth() - w;
+    int y_ = texture.getHeight() - h;
+    texture.drawSubsection(x_, y_, w, h, -x+x_, -y+y_);
+  }
+  else {
+//    int x_ = texture.getWidth() - w;
+//    int y_ = texture.getHeight() - h;
+//    texture.drawSubsection(y_, x_, h-y_, w-x_, y+y_, x+x_);
+  }
+  frameBuffer.end();
+  frameBuffer.readToPixels(result);	
 
   textureNeedsUpdate = false;
 }
 
 //--------------------------------------------------------------
-void center(ofTexture& image, int angle) {
+void center(ofTexture& texture, int angle) {
   if (angle % 2 == 0) {
-    ofTranslate(ofGetWidth()  * 0.5f - image.getWidth()  * 0.5f,
-                ofGetHeight() * 0.5f - image.getHeight() * 0.5f);
+    ofTranslate(ofGetWidth()  * 0.5f - texture.getWidth()  * 0.5f,
+                ofGetHeight() * 0.5f - texture.getHeight() * 0.5f);
   }
   else {
-    ofTranslate(ofGetWidth()  * 0.5f - image.getHeight() * 0.5f,
-                ofGetHeight() * 0.5f - image.getWidth()  * 0.5f);
+    ofTranslate(ofGetWidth()  * 0.5f - texture.getHeight() * 0.5f,
+                ofGetHeight() * 0.5f - texture.getWidth()  * 0.5f);
   }
 }
 
 //--------------------------------------------------------------
-void applyRotation(ofTexture &image, int angle) {
+void applyRotation(ofTexture &texture, int angle) {
   ofRotate(angle * 90);
   
   switch (angle) {
       
     case Rotate90:
-      ofTranslate( 0, -image.getHeight() );
+      ofTranslate( 0, -texture.getHeight() );
       break;
       
     case Rotate180:
-      ofTranslate( -image.getWidth(), -image.getHeight() );
+      ofTranslate( -texture.getWidth(), -texture.getHeight() );
       break;
       
     case Rotate270:
-      ofTranslate( -image.getWidth(), 0 );
+      ofTranslate( -texture.getWidth(), 0 );
       break;
       
     default: break;
