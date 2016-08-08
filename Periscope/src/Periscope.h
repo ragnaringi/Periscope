@@ -49,6 +49,8 @@ private:
 	ofxOscSender sender;
 	int mouseX, mouseY = 0;
 };
+  
+const float MAX_SIZE = 320.f;
 
 #pragma mark - Resize
 class Resize : public Component
@@ -58,11 +60,14 @@ public:
 		gui->add(scale.set("Scale", 1, 0, 1));
 	};
 	void compute(cv::Mat &src) {
-    if (scale * src.cols > 320 ||
-        scale * src.rows > 320) {
-      // Force resize
-      // TODO: Scale to max size
-      cv::resize(src, src, cv::Size(320, 320));
+    float newW = scale * src.cols;
+    float newH = scale * src.rows;
+    if (newW > MAX_SIZE ||
+        newH > MAX_SIZE) {
+      // Force resize if scaled output is larger than MAX_SIZE
+      float greater = newW > newH ? newW : newH;
+      float wScale = MAX_SIZE / greater;
+      cv::resize(src, src, cv::Size(), wScale, wScale);
     }
     else if (scale < 1.f) {
       cv::resize(src, src, cv::Size(), scale, scale);
