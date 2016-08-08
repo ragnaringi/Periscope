@@ -152,13 +152,12 @@ public:
 		gui->add(autoThresh);
 	}
 	void compute(cv::Mat &src) {
-		ofxCv::copyGray(src, cpy);
 		if(autoThresh) {
-			ofxCv::autothreshold(cpy);
+			ofxCv::autothreshold(src);
 		} else {
-			ofxCv::threshold(cpy, thresh);
+			ofxCv::threshold(src, thresh);
 		}
-		ofxCv::copy(cpy, src);
+		ofxCv::copy(src, cpy);
 	}
 	string getTitle() {
 		return "Threshold";
