@@ -58,8 +58,7 @@ public:
 		gui->add(scale.set("Scale", 1, 0, 1));
 	};
 	void compute(cv::Mat &src) {
-    cv::Size size(320, 240); // TODO
-    cv::resize(src, src, size);
+    cv::resize(src, src, cv::Size(), scale, scale);
 		ofxCv::copy(src, cpy);
 	};
 	string getTitle() {
