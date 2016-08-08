@@ -25,7 +25,7 @@ void ofApp::update(){
     periscope.compute(mat);
 	}
 	output.send(periscope.getOutput());
-//	output.sendMain(src);
+	output.sendMain(periscope.getInput().getTexture());
   
   shapeDetector.update();
 }
@@ -45,6 +45,7 @@ void ofApp::draw(){
 	
   ofSetColor(ofColor::white);
 	ofDrawBitmapString("1,2,3 = Change Drawing Mode, S = Save Settings to json, L = Load Settings from json, C = Select webcam, V = Select syphon, M = Load movie", 10, ofGetHeight() - 100);
+  ofDrawBitmapString(ofGetFrameRate(), 10, ofGetHeight() - 120);
 }
 
 //--------------------------------------------------------------
