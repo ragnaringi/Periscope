@@ -107,11 +107,13 @@ void Periscope::setDebug(bool debug) {
 }
 
 //--------------------------------------------------------------
-void Periscope::compute(ofImage &src_) {
-	input = src_;
+void Periscope::compute(cv::Mat &src_) {
+  
+  if (src_.data == NULL) return;
+  
+  ofxCv::copy(src_, input);
 	input.update();
-	src = input;
-	src.update();
+	ofxCv::copy(src_, src);
 	
 	std::vector<int> toRemove; 
 	
@@ -148,8 +150,8 @@ void Periscope::draw() {
 		return;
 	}
 		
-	float width  = src.getWidth();
-	float height = src.getHeight();
+	float width  = src.cols;
+	float height = src.rows;
 
 	int col = 0, row = 0;
 	for (auto const &c : components) {

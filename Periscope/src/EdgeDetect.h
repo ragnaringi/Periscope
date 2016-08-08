@@ -26,10 +26,10 @@ public:
 		gui->add(thresh1);
 		gui->add(thresh2);
 	};
-	void compute(ofImage &src) {
+  void compute(cv::Mat &src) {
 		ofxCv::copyGray(src, cpy); // grayscale 8-bit input and output
 		ofxCv::Canny(cpy, cpy, thresh1, thresh2);
-		src = cpy;
+		ofxCv::copy(cpy, src);
 	};
 	string getTitle() {
 		return "Canny";
@@ -57,9 +57,9 @@ public:
 	}
 	void loadGui(ofxPanel *gui) {
 	};
-	void compute(ofImage &src) {
+  void compute(cv::Mat &src) {
 		ofxCv::Sobel(src, cpy);
-		src = cpy;
+    ofxCv::copy(cpy, src);
 	};
 	string getTitle() {
 		return "Sobel";

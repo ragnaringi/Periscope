@@ -12,8 +12,8 @@
 static const int MAX_WIDTH = 1080;
 static const int MAX_HEIGHT = 720;
 
-void center(ofImage &image, int angle);
-void applyRotation(ofImage &image, int angle);
+void center(ofTexture &image, int angle);
+void applyRotation(ofTexture &image, int angle);
 
 //--------------------------------------------------------------
 Input::Input() : isSetup(false), enabled(true), textureNeedsUpdate(false), angle(RotateNone) {
@@ -26,8 +26,7 @@ Input::Input() : isSetup(false), enabled(true), textureNeedsUpdate(false), angle
   spoutReceiver.setup();
 #endif
   frameBuffer.allocate(MAX_WIDTH, MAX_HEIGHT);
-  input.allocate(MAX_WIDTH, MAX_HEIGHT, OF_IMAGE_COLOR);
-  result = input;
+  result.allocate(MAX_WIDTH, MAX_HEIGHT, OF_IMAGE_COLOR);
   
   // Gui
   gui.setup();
@@ -65,6 +64,7 @@ void Input::selectSyphon(std::string server) {
 #ifdef __APPLE__
   syphonClient.set("", server);
 #endif
+  source = nullptr;
   enableClient = true;
 }
 
@@ -76,8 +76,6 @@ void Input::update() {
     }
     source->update();
     if( !source->isFrameNew() ) return;
-    ofxCv::copy(*source, input);
-    input.update();
   }
   else {
 #ifndef __APPLE__
@@ -93,6 +91,9 @@ void Input::draw() {
   updateTextureIfNeeded();
   
   ofClear(0.f);
+  ofSetColor(ofColor::white);
+  
+  ofTexture& input = enableClient ? frameBuffer.getTexture() : source->getTexture();
   
   // Center images using original as anchor
   ofPushMatrix();
@@ -101,7 +102,6 @@ void Input::draw() {
   // Rotate original
   ofPushMatrix();
   applyRotation(input, angle);
-  ofSetColor(ofColor::darkGray);
   input.draw(0, 0);
   ofPopMatrix();
   
@@ -109,10 +109,6 @@ void Input::draw() {
   ofNoFill();
   ofSetColor(ofColor::red);
   ofDrawRectangle(x-1, y-1, w+2, h+2);
-  
-  // Draw processed copy
-  ofSetColor(ofColor::white);
-  result.draw(x, y);
   
   ofPopMatrix(); /* Center images */
   
@@ -133,12 +129,19 @@ void Input::crop(int x_, int y_, int w_, int h_) {
 }
 
 //--------------------------------------------------------------
-ofImage& Input::raw() {
-  return input;
+ofTexture& Input::raw() {
+  if ( enableClient ) {
+#ifdef __APPLE__
+    return syphonClient.getTexture();
+#else
+    return spoutReceiver.getTexture();
+#endif
+  }
+  return source->getTexture(); // TODO: Fix for Syphon/Spout
 }
 
 //--------------------------------------------------------------
-ofImage& Input::processed() {
+ofPixels& Input::processed() {
   updateTextureIfNeeded();
   return result;
 }
@@ -146,6 +149,7 @@ ofImage& Input::processed() {
 //--------------------------------------------------------------
 void Input::updateGui() {
   if (!isSetup) {
+    ofTexture& input = source->getTexture();
     if (w != input.getWidth() || h != input.getHeight()) {
       crop(0, 0, fmin(input.getWidth(), MAX_WIDTH), fmin(input.getHeight(), MAX_HEIGHT));
     }
@@ -181,23 +185,20 @@ void Input::updateTextureIfNeeded() {
     
     // Copy framebuffer to input
     if (frameBuffer.isAllocated()) {
-      ofPixels pix;
-      frameBuffer.readToPixels(pix);
-      input.setFromPixels(pix);
-      input.update();
+      frameBuffer.readToPixels(result);
     }
   }
   
   // Rotate
-  result = input;
-  result.rotate90(angle);
+  source->getPixels().cropTo(result, x, y, w, h);
   result.crop(x,y,w,h);
-  
+  result.rotate90(angle);
+
   textureNeedsUpdate = false;
 }
 
 //--------------------------------------------------------------
-void center(ofImage& image, int angle) {
+void center(ofTexture& image, int angle) {
   if (angle % 2 == 0) {
     ofTranslate(ofGetWidth()  * 0.5f - image.getWidth()  * 0.5f,
                 ofGetHeight() * 0.5f - image.getHeight() * 0.5f);
@@ -209,7 +210,7 @@ void center(ofImage& image, int angle) {
 }
 
 //--------------------------------------------------------------
-void applyRotation(ofImage &image, int angle) {
+void applyRotation(ofTexture &image, int angle) {
   ofRotate(angle * 90);
   
   switch (angle) {

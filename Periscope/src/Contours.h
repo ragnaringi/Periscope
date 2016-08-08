@@ -27,15 +27,14 @@ public:
 		gui->add(simplify);
 		gui->add(mode);
 	}
-	void compute(ofImage &src) {
-		ofxCv::copyGray(src, cpy);
+  void compute(cv::Mat &src) {
 		int simplifyMode = simplify ? CV_CHAIN_APPROX_SIMPLE : CV_CHAIN_APPROX_NONE;
-		cv::findContours(ofxCv::toCv(cpy), contours, mode, simplifyMode);
+		cv::findContours(src, contours, mode, simplifyMode);
 		polylines.clear();
 		for (auto const& p : contours) {
 			polylines.push_back(ofxCv::toOf(p));
 		}
-		src = cpy;
+    ofxCv::copy(src, cpy);
 		
 		// Send Osc
 		ofxOscMessage m;

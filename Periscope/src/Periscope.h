@@ -30,7 +30,7 @@ public:
 	void addComponent(Component *c);
 	void setDebug(bool debug);
 	bool& getDebug() { return debugMode; };
-	void compute(ofImage &src);
+  void compute(cv::Mat &src);
 	void draw();
 	
 	void mouseDragged(int x, int y, int button);
@@ -45,7 +45,7 @@ private:
 	ofxPanel gui;
 	vector<unique_ptr<Thumbnail>> thumbnails;
 	vector<unique_ptr<Component>> components;
-	ofImage src;
+  cv::Mat src;
 	ofxOscSender sender;
 	int mouseX, mouseY = 0;
 };
@@ -57,9 +57,10 @@ public:
 	void loadGui(ofxPanel *gui) {
 		gui->add(scale.set("Scale", 1, 0, 1));
 	};
-	void compute(ofImage &src) {
-		src.resize(320, 240);
-		cpy = src;
+	void compute(cv::Mat &src) {
+    cv::Size size(320, 240); // TODO
+    cv::resize(src, src, size);
+		ofxCv::copy(src, cpy);
 	};
 	string getTitle() {
 		return "Resize";
@@ -74,10 +75,9 @@ class Colours : public Component
 {
 public:
 	void loadGui(ofxPanel *gui) {};
-	void compute(ofImage &src) {
-		cpy = src;
-		
-		cv::Scalar colours = mean(ofxCv::toCv(cpy));
+	void compute(cv::Mat &src) {
+    cv::Scalar colours = cv::mean(src);
+    ofxCv::copy(src, cpy);
 		
 		// Send Osc
 		ofxOscMessage m;
@@ -98,9 +98,9 @@ class Greyscale : public Component
 {
 public:
 	void loadGui(ofxPanel *gui) {};
-	void compute(ofImage &src) {
+	void compute(cv::Mat &src) {
 		ofxCv::copyGray(src, cpy);
-		src = cpy;
+    ofxCv::copy(cpy, src);
 	};
 	string getTitle() {
 		return "Greyscale";
@@ -118,7 +118,7 @@ public:
 	void loadGui(ofxPanel *gui) {
 		gui->add(blurAmt);
 	};
-	void compute(ofImage &src) {
+	void compute(cv::Mat &src) {
 		if (blurAmt > 0) {;
 			ofxCv::blur(src, blurAmt);
 		}
@@ -151,7 +151,7 @@ public:
 		gui->add(thresh);
 		gui->add(autoThresh);
 	}
-	void compute(ofImage &src) {
+	void compute(cv::Mat &src) {
 		ofxCv::copyGray(src, cpy);
 		if(autoThresh) {
 			ofxCv::autothreshold(cpy);
@@ -188,16 +188,15 @@ public:
 	void loadGui(ofxPanel *gui) {
 		gui->add(learn);
 	}
-	void compute(ofImage &src) {
+	void compute(cv::Mat &src) {
 		if (learn) {
 			ofxCv::copy(src, bg);
 			learn = false;
 		}
-		// take the absolute difference of prev and current and save it inside cpy
-		ofxCv::absdiff(src, bg, cpy);
-		src = cpy;
-		
-		cv::Scalar diffMean = mean(ofxCv::toCv(cpy));
+		// take the absolute difference of prev and current
+		ofxCv::absdiff(src, bg, src);
+		cv::Scalar diffMean = cv::mean(src);
+    ofxCv::copy(src, cpy);
 		
 		// Send Osc
 		ofxOscMessage m;
@@ -219,7 +218,7 @@ public:
 		return settings;
 	};
 protected:
-	ofImage bg;
+  cv::Mat bg;
 	ofParameter<bool> learn;
 };
 
@@ -247,8 +246,8 @@ public:
 	};
 	void loadGui(ofxPanel *gui) {
 	};
-	void compute(ofImage &src) {
-		cpy = src;
+	void compute(cv::Mat &src) {
+		ofxCv::copy(cpy, src);
 		
 		if(usefb) {
 			curFlow = &fb;
@@ -282,7 +281,7 @@ public:
 		Component::draw(x, y);
 		ofPushMatrix();
 		ofTranslate(x, y);
-		curFlow->draw(0,0,cpy.getWidth(),cpy.getHeight());
+		curFlow->draw(0,0,cpy.getWidth(), cpy.getHeight());
 		ofPopMatrix();
 	}
 	string getTitle() {
@@ -310,9 +309,9 @@ public:
 	void loadGui(ofxPanel *gui) {
 		gui->add(iterations);
 	};
-	void compute(ofImage &src) {
-		ofxCv::erode(src, cpy, iterations);
-		src = cpy;
+	void compute(cv::Mat &src) {
+		ofxCv::erode(src, iterations.get());
+    ofxCv::copy(src, cpy);
 	};
 	string getTitle() {
 		return "Erode";
@@ -339,9 +338,9 @@ public:
 	void loadGui(ofxPanel *gui) {
 		gui->add(iterations);
 	};
-	void compute(ofImage &src) {
-		ofxCv::dilate(src, cpy, iterations);
-		src = cpy;
+	void compute(cv::Mat &src) {
+		ofxCv::dilate(src, iterations.get());
+    ofxCv::copy(src, cpy);
 	};
 	string getTitle() {
 		return "Dilate";
@@ -369,11 +368,11 @@ public:
 	}
 	void loadGui(ofxPanel *gui) {
 	};
-	void compute(ofImage &src) {
-		cpy = src;
-		ofImage& raw = Periscope::getInput();
+	void compute(cv::Mat &src) {
 		
-		cv::Mat srcMat = ofxCv::toCv(raw), threshMat = ofxCv::toCv(cpy);
+		ofImage& raw = Periscope::getInput();
+    cv::Mat srcMat = ofxCv::toCv(raw);
+    cv::Mat& threshMat = src;
 		
 		lines.clear();
 		double distanceResolution = 1;
@@ -383,7 +382,7 @@ public:
 		double maxLineGap = 3;
 		HoughLinesP(threshMat, lines, distanceResolution, angleResolution, voteThreshold, minLineLength, maxLineGap);
 		
-		src = cpy;
+    ofxCv::copy(src, cpy);
 	};
 	void draw(int x, int y) {
 		Component::draw(x, y);
@@ -415,7 +414,7 @@ protected:
 //	void loadGui(ofxPanel *gui) {
 //		gui->add(hipass.set("Hipass", 5, 0, 25));
 //	};
-//	void compute(ofImage &src) {
+//	void compute(cv::Mat &src) {
 //	};
 //	String getDescription() {
 //		return "Filter";

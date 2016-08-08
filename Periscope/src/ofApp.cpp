@@ -19,12 +19,13 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
 	input.update();
-	ofImage &src = input.processed();
+	ofPixels &src = input.processed();
 	if (src.isAllocated()) {
-		periscope.compute(src);
+    cv::Mat mat = ofxCv::toCv(src);
+    periscope.compute(mat);
 	}
 	output.send(periscope.getOutput());
-	output.sendMain(src.getTexture());
+//	output.sendMain(src);
   
   shapeDetector.update();
 }
