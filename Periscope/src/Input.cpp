@@ -209,9 +209,9 @@ void Input::updateTextureIfNeeded() {
     texture.drawSubsection(0, 0, w, h, x, y);
   }
   else if (angle == 1) {
-//    int x_ = texture.getWidth() - w;
-//    int y_ = texture.getHeight() - h;
-//    texture.drawSubsection(-y_, 0, h, w, y+y_, x);
+    int x_ = texture.getWidth() - w;
+    int y_ = texture.getHeight() - h;
+    texture.drawSubsection(0, 0, h, w+x_, y, -x);
   }
   else if (angle == 2) {
     int x_ = texture.getWidth() - w;
