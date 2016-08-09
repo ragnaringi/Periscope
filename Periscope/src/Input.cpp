@@ -12,8 +12,9 @@
 static const int MAX_WIDTH = 1080;
 static const int MAX_HEIGHT = 720;
 
-void center(ofTexture &image, int angle);
+void center(ofRectangle &rect, int angle);
 void applyRotation(ofTexture &image, int angle);
+void center(ofTexture& texture, ofFbo& container, int angle);
 
 //--------------------------------------------------------------
 Input::Input() : isSetup(false), enabled(true), textureNeedsUpdate(false), angle(RotateNone) {
@@ -30,8 +31,8 @@ Input::Input() : isSetup(false), enabled(true), textureNeedsUpdate(false), angle
   
   // Gui
   gui.setup();
-  gui.add(x.set("x", 320, 0, MAX_WIDTH));
-  gui.add(y.set("y", 240, 0, MAX_WIDTH));
+  gui.add(x.set("x", 320, -MAX_WIDTH, MAX_WIDTH));
+  gui.add(y.set("y", 240, -MAX_WIDTH, MAX_WIDTH));
   gui.add(w.set("w", MAX_WIDTH, 0, MAX_WIDTH));
   gui.add(h.set("h", MAX_HEIGHT, 0, MAX_HEIGHT));
   gui.add(angle.set("angle", 0, 0, Rotate270));
@@ -96,21 +97,25 @@ void Input::draw() {
   ofTexture& input = enableClient ? frameBuffer.getTexture() : source->getTexture();
   
   // Center images using original as anchor
+  {
   ofPushMatrix();
-  center(input, angle);
-  
-  // Rotate original
-  ofPushMatrix();
+  ofRectangle rect(0, 0, input.getWidth(), input.getHeight());
+  center(rect, angle);
   applyRotation(input, angle);
   input.draw(0, 0);
-  ofPopMatrix();
+  ofPopMatrix(); /* Center images */
+  }
   
   // Draw bounding box for crop
+  {
+  ofPushMatrix();
+  ofRectangle rect(x-1, y-1, w+2, h+2);
+  center(rect, 0);
   ofNoFill();
   ofSetColor(ofColor::red);
-  ofDrawRectangle(x-1, y-1, w+2, h+2);
-  
-  ofPopMatrix(); /* Center images */
+  ofDrawRectangle(rect);
+  ofPopMatrix();
+  }
   
   gui.draw();
 }
@@ -204,25 +209,20 @@ void Input::updateTextureIfNeeded() {
   frameBuffer.begin();
   ofClear(0);
   ofSetColor( ofColor::white );
+  center(texture, frameBuffer, angle);
   applyRotation(texture, angle);
-  if (angle == 0) {
-    texture.drawSubsection(0, 0, w, h, x, y);
+  switch (angle) {
+    case RotateNone:
+      ofTranslate(-x, -y); break;
+    case Rotate180:
+      ofTranslate(x, y); break;
+    case Rotate90:
+      ofTranslate(-y, x); break;
+    case Rotate270:
+      ofTranslate(y, -x); break;
+    default: break;
   }
-  else if (angle == 1) {
-    int x_ = texture.getWidth() - w;
-    int y_ = texture.getHeight() - h;
-    texture.drawSubsection(0, 0, h, w+x_, y, -x);
-  }
-  else if (angle == 2) {
-    int x_ = texture.getWidth() - w;
-    int y_ = texture.getHeight() - h;
-    texture.drawSubsection(x_, y_, w, h, -x+x_, -y+y_);
-  }
-  else {
-//    int x_ = texture.getWidth() - w;
-//    int y_ = texture.getHeight() - h;
-//    texture.drawSubsection(y_, x_, h-y_, w-x_, y+y_, x+x_);
-  }
+  texture.draw(0, 0);
   frameBuffer.end();
   frameBuffer.readToPixels(result);	
 
@@ -230,14 +230,26 @@ void Input::updateTextureIfNeeded() {
 }
 
 //--------------------------------------------------------------
-void center(ofTexture& texture, int angle) {
+void center(ofRectangle& rect, int angle) {
   if (angle % 2 == 0) {
-    ofTranslate(ofGetWidth()  * 0.5f - texture.getWidth()  * 0.5f,
-                ofGetHeight() * 0.5f - texture.getHeight() * 0.5f);
+    ofTranslate(ofGetWidth()  * 0.5f - rect.getWidth()  * 0.5f,
+                ofGetHeight() * 0.5f - rect.getHeight() * 0.5f);
   }
   else {
-    ofTranslate(ofGetWidth()  * 0.5f - texture.getHeight() * 0.5f,
-                ofGetHeight() * 0.5f - texture.getWidth()  * 0.5f);
+    ofTranslate(ofGetWidth()  * 0.5f - rect.getHeight() * 0.5f,
+                ofGetHeight() * 0.5f - rect.getWidth()  * 0.5f);
+  }
+}
+
+//--------------------------------------------------------------
+void center(ofTexture& texture, ofFbo& container,  int angle) {
+  if (angle % 2 == 0) {
+    ofTranslate(container.getWidth() * 0.5f - texture.getWidth()  * 0.5f,
+                container.getHeight() * 0.5f - texture.getHeight() * 0.5f);
+  }
+  else {
+    ofTranslate(container.getWidth() * 0.5f - texture.getHeight() * 0.5f,
+                container.getHeight() * 0.5f - texture.getWidth()  * 0.5f);
   }
 }
 
