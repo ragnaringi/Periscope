@@ -12,9 +12,10 @@
 static const int MAX_WIDTH = 1080;
 static const int MAX_HEIGHT = 720;
 
-void center(ofRectangle &rect, int angle);
-void applyRotation(ofTexture &image, int angle);
-void center(ofTexture& texture, ofFbo& container, int angle);
+// Helpers
+void rotate90Centered(ofRectangle &rect, int angle);
+void center(ofRectangle& element, ofRectangle& container, int angle);
+ofRectangle& getBounds(ofBaseDraws& element);
 
 //--------------------------------------------------------------
 Input::Input() : isSetup(false), enabled(true), textureNeedsUpdate(false), angle(RotateNone) {
@@ -95,13 +96,13 @@ void Input::draw() {
   ofSetColor(ofColor::white);
   
   ofTexture& input = enableClient ? frameBuffer.getTexture() : source->getTexture();
-  
+  ofRectangle window = ofGetWindowRect();
   // Center images using original as anchor
   {
   ofPushMatrix();
   ofRectangle rect(0, 0, input.getWidth(), input.getHeight());
-  center(rect, angle);
-  applyRotation(input, angle);
+  center(getBounds(input), window, angle);
+  rotate90Centered(rect, angle);
   input.draw(0, 0);
   ofPopMatrix(); /* Center images */
   }
@@ -110,7 +111,8 @@ void Input::draw() {
   {
   ofPushMatrix();
   ofRectangle rect(x-1, y-1, w+2, h+2);
-  center(rect, 0);
+  center(rect, window, 0);
+  rotate90Centered(rect, 0);
   ofNoFill();
   ofSetColor(ofColor::red);
   ofDrawRectangle(rect);
@@ -196,21 +198,17 @@ void Input::updateTextureIfNeeded() {
   
   if (frameBuffer.getWidth() != w ||
       frameBuffer.getHeight() != h) {
-//    if (angle % 2 == 0) {
       frameBuffer.allocate(w, h);
-//    }
-//    else {
-//      frameBuffer.allocate(h, w);
-//    }
   }
   
-  // Rotate
+  // Rotate and translate for cropping
   ofTexture& texture = source->getTexture();
   frameBuffer.begin();
   ofClear(0);
   ofSetColor( ofColor::white );
-  center(texture, frameBuffer, angle);
-  applyRotation(texture, angle);
+  ofRectangle& rect = getBounds(texture);
+  center(rect, getBounds(frameBuffer), angle);
+  rotate90Centered(rect, angle);
   switch (angle) {
     case RotateNone:
       ofTranslate(-x, -y); break;
@@ -230,47 +228,36 @@ void Input::updateTextureIfNeeded() {
 }
 
 //--------------------------------------------------------------
-void center(ofRectangle& rect, int angle) {
+void center(ofRectangle& elem, ofRectangle& container,  int angle) {
   if (angle % 2 == 0) {
-    ofTranslate(ofGetWidth()  * 0.5f - rect.getWidth()  * 0.5f,
-                ofGetHeight() * 0.5f - rect.getHeight() * 0.5f);
+    ofTranslate(container.getWidth() * 0.5f - elem.getWidth()  * 0.5f,
+                container.getHeight() * 0.5f - elem.getHeight() * 0.5f);
   }
   else {
-    ofTranslate(ofGetWidth()  * 0.5f - rect.getHeight() * 0.5f,
-                ofGetHeight() * 0.5f - rect.getWidth()  * 0.5f);
+    ofTranslate(container.getWidth() * 0.5f - elem.getHeight() * 0.5f,
+                container.getHeight() * 0.5f - elem.getWidth()  * 0.5f);
   }
 }
 
 //--------------------------------------------------------------
-void center(ofTexture& texture, ofFbo& container,  int angle) {
-  if (angle % 2 == 0) {
-    ofTranslate(container.getWidth() * 0.5f - texture.getWidth()  * 0.5f,
-                container.getHeight() * 0.5f - texture.getHeight() * 0.5f);
-  }
-  else {
-    ofTranslate(container.getWidth() * 0.5f - texture.getHeight() * 0.5f,
-                container.getHeight() * 0.5f - texture.getWidth()  * 0.5f);
-  }
-}
-
-//--------------------------------------------------------------
-void applyRotation(ofTexture &texture, int angle) {
+void rotate90Centered(ofRectangle &rect, int angle) {
   ofRotate(angle * 90);
   
   switch (angle) {
-      
     case Rotate90:
-      ofTranslate( 0, -texture.getHeight() );
-      break;
-      
+      ofTranslate( 0, -rect.getHeight() ); break;
     case Rotate180:
-      ofTranslate( -texture.getWidth(), -texture.getHeight() );
-      break;
-      
+      ofTranslate( -rect.getWidth(), -rect.getHeight() ); break;
     case Rotate270:
-      ofTranslate( -texture.getWidth(), 0 );
-      break;
-      
+      ofTranslate( -rect.getWidth(), 0 ); break;
     default: break;
   }
+}
+
+//--------------------------------------------------------------
+ofRectangle& getBounds(ofBaseDraws& element) {
+  static ofRectangle rect(0, 0, 0, 0);
+  rect.width = element.getWidth();
+  rect.height = element.getHeight();
+  return rect;
 }
