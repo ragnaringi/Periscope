@@ -142,7 +142,7 @@ ofTexture& Input::raw() {
     return spoutReceiver.getTexture();
 #endif
   }
-  return source->getTexture(); // TODO: Fix for Syphon/Spout
+  return source->getTexture();
 }
 
 //--------------------------------------------------------------
@@ -196,12 +196,7 @@ void Input::updateTextureIfNeeded() {
   
   if (frameBuffer.getWidth() != w ||
       frameBuffer.getHeight() != h) {
-//    if (angle % 2 == 0) {
       frameBuffer.allocate(w, h);
-//    }
-//    else {
-//      frameBuffer.allocate(h, w);
-//    }
   }
   
   // Rotate
