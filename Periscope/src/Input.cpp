@@ -12,9 +12,9 @@
 static const int MAX_WIDTH = 1080;
 static const int MAX_HEIGHT = 720;
 
-void center(ofRectangle &rect, int angle);
-void applyRotation(ofTexture &image, int angle);
-void center(ofTexture& texture, ofFbo& container, int angle);
+void center(const ofRectangle &rect, int angle);
+void applyRotation(const ofTexture &image, int angle);
+void center(const ofTexture& texture, ofFbo& container, int angle);
 
 //--------------------------------------------------------------
 Input::Input() : isSetup(false), enabled(true), textureNeedsUpdate(false), angle(RotateNone) {
@@ -94,7 +94,7 @@ void Input::draw() {
   ofClear(0.f);
   ofSetColor(ofColor::white);
   
-  ofTexture& input = enableClient ? frameBuffer.getTexture() : source->getTexture();
+  ofTexture& input = raw();
   
   // Center images using original as anchor
   {
@@ -137,6 +137,8 @@ void Input::crop(int x_, int y_, int w_, int h_) {
 ofTexture& Input::raw() {
   if ( enableClient ) {
 #ifdef __APPLE__
+    syphonClient.bind();
+    syphonClient.unbind();
     return syphonClient.getTexture();
 #else
     return spoutReceiver.getTexture();
@@ -166,41 +168,13 @@ void Input::updateGui() {
 void Input::updateTextureIfNeeded() {
   if ( !textureNeedsUpdate ) return;
   
-  if ( enableClient ) {
-    
-    frameBuffer.begin();
-    ofClear(0);
-    ofSetColor(ofColor::white);
-    ofTexture *texture = nullptr;
-#ifdef __APPLE__
-    texture = &syphonClient.getTexture();
-    syphonClient.draw(0, 0);
-#else
-    texture = &spoutReceiver.getTexture();
-    texture->draw(0, 0);
-#endif
-    frameBuffer.end();
-    
-    // Resize framebuffer if necessary
-    if (texture != nullptr &&
-        frameBuffer.getWidth() != texture->getWidth() &&
-        frameBuffer.getHeight() != texture->getHeight()) {
-      frameBuffer.allocate(texture->getWidth(), texture->getHeight());
-    }
-    
-    // Copy framebuffer to input
-    if (frameBuffer.isAllocated()) {
-      frameBuffer.readToPixels(result);
-    }
-  }
-  
   if (frameBuffer.getWidth() != w ||
       frameBuffer.getHeight() != h) {
       frameBuffer.allocate(w, h);
   }
   
   // Rotate
-  ofTexture& texture = source->getTexture();
+  const ofTexture& texture = raw();
   frameBuffer.begin();
   ofClear(0);
   ofSetColor( ofColor::white );
@@ -225,7 +199,7 @@ void Input::updateTextureIfNeeded() {
 }
 
 //--------------------------------------------------------------
-void center(ofRectangle& rect, int angle) {
+void center(const ofRectangle& rect, int angle) {
   if (angle % 2 == 0) {
     ofTranslate(ofGetWidth()  * 0.5f - rect.getWidth()  * 0.5f,
                 ofGetHeight() * 0.5f - rect.getHeight() * 0.5f);
@@ -237,7 +211,7 @@ void center(ofRectangle& rect, int angle) {
 }
 
 //--------------------------------------------------------------
-void center(ofTexture& texture, ofFbo& container,  int angle) {
+void center(const ofTexture& texture, ofFbo& container,  int angle) {
   if (angle % 2 == 0) {
     ofTranslate(container.getWidth() * 0.5f - texture.getWidth()  * 0.5f,
                 container.getHeight() * 0.5f - texture.getHeight() * 0.5f);
@@ -249,7 +223,7 @@ void center(ofTexture& texture, ofFbo& container,  int angle) {
 }
 
 //--------------------------------------------------------------
-void applyRotation(ofTexture &texture, int angle) {
+void applyRotation(const ofTexture &texture, int angle) {
   ofRotate(angle * 90);
   
   switch (angle) {
