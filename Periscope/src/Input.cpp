@@ -40,6 +40,7 @@ Input::Input() : isSetup(false), enabled(true), textureNeedsUpdate(false), angle
 
 //--------------------------------------------------------------
 void Input::loadMovie(std::string title) {
+  input = nullptr;
   enableClient = false;
   unique_ptr<ofVideoPlayer> player(new ofVideoPlayer);
   if (!player->load(title)) {
@@ -53,10 +54,24 @@ void Input::loadMovie(std::string title) {
 
 //--------------------------------------------------------------
 void Input::selectWebCam() {
+  input = nullptr;
   enableClient = false;
   unique_ptr<ofVideoGrabber> cam(new ofVideoGrabber);
   cam->setup(640, 480);
   source = move(cam);
+  isSetup = false;
+}
+
+//--------------------------------------------------------------
+void Input::selectBlackmagic() {
+  enableClient = false;
+  source = nullptr;
+  auto deviceList = ofxBlackmagic::Iterator::getDeviceList();
+  std::unique_ptr<ofxBlackmagic::Input> cam( new ofxBlackmagic::Input() );
+  // NOTE: Mode is input device specific. Currently set to use with
+  auto mode = bmdModeHD720p50; // GoPro Hero 720p stream
+  cam->startCapture(deviceList.front(), mode);
+  input = move( cam );
   isSetup = false;
 }
 
@@ -67,16 +82,20 @@ void Input::selectSyphon(std::string server) {
 #endif
   source = nullptr;
   enableClient = true;
+  isSetup = false;
 }
 
 //--------------------------------------------------------------
 void Input::update() {
   if ( enabled && !enableClient ) {
-    if (source == nullptr) {
-      return;
+    if (source != nullptr) {
+      source->update();
+      if( !source->isFrameNew() ) return;
     }
-    source->update();
-    if( !source->isFrameNew() ) return;
+    if (input != nullptr) {
+      input->update();
+      if ( !input->isFrameNew() ) return;
+    }
   }
   else {
 #ifndef __APPLE__
@@ -144,6 +163,9 @@ ofTexture& Input::raw() {
     return spoutReceiver.getTexture();
 #endif
   }
+  if (input != nullptr) {
+    return input->getTexture();
+  }
   return source->getTexture();
 }
 
@@ -156,7 +178,7 @@ ofPixels& Input::processed() {
 //--------------------------------------------------------------
 void Input::updateGui() {
   if (!isSetup) {
-    ofTexture& input = source->getTexture();
+    ofTexture& input = raw();
     if (w != input.getWidth() || h != input.getHeight()) {
       crop(0, 0, fmin(input.getWidth(), MAX_WIDTH), fmin(input.getHeight(), MAX_HEIGHT));
     }

@@ -44,7 +44,7 @@ void ofApp::draw(){
   }
 	
   ofSetColor(ofColor::white);
-	ofDrawBitmapString("1,2,3 = Change Drawing Mode, S = Save Settings to json, L = Load Settings from json, C = Select webcam, V = Select syphon, M = Load movie", 10, ofGetHeight() - 100);
+	ofDrawBitmapString("1,2,3 = Change Drawing Mode, S = Save Settings to json, L = Load Settings from json, C = Select webcam, B = Select Blackmagic, V = Select syphon, M = Load movie", 10, ofGetHeight() - 100);
   ofDrawBitmapString(ofGetFrameRate(), 10, ofGetHeight() - 120);
 }
 
@@ -70,6 +70,9 @@ void ofApp::keyPressed(int key){
 		case 'c':
 			input.selectWebCam();
 			break;
+    case 'b':
+      input.selectBlackmagic();
+      break;
 		case 'v': {
       string server;
 #ifdef __APPLE__

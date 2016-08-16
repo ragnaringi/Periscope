@@ -10,6 +10,7 @@
 #define Input_h
 
 #include "ofxGui.h"
+#include "ofxBlackmagic.h"
 #ifdef __APPLE__
 #include "ofxSyphon.h"
 #else
@@ -31,6 +32,7 @@ public:
 	Input();
 	void loadMovie(std::string title);
 	void selectWebCam();
+  void selectBlackmagic();
 	void selectSyphon(std::string server);
 	void rotate(InputRotate angle);
 	void crop(int x, int y, int w, int h);
@@ -47,6 +49,7 @@ public:
 #endif
 private:
 	ofFbo frameBuffer;
+  std::unique_ptr<ofxBlackmagic::Input> input;
 #ifdef __APPLE__
 	ofxSyphonClient syphonClient;
 #else
