@@ -4,4 +4,4 @@ ofxGui
 ofxJSON
 ofxOpenCv
 ofxOsc
-ofxSyphon
+ofxSpout2

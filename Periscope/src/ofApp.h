@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include "ofMain.h"
 #include "Input.h"
 #include "Output.h"
 #include "Periscope.h"
 #include "ShapeDetector.h"
+#include "ofMain.h"
 
 class ofApp : public ofBaseApp{
 

@@ -6,7 +6,6 @@
 //
 //
 
-#include "ofxCV.h"
 #include "Input.h"
 
 static const int MAX_WIDTH = 1080;
@@ -67,6 +66,10 @@ void Input::selectBlackmagic() {
   enableClient = false;
   source = nullptr;
   auto deviceList = ofxBlackmagic::Iterator::getDeviceList();
+  if ( deviceList.empty() ) {
+    cout << "No Blackmagic device found" << endl;
+    return;
+  }
   std::unique_ptr<ofxBlackmagic::Input> cam( new ofxBlackmagic::Input() );
   // NOTE: Mode is input device specific. Currently set to use with
   auto mode = bmdModeHD720p50; // GoPro Hero 720p stream
@@ -165,6 +168,9 @@ ofTexture& Input::raw() {
   }
   if (input != nullptr) {
     return input->getTexture();
+  }
+  if (source == nullptr) {
+    return frameBuffer.getTexture();;
   }
   return source->getTexture();
 }

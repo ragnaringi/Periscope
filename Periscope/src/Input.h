@@ -9,8 +9,8 @@
 #ifndef Input_h
 #define Input_h
 
-#include "ofxGui.h"
 #include "ofxBlackmagic.h"
+#include "ofxGui.h"
 #ifdef __APPLE__
 #include "ofxSyphon.h"
 #else
