@@ -1,6 +1,5 @@
 
 #include "ofApp.h"
-#include "Periscope.h"
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -11,6 +10,7 @@ void ofApp::setup(){
 	ofSetFrameRate(60);
 
 	input.loadMovie("fingers.mov");
+//  input.selectBlackmagic();
 	
 	// Classic background subtraction
 	periscope.loadFromFile(ofToDataPath("BackgroundSubtract.json"));

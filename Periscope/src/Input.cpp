@@ -72,7 +72,7 @@ void Input::selectBlackmagic() {
   }
   std::unique_ptr<ofxBlackmagic::Input> cam( new ofxBlackmagic::Input() );
   // NOTE: Mode is input device specific. Currently set to use with
-  auto mode = bmdModeHD720p50; // GoPro Hero 720p stream
+  auto mode = bmdModeHD720p5994; // GoPro Hero 720p stream
   cam->startCapture(deviceList.front(), mode);
   input = move( cam );
   isSetup = false;
