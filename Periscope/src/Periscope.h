@@ -42,7 +42,7 @@ public:
 	ofTexture& getOutput();
 private:
 	bool debugMode;
-	ofxPanel gui;
+	ofxPanel  gui;
 	vector<unique_ptr<Thumbnail>> thumbnails;
 	vector<unique_ptr<Component>> components;
   cv::Mat src;

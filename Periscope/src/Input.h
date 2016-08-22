@@ -32,7 +32,7 @@ public:
 	Input();
 	void loadMovie(std::string title);
 	void selectWebCam();
-  void selectBlackmagic();
+  void selectBlackmagic(BMDDisplayMode mode);
 	void selectSyphon(std::string server);
 	void rotate(InputRotate angle);
 	void crop(int x, int y, int w, int h);

@@ -38,4 +38,12 @@ class ofApp : public ofBaseApp{
 		void loadPeriscope();
 		void savePeriscope();
 		void loadMovieFile();
+    void selectSyphonInput();
+  
+    ofxPanel gui;
+    ofParameter<bool> video;
+    ofParameter<bool> webcam;
+    ofParameter<bool> syphon;
+    ofParameter<bool> hero3;
+    ofParameter<bool> hero4;
 };

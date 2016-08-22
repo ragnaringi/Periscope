@@ -3,11 +3,19 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+  
+  gui.setup();
+  gui.add( video.set("Video", false) );
+  gui.add( webcam.set("Webcam", false) );
+  gui.add( syphon.set("Syphon/Spout", false) );
+  gui.add( hero3.set("Hero3", false) );
+  gui.add( hero4.set("Hero4", false) );
 	
 	ofSetWindowTitle("PERISCOPE");
 	ofSetWindowShape(1280, 768);
 	ofSetWindowPosition(10, 20);
 	ofSetFrameRate(60);
+  ofSetVerticalSync(true);
 
 	input.loadMovie("fingers.mov");
 //  input.selectBlackmagic();
@@ -18,6 +26,27 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+  if ( video ) {
+    loadMovieFile();
+    video = false;
+  }
+  else if ( webcam ) {
+    input.selectWebCam();
+    webcam = false;
+  }
+  else if ( syphon ) {
+    selectSyphonInput();
+    syphon = false;
+  }
+  else if ( hero3 ) {
+    input.selectBlackmagic(bmdModeHD720p50);
+    hero3 = false;
+  }
+  else if ( hero4 ) {
+    input.selectBlackmagic(bmdModeHD720p5994);
+    hero4 = false;
+  }
+  
 	input.update();
 	ofPixels &src = input.processed();
 	if (src.isAllocated()) {
@@ -44,8 +73,10 @@ void ofApp::draw(){
   }
 	
   ofSetColor(ofColor::white);
-	ofDrawBitmapString("1,2,3 = Change Drawing Mode, S = Save Settings to json, L = Load Settings from json, C = Select webcam, B = Select Blackmagic, V = Select syphon, M = Load movie", 10, ofGetHeight() - 100);
+	ofDrawBitmapString("1,2,3 = Change Drawing Mode, S = Save Settings to json, L = Load Settings from json", 10, ofGetHeight() - 100);
   ofDrawBitmapString(ofGetFrameRate(), 10, ofGetHeight() - 120);
+  
+  gui.draw();
 }
 
 //--------------------------------------------------------------
@@ -66,23 +97,6 @@ void ofApp::keyPressed(int key){
 			break;
 		case 's':
 			savePeriscope();
-			break;
-		case 'c':
-			input.selectWebCam();
-			break;
-    case 'b':
-      input.selectBlackmagic();
-      break;
-		case 'v': {
-      string server;
-#ifdef __APPLE__
-      server = ofSystemTextBoxDialog("Input Syphon Source", input.syphonServer());
-#endif
-			input.selectSyphon(server);
-			break;
-		}
-		case 'm':
-			loadMovieFile();
 			break;
     case ' ':
       input.setEnabled( !input.isEnabled() );
@@ -159,4 +173,13 @@ void ofApp::loadMovieFile() {
 	ofFileDialogResult result = ofSystemLoadDialog();
 	cout << result.getPath() << endl;
 	input.loadMovie(result.getPath());
+}
+
+//--------------------------------------------------------------
+void ofApp::selectSyphonInput() {
+  string server;
+#ifdef __APPLE__
+  server = ofSystemTextBoxDialog("Input Syphon Source", input.syphonServer());
+#endif
+  input.selectSyphon(server);
 }

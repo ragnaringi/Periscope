@@ -62,7 +62,7 @@ void Input::selectWebCam() {
 }
 
 //--------------------------------------------------------------
-void Input::selectBlackmagic() {
+void Input::selectBlackmagic(BMDDisplayMode mode) {
   enableClient = false;
   source = nullptr;
   auto deviceList = ofxBlackmagic::Iterator::getDeviceList();
@@ -71,8 +71,6 @@ void Input::selectBlackmagic() {
     return;
   }
   std::unique_ptr<ofxBlackmagic::Input> cam( new ofxBlackmagic::Input() );
-  // NOTE: Mode is input device specific. Currently set to use with
-  auto mode = bmdModeHD720p5994; // GoPro Hero 720p stream
   cam->startCapture(deviceList.front(), mode);
   input = move( cam );
   isSetup = false;
