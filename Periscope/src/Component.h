@@ -36,8 +36,8 @@ public:
     bounds.set(x, y, cpy.getWidth(), cpy.getHeight());
     ofSetColor(ofColor::white);
     if (highlight) ofSetColor(ofColor::red);
-    cpy.update();
-    cpy.draw(x, y);
+    ofTexture& tex = getTexture();
+    tex.draw(x, y);
     ofDrawBitmapString(getTitle(), x + 10, y + 10);
     localGui.setPosition(x, y);
     localGui.draw();
@@ -46,6 +46,7 @@ public:
   bool shouldUseRaw() { return useRaw; };
   bool isBypassed() { return bypass; };
   ofTexture& getTexture() {
+    cpy.update();
     return cpy.getTexture();
   }
   bool selected = false;
