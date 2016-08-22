@@ -5,6 +5,8 @@
 void ofApp::setup(){
   
   gui.setup();
+  gui.add( load.set("Load Periscope", false) );
+  gui.add( save.set("Save Periscope", false) );
   gui.add( video.set("Video", false) );
   gui.add( webcam.set("Webcam", false) );
   gui.add( syphon.set("Syphon/Spout", false) );
@@ -40,7 +42,15 @@ void ofApp::exit() {
 
 //--------------------------------------------------------------
 void ofApp::update(){
-  if ( video ) {
+  if ( load ) {
+    loadPeriscope();
+    load = false;
+  }
+  else if ( save ) {
+    savePeriscope();
+    save = false;
+  }
+  else if ( video ) {
     loadMovieFile();
     video = false;
   }

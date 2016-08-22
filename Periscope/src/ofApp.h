@@ -46,6 +46,8 @@ class ofApp : public ofBaseApp{
     void selectSyphonInput();
   
     ofxPanel gui;
+    ofParameter<bool> load;
+    ofParameter<bool> save;
     ofParameter<bool> video;
     ofParameter<bool> webcam;
     ofParameter<bool> syphon;
