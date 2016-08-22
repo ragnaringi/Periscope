@@ -113,6 +113,8 @@ void Input::update() {
 void Input::draw() {
   updateTextureIfNeeded();
   
+  ofPushStyle();
+  
   ofClear(0.f);
   ofSetColor(ofColor::white);
   
@@ -140,6 +142,8 @@ void Input::draw() {
   }
   
   gui.draw();
+  
+  ofPopStyle();
 }
 
 //--------------------------------------------------------------

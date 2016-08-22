@@ -16,6 +16,8 @@ Output::Output() {
 }
 
 void Output::send(ofTexture &texture) {
+  ofClear( 0 );
+  ofSetColor( 255 );
 #ifdef __APPLE__
 	textureServer.publishTexture(&texture);
 #else
@@ -24,6 +26,8 @@ void Output::send(ofTexture &texture) {
 }
 
 void Output::sendMain(ofTexture &texture) {
+  ofClear( 0 );
+  ofSetColor( 255 );
 #ifdef __APPLE__
 	mainServer.publishTexture(&texture);
 #else
