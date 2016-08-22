@@ -13,18 +13,29 @@ void ofApp::setup(){
   gui.add( center.set("Center", false) );
   gui.add( fitToSize.set("Fit to Size", false) );
 	
-	ofSetWindowTitle("PERISCOPE");
-	ofSetWindowShape(1280, 768);
-	ofSetWindowPosition(10, 20);
-	ofSetFrameRate(60);
+  ofSetWindowTitle("PERISCOPE");
+  ofSetWindowShape(1280, 768);
+  ofSetWindowPosition(10, 20);
   ofSetVerticalSync(true);
+  ofSetFrameRate(60);
+#ifndef __APPLE__ 
+  // Attempt to get max framerate on Windows
+  // https://forum.openframeworks.cc/t/emptyexample-running-at-50fps-in-release-mode/13731/7
+  timeBeginPeriod(1);
+#endif
 
-	input.loadMovie("fingers.mov");
+  input.loadMovie("fingers.mov");
 //  input.selectBlackmagic();
   input.crop(0, 0, 720, 720);
 	
-	// Classic background subtraction
-	periscope.loadFromFile(ofToDataPath("BackgroundSubtract.json"));
+  // Classic background subtraction
+  periscope.loadFromFile(ofToDataPath("BackgroundSubtract.json"));
+}
+
+void ofApp::exit() {
+#ifndef __APPLE__
+	timeEndPeriod(1);
+#endif  
 }
 
 //--------------------------------------------------------------

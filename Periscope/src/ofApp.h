@@ -7,10 +7,15 @@
 #include "ShapeDetector.h"
 #include "ofMain.h"
 
+#ifndef __APPLE__
+#include <mmsystem.h>
+#endif
+
 class ofApp : public ofBaseApp{
 
 	public:
 		void setup();
+		void exit();
 		void update();
 		void draw();
 
