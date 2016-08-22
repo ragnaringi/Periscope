@@ -46,4 +46,6 @@ class ofApp : public ofBaseApp{
     ofParameter<bool> syphon;
     ofParameter<bool> hero3;
     ofParameter<bool> hero4;
+    ofParameter<bool> center;
+    ofParameter<bool> fitToSize;
 };

@@ -36,6 +36,9 @@ public:
 	void selectSyphon(std::string server);
 	void rotate(InputRotate angle);
 	void crop(int x, int y, int w, int h);
+  void centerCrop();
+  void fitCrop();
+  void setCenter(int x, int y);
 	void update();
 	void draw();
   bool& isEnabled() { return enabled; }

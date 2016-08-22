@@ -10,6 +10,8 @@ void ofApp::setup(){
   gui.add( syphon.set("Syphon/Spout", false) );
   gui.add( hero3.set("Hero3", false) );
   gui.add( hero4.set("Hero4", false) );
+  gui.add( center.set("Center", false) );
+  gui.add( fitToSize.set("Fit to Size", false) );
 	
 	ofSetWindowTitle("PERISCOPE");
 	ofSetWindowShape(1280, 768);
@@ -19,6 +21,7 @@ void ofApp::setup(){
 
 	input.loadMovie("fingers.mov");
 //  input.selectBlackmagic();
+  input.crop(0, 0, 720, 720);
 	
 	// Classic background subtraction
 	periscope.loadFromFile(ofToDataPath("BackgroundSubtract.json"));
@@ -45,6 +48,14 @@ void ofApp::update(){
   else if ( hero4 ) {
     input.selectBlackmagic(bmdModeHD720p5994);
     hero4 = false;
+  }
+  else if ( center ) {
+    input.centerCrop();
+    center = false;
+  }
+  else if ( fitToSize ) {
+    input.fitCrop();
+    fitToSize = false;
   }
   
 	input.update();

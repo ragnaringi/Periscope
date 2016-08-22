@@ -157,6 +157,18 @@ void Input::crop(int x_, int y_, int w_, int h_) {
   h = h_;
 }
 
+void Input::centerCrop() {
+  setCenter(0, 0);
+}
+
+void Input::fitCrop() {
+  crop(0, 0, fmin(raw().getWidth(), MAX_WIDTH), fmin(raw().getHeight(), MAX_HEIGHT));
+}
+
+void Input::setCenter(int x_, int y_) {
+  crop(x_, y_, w, h);
+}
+
 //--------------------------------------------------------------
 ofTexture& Input::raw() {
   if ( enableClient ) {
@@ -187,9 +199,6 @@ ofPixels& Input::processed() {
 void Input::updateGui() {
   if (!isSetup) {
     ofTexture& input = raw();
-    if (w != input.getWidth() || h != input.getHeight()) {
-      crop(0, 0, fmin(input.getWidth(), MAX_WIDTH), fmin(input.getHeight(), MAX_HEIGHT));
-    }
     isSetup = true;
   }
 }
