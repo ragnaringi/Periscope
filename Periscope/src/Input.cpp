@@ -110,25 +110,32 @@ void Input::draw() {
   
   ofTexture& input = raw();
   
+  if ( !presentationMode ) {
   // Center images using original as anchor
   {
-  ofPushMatrix();
-  ofRectangle rect(0, 0, input.getWidth(), input.getHeight());
-  center(rect, angle);
-  applyRotation(input, angle);
-  input.draw(0, 0);
-  ofPopMatrix(); /* Center images */
-  }
+    ofPushMatrix();
+    ofRectangle rect(0, 0, input.getWidth(), input.getHeight());
+    center(rect, angle);
+    applyRotation(input, angle);
+    input.draw(0, 0);
+    ofPopMatrix(); /* Center images */
+    }
+    
+    // Draw bounding box for crop
+    {
+    ofPushMatrix();
+    ofRectangle rect = getCrop();
+    center(rect, 0);
+    ofNoFill();
+    ofSetColor(ofColor::red);
+    ofDrawRectangle(rect);
+    ofPopMatrix();
+    }
   
-  // Draw bounding box for crop
-  {
-  ofPushMatrix();
-  ofRectangle rect = getCrop();
-  center(rect, 0);
-  ofNoFill();
-  ofSetColor(ofColor::red);
-  ofDrawRectangle(rect);
-  ofPopMatrix();
+  }
+  else {
+    float scale = (float)ofGetWidth() / (float)input.getWidth();
+    input.draw(0, 0, ofGetWidth(), input.getHeight() * scale);
   }
   
   ofPopStyle();

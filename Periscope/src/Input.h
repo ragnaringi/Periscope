@@ -51,6 +51,7 @@ public:
     return syphonClient.getApplicationName();
   }
 #endif
+  bool presentationMode = true;
 private:
 	ofFbo frameBuffer;
   std::unique_ptr<ofxBlackmagic::Input> input;
