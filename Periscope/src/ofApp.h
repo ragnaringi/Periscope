@@ -33,6 +33,9 @@ class ofApp : public ofBaseApp{
 	
 	private:
   
+    void updateGui();
+    void sendOrientation();
+  
     int drawingMode;
 	
 		PScope::Input input;
@@ -45,6 +48,8 @@ class ofApp : public ofBaseApp{
 		void loadMovieFile();
     void selectSyphonInput();
   
+    ofxOscSender sender;
+  
     ofxPanel gui;
     ofParameter<bool> load;
     ofParameter<bool> save;
@@ -55,4 +60,5 @@ class ofApp : public ofBaseApp{
     ofParameter<bool> hero4;
     ofParameter<bool> center;
     ofParameter<bool> fitToSize;
+    ofParameter<int> x, y, w, h, angle;
 };

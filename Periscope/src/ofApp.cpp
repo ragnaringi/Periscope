@@ -1,5 +1,6 @@
 
 #include "ofApp.h"
+#include "constants.h"
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -14,6 +15,11 @@ void ofApp::setup(){
   gui.add( hero4.set("Hero4", false) );
   gui.add( center.set("Center", false) );
   gui.add( fitToSize.set("Fit to Size", false) );
+  gui.add( x.set("x", 320, -MAX_WIDTH, MAX_WIDTH) );
+  gui.add( y.set("y", 240, -MAX_WIDTH, MAX_WIDTH) );
+  gui.add( w.set("w", MAX_WIDTH, 0, MAX_WIDTH) );
+  gui.add( h.set("h", MAX_HEIGHT, 0, MAX_HEIGHT) );
+  gui.add( angle.set("angle", 0, 0, Rotate270) );
 	
   ofSetWindowTitle("PERISCOPE");
   ofSetWindowShape(1280, 768);
@@ -29,6 +35,7 @@ void ofApp::setup(){
   input.loadMovie("fingers.mov");
 //  input.selectBlackmagic();
   input.crop(0, 0, 720, 720);
+  updateGui();
 	
   // Classic background subtraction
   periscope.loadFromFile(ofToDataPath("BackgroundSubtract.json"));
@@ -72,14 +79,19 @@ void ofApp::update(){
   }
   else if ( center ) {
     input.centerCrop();
+    updateGui();
     center = false;
   }
   else if ( fitToSize ) {
     input.fitCrop();
+    updateGui();
     fitToSize = false;
   }
   
+  input.crop(x, y, w, h);
+  input.rotate((InputRotate)angle.get());
 	input.update();
+  
 	ofPixels &src = input.processed();
 	if (src.isAllocated()) {
     cv::Mat mat = ofxCv::toCv(src);
@@ -214,4 +226,22 @@ void ofApp::selectSyphonInput() {
   server = ofSystemTextBoxDialog("Input Syphon Source", input.syphonServer());
 #endif
   input.selectSyphon(server);
+}
+
+//--------------------------------------------------------------
+void ofApp::updateGui() {
+  x = input.getCrop().getX();
+  y = input.getCrop().getY();
+  w = input.getCrop().getWidth();
+  h = input.getCrop().getHeight();
+}
+
+//--------------------------------------------------------------
+void ofApp::sendOrientation() {
+  // Send Osc
+  ofxOscMessage m;
+  m.setAddress("/orientation");
+  m.addFloatArg(0); // TODO: Receive from Periscope
+  m.addFloatArg(y);
+  sender.sendMessage(m);
 }

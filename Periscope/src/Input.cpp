@@ -27,14 +27,6 @@ Input::Input() : isSetup(false), enabled(true), textureNeedsUpdate(false), angle
 #endif
   frameBuffer.allocate(MAX_WIDTH, MAX_HEIGHT);
   result.allocate(MAX_WIDTH, MAX_HEIGHT, OF_IMAGE_COLOR);
-  
-  // Gui
-  gui.setup();
-  gui.add(x.set("x", 320, -MAX_WIDTH, MAX_WIDTH));
-  gui.add(y.set("y", 240, -MAX_WIDTH, MAX_WIDTH));
-  gui.add(w.set("w", MAX_WIDTH, 0, MAX_WIDTH));
-  gui.add(h.set("h", MAX_HEIGHT, 0, MAX_HEIGHT));
-  gui.add(angle.set("angle", 0, 0, Rotate270));
 }
 
 //--------------------------------------------------------------
@@ -131,7 +123,7 @@ void Input::draw() {
   // Draw bounding box for crop
   {
   ofPushMatrix();
-  ofRectangle rect(x-1, y-1, w+2, h+2);
+  ofRectangle rect = getCrop();
   center(rect, 0);
   ofNoFill();
   ofSetColor(ofColor::red);
@@ -139,14 +131,17 @@ void Input::draw() {
   ofPopMatrix();
   }
   
-  gui.draw();
-  
   ofPopStyle();
 }
 
 //--------------------------------------------------------------
 void Input::rotate(InputRotate angle_) {
   angle = angle_;
+}
+
+//--------------------------------------------------------------
+ofRectangle Input::getCrop() {
+  return ofRectangle(x, y, w, h);
 }
 
 //--------------------------------------------------------------
@@ -162,7 +157,10 @@ void Input::centerCrop() {
 }
 
 void Input::fitCrop() {
-  crop(0, 0, fmin(raw().getWidth(), MAX_WIDTH), fmin(raw().getHeight(), MAX_HEIGHT));
+  int w = fmin(raw().getWidth(), MAX_WIDTH);
+  int h = fmin(raw().getHeight(), MAX_HEIGHT);
+  if (angle % 2) std::swap(w, h);
+  crop(0, 0, w, h);
 }
 
 void Input::setCenter(int x_, int y_) {

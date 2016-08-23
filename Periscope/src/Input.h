@@ -35,6 +35,7 @@ public:
   void selectBlackmagic(BMDDisplayMode mode);
 	void selectSyphon(std::string server);
 	void rotate(InputRotate angle);
+  ofRectangle getCrop();
 	void crop(int x, int y, int w, int h);
   void centerCrop();
   void fitCrop();
@@ -60,10 +61,9 @@ private:
 #endif
 	bool isSetup;
   bool enabled;
-	ofParameter<int> x, y, w, h, angle;
+	int x, y, w, h, angle;
 	unique_ptr<ofBaseVideoDraws> source;
 	ofPixels result;
-	ofxPanel gui;
 	ofParameter<bool> enableClient, enableServer;
 	void updateGui();
   void updateTextureIfNeeded();
