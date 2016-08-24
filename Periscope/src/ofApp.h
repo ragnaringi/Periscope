@@ -5,6 +5,7 @@
 #include "Output.h"
 #include "Periscope.h"
 #include "ShapeDetector.h"
+#include "PixelSender.h"
 #include "ofMain.h"
 
 #ifndef __APPLE__
@@ -42,6 +43,7 @@ class ofApp : public ofBaseApp{
 		PScope::Output output;
 		PScope::Periscope periscope;
     PScope::ShapeDetector shapeDetector;
+    PixelSender pixelSender;
 	
 		void loadPeriscope();
 		void savePeriscope();
@@ -49,6 +51,7 @@ class ofApp : public ofBaseApp{
     void selectSyphonInput();
   
     ofxOscSender sender;
+    ofxOscReceiver receiver;
   
     ofxPanel gui;
     ofParameter<bool> load;

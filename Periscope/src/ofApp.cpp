@@ -39,6 +39,8 @@ void ofApp::setup(){
 	
   // Classic background subtraction
   periscope.loadFromFile(ofToDataPath("BackgroundSubtract.json"));
+  
+  pixelSender.setup("127.0.0.1", 9001);
 }
 
 void ofApp::exit() {
@@ -99,6 +101,8 @@ void ofApp::update(){
 	}
 	output.send(periscope.getOutput());
 	output.sendMain(periscope.getInput().getTexture());
+  
+  pixelSender.send(src);
   
   shapeDetector.update();
 }

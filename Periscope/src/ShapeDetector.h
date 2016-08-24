@@ -9,7 +9,7 @@
 #ifndef ShapeDetector_h
 #define ShapeDetector_h
 
-#include "ofxOsc.h"
+#include "ofxOscReceiver.h"
 
 inline namespace PScope
 {
