@@ -64,4 +64,5 @@ class ofApp : public ofBaseApp{
     ofParameter<bool> center;
     ofParameter<bool> fitToSize;
     ofParameter<int> x, y, w, h, angle;
+    ofParameter<float> zoom;
 };

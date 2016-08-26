@@ -13,6 +13,8 @@ static const int MAX_HEIGHT = 720;
 
 void center(const ofRectangle &rect, int angle);
 void applyRotation(const ofTexture &image, int angle);
+void applyRotation(const ofRectangle &rect, int angle);
+void center(const ofRectangle& rect, ofFbo& container, int angle);
 void center(const ofTexture& texture, ofFbo& container, int angle);
 
 //--------------------------------------------------------------
@@ -109,14 +111,14 @@ void Input::draw() {
   ofSetColor(ofColor::white);
   
   ofTexture& input = raw();
-  
   if ( !presentationMode ) {
   // Center images using original as anchor
   {
     ofPushMatrix();
-    ofRectangle rect(0, 0, input.getWidth(), input.getHeight());
+    ofRectangle rect(0, 0, input.getWidth() * zoom, input.getHeight() * zoom);
     center(rect, angle);
-    applyRotation(input, angle);
+    applyRotation(rect, angle);
+    ofScale( zoom );
     input.draw(0, 0);
     ofPopMatrix(); /* Center images */
     }
@@ -161,6 +163,10 @@ void Input::crop(int x_, int y_, int w_, int h_) {
 
 void Input::centerCrop() {
   setCenter(0, 0);
+}
+
+void Input::setZoom(float zoom_) {
+  zoom = zoom_;
 }
 
 void Input::fitCrop() {
@@ -222,8 +228,11 @@ void Input::updateTextureIfNeeded() {
   frameBuffer.begin();
   ofClear(0);
   ofSetColor( ofColor::white );
-  center(texture, frameBuffer, angle);
-  applyRotation(texture, angle);
+  
+  ofRectangle rect(0, 0, texture.getWidth() * zoom, texture.getHeight() * zoom);
+  center(rect, frameBuffer, angle);
+  applyRotation(rect, angle);
+  ofScale( zoom );
   switch (angle) {
     case RotateNone:
       ofTranslate(-x, -y); break;
@@ -255,6 +264,18 @@ void center(const ofRectangle& rect, int angle) {
 }
 
 //--------------------------------------------------------------
+void center(const ofRectangle& rect, ofFbo& container, int angle) {
+  if (angle % 2 == 0) {
+    ofTranslate(container.getWidth()  * 0.5f - rect.getWidth()  * 0.5f,
+                container.getHeight() * 0.5f - rect.getHeight() * 0.5f);
+  }
+  else {
+    ofTranslate(container.getWidth()  * 0.5f - rect.getHeight() * 0.5f,
+                container.getHeight() * 0.5f - rect.getWidth()  * 0.5f);
+  }
+}
+
+//--------------------------------------------------------------
 void center(const ofTexture& texture, ofFbo& container,  int angle) {
   if (angle % 2 == 0) {
     ofTranslate(container.getWidth() * 0.5f - texture.getWidth()  * 0.5f,
@@ -268,20 +289,26 @@ void center(const ofTexture& texture, ofFbo& container,  int angle) {
 
 //--------------------------------------------------------------
 void applyRotation(const ofTexture &texture, int angle) {
+  ofRectangle rect(0, 0, texture.getWidth(), texture.getHeight());
+  applyRotation(rect, angle);
+}
+
+//--------------------------------------------------------------
+void applyRotation(const ofRectangle &rect, int angle) {
   ofRotate(angle * 90);
   
   switch (angle) {
       
     case Rotate90:
-      ofTranslate( 0, -texture.getHeight() );
+      ofTranslate( 0, -rect.getHeight() );
       break;
       
     case Rotate180:
-      ofTranslate( -texture.getWidth(), -texture.getHeight() );
+      ofTranslate( -rect.getWidth(), -rect.getHeight() );
       break;
       
     case Rotate270:
-      ofTranslate( -texture.getWidth(), 0 );
+      ofTranslate( -rect.getWidth(), 0 );
       break;
       
     default: break;

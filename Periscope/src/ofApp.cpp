@@ -20,6 +20,7 @@ void ofApp::setup(){
   gui.add( w.set("w", MAX_WIDTH, 0, MAX_WIDTH) );
   gui.add( h.set("h", MAX_HEIGHT, 0, MAX_HEIGHT) );
   gui.add( angle.set("angle", 0, 0, Rotate270) );
+  gui.add( zoom.set("zoom", 1.f, 1.f, 6.f) );
 	
   ofSetWindowTitle("PERISCOPE");
   ofSetWindowShape(1280, 768);
@@ -91,7 +92,8 @@ void ofApp::update(){
   }
   
   input.crop(x, y, w, h);
-  input.rotate((InputRotate)angle.get());
+  input.rotate( (InputRotate)angle.get() );
+  input.setZoom( zoom );
 	input.update();
   
 	ofPixels &src = input.processed();

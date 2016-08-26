@@ -40,6 +40,7 @@ public:
   void centerCrop();
   void fitCrop();
   void setCenter(int x, int y);
+  void setZoom(float zoom);
 	void update();
 	void draw();
   bool& isEnabled() { return enabled; }
@@ -51,7 +52,7 @@ public:
     return syphonClient.getApplicationName();
   }
 #endif
-  bool presentationMode = true;
+  bool presentationMode = false;
 private:
 	ofFbo frameBuffer;
   std::unique_ptr<ofxBlackmagic::Input> input;
@@ -62,6 +63,7 @@ private:
 #endif
 	bool isSetup;
   bool enabled;
+  float zoom;
 	int x, y, w, h, angle;
 	unique_ptr<ofBaseVideoDraws> source;
 	ofPixels result;
