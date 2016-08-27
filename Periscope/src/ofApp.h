@@ -12,6 +12,9 @@
 #include <mmsystem.h>
 #endif
 
+#define SEND_PORT 9997
+#define RECEIVE_PORT 9999
+
 class ofApp : public ofBaseApp{
 
 	public:

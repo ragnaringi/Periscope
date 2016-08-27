@@ -30,7 +30,7 @@ static ofImage input; // TODO
 
 //--------------------------------------------------------------
 Periscope::Periscope() : debugMode(true) {
-	sender.setup(HOST, SEND_PORT);
+	sender.setup(LOCAL_HOST, LOCAL_PORT);
 	
 	for (int i = 0; i < NUM_THUMBNAILS; ++i) {
 		unique_ptr<Thumbnail> t( new Thumbnail(titles[i]) );

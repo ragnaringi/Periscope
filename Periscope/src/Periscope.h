@@ -14,10 +14,8 @@
 #include "Contours.h"
 #include "EdgeDetect.h"
 
-#define HOST "localhost" //"10.2.65.114"
+#define LOCAL_HOST "localhost" //"10.2.65.114"
 #define LOCAL_PORT 9991
-#define SEND_PORT 9997
-#define RECEIVE_PORT 9999
 
 inline namespace PScope
 {
