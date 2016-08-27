@@ -75,6 +75,7 @@ class ofApp : public ofBaseApp{
   
     // Periscope parameters
     ofParameter<float> zoom;
+    ofParameter<float> tilt;
     ofParameter<float> heading;
     int numberOfObjects;
   

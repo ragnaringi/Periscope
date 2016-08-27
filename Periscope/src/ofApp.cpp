@@ -15,7 +15,7 @@ void ofApp::setup(){
   gui.add( hero4.set("Hero4", false) );
   gui.add( center.set("Center", false) );
   gui.add( fitCrop.set("Fit Crop", false) );
-  gui.add( fitToScreen.set("Fit to Screen", false) );
+  gui.add( fitToScreen.set("Fit to Screen", true) );
   gui.add( x.set("x", 320, -MAX_WIDTH, MAX_WIDTH) );
   gui.add( y.set("y", 240, -MAX_WIDTH, MAX_WIDTH) );
   gui.add( w.set("w", MAX_WIDTH, 0, MAX_WIDTH) );
@@ -24,6 +24,7 @@ void ofApp::setup(){
   gui.add( debug.set("debug", true) );
   gui.add( sendOsc.set("Send OSC on Port 9997", false) );
   gui.add( zoom.set("zoom", 1.f, 1.f, 6.f) );
+  gui.add( tilt.set("tilt", 0.f, 0.f, 1.f) );
   gui.add( heading.set("heading", 0.f, 0.f, 1.f) );
 	
   ofSetWindowTitle("PERISCOPE");
@@ -253,6 +254,10 @@ void ofApp::processGui() {
     fitCrop = false;
   }
   
+  // Tilting
+  ofTexture &src = input.raw();
+  float delta = ( src.getWidth() - h ) * 0.5;
+  y = ( (src.getWidth() - h) * (1 - tilt) ) - delta;
 }
 
 //--------------------------------------------------------------
@@ -285,7 +290,7 @@ void ofApp::sendOscMessages() {
   ofxOscMessage m;
   m.setAddress("/periscope/orientation");
   m.addFloatArg(heading); // TODO: Receive from Periscope
-  m.addFloatArg(y);
+  m.addFloatArg(tilt);
   sender.sendMessage(m);
   }
   // Send Zoom
@@ -302,6 +307,4 @@ void ofApp::sendOscMessages() {
   // Send Number Of Objects
   
   // Send Number Of People
-  
-  // Send
 }
