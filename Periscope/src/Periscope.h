@@ -15,7 +15,9 @@
 #include "EdgeDetect.h"
 
 #define HOST "localhost" //"10.2.65.114"
-#define PORT 9999
+#define LOCAL_PORT 9991
+#define SEND_PORT 9997
+#define RECEIVE_PORT 9999
 
 inline namespace PScope
 {
@@ -250,14 +252,14 @@ public:
 		fbPolySigma.set("fbPolySigma", 1.5, 1.1, 2);
 		fbUseGaussian.set("fbUseGaussian", false);
 		fbWinSize.set("winSize", 32, 4, 64);
-		usefb.set("Use Farneback", true);
+		usefb.set("Use Farneback", false);
 		
-		curFlow = &fb;
+		curFlow = &lk;
 	};
 	void loadGui(ofxPanel *gui) {
 	};
 	void compute(cv::Mat &src) {
-		ofxCv::copy(cpy, src);
+		ofxCv::copy(src, cpy);
 		
 		if(usefb) {
 			curFlow = &fb;
@@ -280,12 +282,19 @@ public:
 		curFlow->calcOpticalFlow(cpy);
 		
 		// Send Osc
-		ofVec2f flow = fb.getAverageFlow();
-		ofxOscMessage m;
-		m.setAddress("/flow");
-		m.addFloatArg(flow.x);
-		m.addFloatArg(flow.y);
-		sender->sendMessage(m);
+    float x = 0.f;
+    std::vector<ofVec2f> flow = lk.getMotion();
+    for (auto v : flow) {
+      x += v.x;
+//      cout << v << endl; 
+    }
+    x /= flow.size();
+    cout << x << endl;
+//		ofxOscMessage m;
+//		m.setAddress("/flow");
+//		m.addFloatArg(flow.x);
+//		m.addFloatArg(flow.y);
+//		sender->sendMessage(m);
 	};
 	void draw(int x, int y) {
 		Component::draw(x, y);

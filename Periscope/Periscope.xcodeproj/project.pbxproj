@@ -1217,6 +1217,29 @@
 			name = src;
 			sourceTree = "<group>";
 		};
+		C03E64CE1D720DCA00B79AFA /* Periscope */ = {
+			isa = PBXGroup;
+			children = (
+				6C74F164674D2FA4D45AD9B5 /* Component.h */,
+				64D31F0818BD6C0D005543CF /* constants.h */,
+				CB9983F9A88D8F7C1D707DD2 /* Contours.h */,
+				28F74B6AD90967DF75B397CB /* EdgeDetect.h */,
+				26392D1501441535E6A35EF1 /* Gui.h */,
+				217C06CB5453D6FB36E3D8E5 /* Helpers.h */,
+				6469022C1250BD948BDA5D65 /* Input.cpp */,
+				C6898E45B42DD6E2688E5727 /* Input.h */,
+				4585622F5C383AB940DFAF33 /* Output.cpp */,
+				2CE4597CDD7B9885AF3EAA73 /* Output.h */,
+				C6D5EDC86B1069C8A5C62C8E /* Periscope.cpp */,
+				D4E9AE6E32CFF332CCED01B5 /* Periscope.h */,
+				604F9820CACB0B98133B1AD1 /* PixelSender.h */,
+				C03E64BF1D6D241E00B79AFA /* PixelSender.cpp */,
+				B199C8058C3365E5F55B04C5 /* ShapeDetector.cpp */,
+				44C02B4D4CDB4EC5DD429022 /* ShapeDetector.h */,
+			);
+			name = Periscope;
+			sourceTree = "<group>";
+		};
 		C58CC92A5283B95AA31D50FB /* video */ = {
 			isa = PBXGroup;
 			children = (
@@ -1341,22 +1364,7 @@
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
-				6C74F164674D2FA4D45AD9B5 /* Component.h */,
-				64D31F0818BD6C0D005543CF /* constants.h */,
-				CB9983F9A88D8F7C1D707DD2 /* Contours.h */,
-				28F74B6AD90967DF75B397CB /* EdgeDetect.h */,
-				26392D1501441535E6A35EF1 /* Gui.h */,
-				217C06CB5453D6FB36E3D8E5 /* Helpers.h */,
-				6469022C1250BD948BDA5D65 /* Input.cpp */,
-				C6898E45B42DD6E2688E5727 /* Input.h */,
-				4585622F5C383AB940DFAF33 /* Output.cpp */,
-				2CE4597CDD7B9885AF3EAA73 /* Output.h */,
-				C6D5EDC86B1069C8A5C62C8E /* Periscope.cpp */,
-				D4E9AE6E32CFF332CCED01B5 /* Periscope.h */,
-				604F9820CACB0B98133B1AD1 /* PixelSender.h */,
-				C03E64BF1D6D241E00B79AFA /* PixelSender.cpp */,
-				B199C8058C3365E5F55B04C5 /* ShapeDetector.cpp */,
-				44C02B4D4CDB4EC5DD429022 /* ShapeDetector.h */,
+				C03E64CE1D720DCA00B79AFA /* Periscope */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;

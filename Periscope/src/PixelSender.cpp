@@ -62,6 +62,8 @@ void PixelSender::send(ofTexture& texture) {
    */
 }
 void PixelSender::send(ofPixels& pixels) {
+  if ( !pimpl->isConnected() ) return;
+  
   int numPixels = 2430;
   char buffer[2430];
   //    memcpy( buffer, pixels.getData(), pixels.getTotalBytes() );

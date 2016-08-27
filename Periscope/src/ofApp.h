@@ -34,8 +34,10 @@ class ofApp : public ofBaseApp{
 	
 	private:
   
+    void processGui();
     void updateGui();
-    void sendOrientation();
+    void sendOscMessages();
+    void processOscMessages();
   
     int drawingMode;
 	
@@ -63,6 +65,13 @@ class ofApp : public ofBaseApp{
     ofParameter<bool> hero4;
     ofParameter<bool> center;
     ofParameter<bool> fitToSize;
+    ofParameter<bool> debug;
+    ofParameter<bool> sendOsc;
     ofParameter<int> x, y, w, h, angle;
+  
+    // Periscope parameters
     ofParameter<float> zoom;
+    ofParameter<float> heading;
+    int numberOfObjects;
+  
 };

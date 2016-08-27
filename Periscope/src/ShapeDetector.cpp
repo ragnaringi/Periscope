@@ -10,7 +10,7 @@
 #include "ShapeDetector.h"
 
 ShapeDetector::ShapeDetector() {
-  receiver.setup(PORT);
+  receiver.setup(SEND_PORT);
 }
 
 void ShapeDetector::update() {
