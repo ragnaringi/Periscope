@@ -42,7 +42,7 @@ public:
   void setCenter(int x, int y);
   void setZoom(float zoom);
 	void update();
-	void draw();
+	void draw(bool fitToSize);
   bool& isEnabled() { return enabled; }
   void setEnabled(bool enable) { enabled = enable; }
 	ofTexture& raw();

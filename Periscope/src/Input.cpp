@@ -102,7 +102,7 @@ void Input::update() {
 }
 
 //--------------------------------------------------------------
-void Input::draw() {
+void Input::draw(bool fitToSize) {
   updateTextureIfNeeded();
   
   ofPushStyle();
@@ -113,7 +113,23 @@ void Input::draw() {
   ofTexture& input = raw();
   if ( !presentationMode ) {
   // Center images using original as anchor
-  {
+
+    ofPushMatrix();
+    if ( fitToSize ) {
+      float scale = 1.f;
+      if ( angle % 2 == 0 ) {
+        // TODO:(Ragnar)
+      }
+      else {
+        if ( input.getWidth() > ofGetHeight() ) {
+          scale = ofGetHeight() / input.getWidth();
+          ofTranslate((input.getWidth() - input.getHeight()) * 0.5, input.getWidth() / 8);
+        }
+      }
+      ofScale(scale);
+    }
+    
+    {
     ofPushMatrix();
     ofRectangle rect(0, 0, input.getWidth() * zoom, input.getHeight() * zoom);
     center(rect, angle);
@@ -133,7 +149,8 @@ void Input::draw() {
     ofDrawRectangle(rect);
     ofPopMatrix();
     }
-  
+    
+    ofPopMatrix();
   }
   else {
     float scale = (float)ofGetWidth() / (float)input.getWidth();

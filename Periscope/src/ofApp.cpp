@@ -14,13 +14,14 @@ void ofApp::setup(){
   gui.add( hero3.set("Hero3", false) );
   gui.add( hero4.set("Hero4", false) );
   gui.add( center.set("Center", false) );
-  gui.add( fitToSize.set("Fit to Size", false) );
+  gui.add( fitCrop.set("Fit Crop", false) );
+  gui.add( fitToScreen.set("Fit to Screen", false) );
   gui.add( x.set("x", 320, -MAX_WIDTH, MAX_WIDTH) );
   gui.add( y.set("y", 240, -MAX_WIDTH, MAX_WIDTH) );
   gui.add( w.set("w", MAX_WIDTH, 0, MAX_WIDTH) );
   gui.add( h.set("h", MAX_HEIGHT, 0, MAX_HEIGHT) );
   gui.add( angle.set("angle", 0, 0, Rotate270) );
-  gui.add( debug.set("debug", false) );
+  gui.add( debug.set("debug", true) );
   gui.add( sendOsc.set("Send OSC on Port 9997", false) );
   gui.add( zoom.set("zoom", 1.f, 1.f, 6.f) );
   gui.add( heading.set("heading", 0.f, 0.f, 1.f) );
@@ -39,6 +40,7 @@ void ofApp::setup(){
   input.loadMovie("pan2.mov");
 //  input.selectBlackmagic();
   input.crop(0, 0, 720, 720);
+  input.rotate( Rotate90 );
   updateGui();
 	
   // Classic background subtraction
@@ -93,7 +95,7 @@ void ofApp::draw(){
     case 2:
       shapeDetector.draw(); break;
     default:
-      input.draw(); break;
+      input.draw(fitToScreen); break;
   }
   
   if ( !debug ) return;
@@ -245,11 +247,12 @@ void ofApp::processGui() {
     updateGui();
     center = false;
   }
-  else if ( fitToSize ) {
+  else if ( fitCrop ) {
     input.fitCrop();
     updateGui();
-    fitToSize = false;
+    fitCrop = false;
   }
+  
 }
 
 //--------------------------------------------------------------

@@ -64,7 +64,8 @@ class ofApp : public ofBaseApp{
     ofParameter<bool> hero3;
     ofParameter<bool> hero4;
     ofParameter<bool> center;
-    ofParameter<bool> fitToSize;
+    ofParameter<bool> fitCrop;
+    ofParameter<bool> fitToScreen;
     ofParameter<bool> debug;
     ofParameter<bool> sendOsc;
     ofParameter<int> x, y, w, h, angle;
