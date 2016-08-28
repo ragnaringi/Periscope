@@ -5,6 +5,7 @@
 #include "Output.h"
 #include "Periscope.h"
 #include "ShapeDetector.h"
+#include "ObjectTracker.h"
 #include "PixelSender.h"
 #include "ofMain.h"
 
@@ -48,6 +49,7 @@ class ofApp : public ofBaseApp{
 		PScope::Output output;
 		PScope::Periscope periscope;
     PScope::ShapeDetector shapeDetector;
+    ObjectTracker objectTracker;
     PixelSender pixelSender;
 	
 		void loadPeriscope();

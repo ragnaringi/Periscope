@@ -40,7 +40,7 @@ void Input::loadMovie(std::string title) {
     cout << "Error loading movie: " << title << endl;
   }
   player->play();
-  player->setLoopState(OF_LOOP_PALINDROME);
+  player->setLoopState(OF_LOOP_NORMAL);
   source = move(player);
   isSetup = false;
 }

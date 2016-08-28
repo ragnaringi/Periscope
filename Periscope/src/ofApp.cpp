@@ -20,7 +20,7 @@ void ofApp::setup(){
   gui.add( y.set("y", 240, -MAX_WIDTH, MAX_WIDTH) );
   gui.add( w.set("w", MAX_WIDTH, 0, MAX_WIDTH) );
   gui.add( h.set("h", MAX_HEIGHT, 0, MAX_HEIGHT) );
-  gui.add( angle.set("angle", Rotate90, 0, Rotate270) );
+  gui.add( angle.set("angle", 0, 0, Rotate270) );
   gui.add( debug.set("debug", true) );
   gui.add( sendOsc.set("Send OSC on Port 9997", false) );
   gui.add( zoom.set("zoom", 1.f, 1.f, 6.f) );
@@ -38,13 +38,15 @@ void ofApp::setup(){
   timeBeginPeriod(1);
 #endif
 
-  input.loadMovie("pan2.mov");
+  input.loadMovie("Untitled 2.mov");
   input.crop(0, 0, 720, 720);
   input.rotate( Rotate90 );
   updateGui();
 	
   // Classic background subtraction
-  periscope.loadFromFile(ofToDataPath("BackgroundSubtract.json"));
+  periscope.loadFromFile(ofToDataPath("Periscope.json"));
+  
+  objectTracker.setup( &gui );
   
   pixelSender.setup("127.0.0.1", 9001);
   
@@ -73,7 +75,9 @@ void ofApp::update(){
 	if (src.isAllocated()) {
     cv::Mat mat = ofxCv::toCv(src);
     periscope.compute(mat);
+    objectTracker.update(mat);
 	}
+  
 	output.send(periscope.getOutput());
 	output.sendMain(periscope.getInput().getTexture());
   
@@ -93,6 +97,8 @@ void ofApp::draw(){
     case 1:
       periscope.draw(); break;
     case 2:
+      objectTracker.draw(); break;
+    case 3:
       shapeDetector.draw(); break;
     default:
       input.draw(fitToScreen); break;
@@ -114,6 +120,9 @@ void ofApp::keyPressed(int key){
       drawingMode = 1; break;
     case '3':
       drawingMode = 2; break;
+      break;
+    case '4':
+      drawingMode = 3; break;
       break;
 		case 'f':
 			ofToggleFullscreen();

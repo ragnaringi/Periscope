@@ -199,6 +199,9 @@
     <ClCompile Include="src\PixelSender.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\ObjectTracker.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -1297,6 +1300,9 @@
     </ClInclude>
     <ClInclude Include="..\openFrameworks\addons\ofxSpout2\libs\include\SpoutSharedMemory.h">
       <Filter>addons\ofxSpout2\libs\include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ObjectTracker.h">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

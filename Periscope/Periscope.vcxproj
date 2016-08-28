@@ -172,6 +172,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\ObjectTracker.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\Output.cpp" />
@@ -237,6 +238,7 @@
     <ClCompile Include="..\openFrameworks\addons\ofxSpout2\libs\src\SpoutSharedMemory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ObjectTracker.h" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\Component.h" />
     <ClInclude Include="src\constants.h" />
