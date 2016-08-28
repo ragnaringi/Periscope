@@ -12,15 +12,16 @@ void ofApp::setup(){
   gui.add( webcam.set("Webcam", false) );
   gui.add( syphon.set("Syphon/Spout", false) );
   gui.add( hero3.set("Hero3", false) );
-  gui.add( hero4.set("Hero4", false) );
+  gui.add( hero4.set("Hero4", true) );
   gui.add( center.set("Center", false) );
   gui.add( fitCrop.set("Fit Crop", false) );
   gui.add( fitToScreen.set("Fit to Screen", true) );
+  gui.add( presentationMode.set("Presentation Mode", false) );
   gui.add( x.set("x", 320, -MAX_WIDTH, MAX_WIDTH) );
   gui.add( y.set("y", 240, -MAX_WIDTH, MAX_WIDTH) );
   gui.add( w.set("w", MAX_WIDTH, 0, MAX_WIDTH) );
   gui.add( h.set("h", MAX_HEIGHT, 0, MAX_HEIGHT) );
-  gui.add( angle.set("angle", 0, 0, Rotate270) );
+  gui.add( angle.set("angle", Rotate90, 0, Rotate270) );
   gui.add( debug.set("debug", true) );
   gui.add( sendOsc.set("Send OSC on Port 9997", false) );
   gui.add( zoom.set("zoom", 1.f, 1.f, 6.f) );
@@ -38,7 +39,6 @@ void ofApp::setup(){
   timeBeginPeriod(1);
 #endif
 
-  input.loadMovie("Untitled 2.mov");
   input.crop(0, 0, 720, 720);
   input.rotate( Rotate90 );
   updateGui();
@@ -261,6 +261,8 @@ void ofApp::processGui() {
     updateGui();
     fitCrop = false;
   }
+  
+  input.presentationMode = presentationMode;
   
   // Tilting
   ofTexture &src = input.raw();

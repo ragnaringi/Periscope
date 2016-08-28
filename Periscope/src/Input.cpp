@@ -119,6 +119,7 @@ void Input::draw(bool fitToSize) {
       float scale = 1.f;
       if ( angle % 2 == 0 ) {
         // TODO:(Ragnar)
+        scale = 1.f;
       }
       else {
         if ( input.getWidth() > ofGetHeight() ) {

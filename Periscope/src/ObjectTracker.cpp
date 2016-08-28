@@ -49,21 +49,21 @@ void Glow::draw() {
   ofPopStyle();
 }
 
+void center(const ofRectangle &rect, int angle);
+void applyRotation(const ofTexture &image, int angle);
+void applyRotation(const ofRectangle &rect, int angle);
+void center(const ofRectangle& rect, ofFbo& container, int angle);
+void center(const ofTexture& texture, ofFbo& container, int angle);
+
 void ObjectTracker::setup(ofxPanel *gui) {
   gui->add( minRadius.set("Min Radius", 1, 0, 200) );
   gui->add( maxRadius.set("Max Radius", 100, 0, 720) );
   gui->add( threshold.set("Threshold", 15, 0, 255) );
   gui->add( persistence.set("Persistence", 15, 0, 255) );
   gui->add( maxDistance.set("Max Distance", 100, 0, 720) );
-  gui->add( clear.set("Clear Tracker", false) );
 }
 
 void ObjectTracker::update(cv::Mat &mat) {
-  if ( clear ) {
-    contourFinder.resetMinArea();
-    contourFinder.resetMaxArea();
-    clear = false;
-  }
   contourFinder.setMinAreaRadius( minRadius );
   contourFinder.setMaxAreaRadius( maxRadius );
   contourFinder.setThreshold( threshold );
@@ -77,10 +77,15 @@ void ObjectTracker::update(cv::Mat &mat) {
 
 void ObjectTracker::draw() {
   ofSetColor(255);
+  ofPushMatrix();
+  ofRectangle rect(0, 0, image.getWidth(), image.getHeight());
+  center(rect, 0);
+  applyRotation(rect, 0);
   image.update();
   image.draw(0, 0);
   vector<Glow>& followers = tracker.getFollowers();
   for(int i = 0; i < followers.size(); i++) {
     followers[i].draw();
   }
+  ofPopMatrix();
 }

@@ -47,7 +47,6 @@ public:
   ofParameter<int> threshold;
   ofParameter<int> persistence;
   ofParameter<int> maxDistance;
-  ofParameter<bool> clear;
 };
 
 #endif /* ObjectTracker_h */

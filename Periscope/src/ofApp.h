@@ -71,6 +71,7 @@ class ofApp : public ofBaseApp{
     ofParameter<bool> center;
     ofParameter<bool> fitCrop;
     ofParameter<bool> fitToScreen;
+    ofParameter<bool> presentationMode;
     ofParameter<bool> debug;
     ofParameter<bool> sendOsc;
     ofParameter<int> x, y, w, h, angle;
