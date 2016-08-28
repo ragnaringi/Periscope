@@ -20,7 +20,7 @@ void ofApp::setup(){
   gui.add( y.set("y", 240, -MAX_WIDTH, MAX_WIDTH) );
   gui.add( w.set("w", MAX_WIDTH, 0, MAX_WIDTH) );
   gui.add( h.set("h", MAX_HEIGHT, 0, MAX_HEIGHT) );
-  gui.add( angle.set("angle", 0, 0, Rotate270) );
+  gui.add( angle.set("angle", Rotate90, 0, Rotate270) );
   gui.add( debug.set("debug", true) );
   gui.add( sendOsc.set("Send OSC on Port 9997", false) );
   gui.add( zoom.set("zoom", 1.f, 1.f, 6.f) );
@@ -39,7 +39,6 @@ void ofApp::setup(){
 #endif
 
   input.loadMovie("pan2.mov");
-//  input.selectBlackmagic();
   input.crop(0, 0, 720, 720);
   input.rotate( Rotate90 );
   updateGui();
