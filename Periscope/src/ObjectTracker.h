@@ -42,6 +42,8 @@ public:
   ofImage image;
   ofxPanel* gui;
   
+  const vector<cv::Rect>& getBoundingRects();
+  
   ofParameter<int> minRadius;
   ofParameter<int> maxRadius;
   ofParameter<int> threshold;

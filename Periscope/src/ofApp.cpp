@@ -310,11 +310,15 @@ void ofApp::sendOscMessages() {
   m.addFloatArg(zoom);
   sender.sendMessage(m);
   }
-  // Send RGB
-  
-  // Send Brightness
   
   // Send Number Of Objects
+  {
+    const vector<cv::Rect>& boundingRects = objectTracker.getBoundingRects();
+    ofxOscMessage m;
+    m.setAddress("/periscope/numObjects");
+    m.addIntArg(boundingRects.size());
+    sender.sendMessage(m);
+  }
   
   // Send Number Of People
 }
