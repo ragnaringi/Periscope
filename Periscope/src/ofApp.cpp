@@ -32,7 +32,7 @@ void ofApp::setup(){
   ofSetWindowShape(1280, 768);
   ofSetWindowPosition(10, 20);
   ofSetVerticalSync(true);
-  ofSetFrameRate(60);
+  ofSetFrameRate(30);
 #ifndef __APPLE__ 
   // Attempt to get max framerate on Windows
   // https://forum.openframeworks.cc/t/emptyexample-running-at-50fps-in-release-mode/13731/7
@@ -248,7 +248,7 @@ void ofApp::processGui() {
     hero3 = false;
   }
   else if ( hero4 ) {
-    input.selectBlackmagic(bmdModeHD720p5994);
+    input.selectBlackmagic(bmdModeHD1080p2997);
     hero4 = false;
   }
   else if ( center ) {

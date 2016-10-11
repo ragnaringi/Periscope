@@ -25,6 +25,7 @@ PScope::Component* loadFromString(string title) {
 	else if (title == "Canny")      return new Canny;
 	else if (title == "Sobel")      return new Sobel;
 	else if (title == "Hough")      return new Hough;
+  else if (title == "Sharpen")    return new Sharpen;
 	else assert(0);
 }
 

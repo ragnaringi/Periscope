@@ -57,10 +57,10 @@ extern void center(const ofTexture& texture, ofFbo& container, int angle);
 
 void ObjectTracker::setup(ofxPanel *gui) {
   gui->add( minRadius.set("Min Radius", 1, 0, 200) );
-  gui->add( maxRadius.set("Max Radius", 100, 0, 720) );
+  gui->add( maxRadius.set("Max Radius", 100, 0, 1080) );
   gui->add( threshold.set("Threshold", 15, 0, 255) );
   gui->add( persistence.set("Persistence", 15, 0, 255) );
-  gui->add( maxDistance.set("Max Distance", 100, 0, 720) );
+  gui->add( maxDistance.set("Max Distance", 100, 0, 1080) );
 }
 
 void ObjectTracker::update(cv::Mat &mat) {

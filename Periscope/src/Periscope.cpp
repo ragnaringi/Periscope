@@ -9,7 +9,7 @@
 #include "Helpers.h"
 #include "Periscope.h"
 
-const int NUM_THUMBNAILS = 13;
+const int NUM_THUMBNAILS = 14;
 string titles[NUM_THUMBNAILS] = {
 	"Resize",
 	"Colours",
@@ -23,7 +23,8 @@ string titles[NUM_THUMBNAILS] = {
 	"Dilate",
 	"Canny",
 	"Sobel",
-	"Hough"
+	"Hough",
+  "Sharpen"
 };
 
 static ofImage input; // TODO
