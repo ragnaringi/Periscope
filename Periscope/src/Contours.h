@@ -6,28 +6,27 @@
 //
 //
 
-#ifndef Contours_h
-#define Contours_h
+#pragma once
 
-#include "ofxGui.h"
 #include "Component.h"
 
 inline namespace PScope {
 
-#pragma mark - Contour Finder
-
-class Contours : public Component
-{
+class Contours : public Component {
+  
 public:
+  //!
 	Contours() {
 		simplify.set("Simplify", false);
 		mode.set("Mode", 0, 0, 4);
 	}
-	void loadGui(ofxPanel *gui) {
+  //!
+	void loadGui(ofxPanel *gui) override {
 		gui->add(simplify);
 		gui->add(mode);
 	}
-  void compute(cv::Mat &src) {
+  //!
+  void compute(cv::Mat &src) override {
 		int simplifyMode = simplify ? CV_CHAIN_APPROX_SIMPLE : CV_CHAIN_APPROX_NONE;
 		cv::findContours(src, contours, mode, simplifyMode);
 		polylines.clear();
@@ -52,7 +51,8 @@ public:
 			sender->sendMessage(m);
 		}
 	}
-	void draw(int x, int y) {
+  //!
+	void draw( int x, int y ) override {
 		Component::draw(x, y);
 		ofPushMatrix();
 		ofTranslate(x, y);
@@ -62,19 +62,23 @@ public:
 		}
 		ofPopMatrix();
 	}
-	string getTitle() {
+  //!
+	string getTitle() override {
 		return "Contours";
 	}
-	void loadSettings(ofxJSON& settings) {
+  //!
+	void loadSettings( Json::Value settings ) override {
 		mode			= settings["Settings"][mode.getName()].asInt();
 		simplify  = settings["Settings"][simplify.getName()].asBool();
 	}
-	ofxJSON getSettings() {
+  //!
+	ofxJSON getSettings() override {
 		ofxJSON settings = Component::getSettings();
 		settings["Settings"][mode.getName()] = mode.get();
 		settings["Settings"][simplify.getName()] = simplify.get();
 		return settings;
 	};
+  
 protected:
 	ofParameter<int> mode;
 	ofParameter<bool> simplify, holes;
@@ -83,5 +87,3 @@ protected:
 };
 	
 }
-
-#endif /* Contours_h */

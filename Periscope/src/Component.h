@@ -6,32 +6,34 @@
 //
 //
 
-#ifndef Component_h
-#define Component_h
+#pragma once
 
 #include "Gui.h"
 #include "ofxCv.h"
-#include "ofxOsc.h"
 #include "ofxJSON.h"
+#include "OscSender.h"
 
-inline namespace PScope
-{
+inline namespace PScope {
   
-class Component : public MouseAware {
+class Component : public MouseAware, public OscSender {
 public:
+  //!
   Component() {
     localGui.setup();
-    localGui.add(bypass.set("Bypass", false));
-    localGui.add(close.set("Close", false));
-    localGui.add(useRaw.set("Use Raw", false));
+    localGui.add( bypass.set("Bypass", false) );
+    localGui.add( close.set("Close", false) );
+    localGui.add( useRaw.set("Use Raw", false) );
   }
+  //!
   virtual ~Component() {};
+  //!
   virtual void loadGui(ofxPanel *gui) = 0;
-  virtual void loadOsc(ofxOscSender *sender) {
-    this->sender = sender;
-  };
+  
+  //!
   virtual string getTitle() = 0;
+  //!
   virtual void compute(cv::Mat &src) = 0;
+  //!
   virtual void draw(int x, int y) {
     bounds.set(x, y, cpy.getWidth(), cpy.getHeight());
     ofSetColor(ofColor::white);
@@ -42,19 +44,27 @@ public:
     localGui.setPosition(x, y);
     localGui.draw();
   }
+  //!
+  bool selected = false;
+  //!
   bool shouldClose() { return close; };
+  //!
   bool shouldUseRaw() { return useRaw; };
+  //!
   bool isBypassed() { return bypass; };
   ofTexture& getTexture() {
     cpy.update();
     return cpy.getTexture();
   }
-  bool selected = false;
-  virtual void loadSettings(Json::Value settings) {
+  
+  //!
+  virtual void loadSettings( Json::Value settings ) {
     bypass = settings["Settings"][bypass.getName()].asBool();
     close  = settings["Settings"][close.getName()].asBool();
     useRaw = settings["Settings"][useRaw.getName()].asBool();
   }
+  
+  //!
   virtual ofxJSON getSettings() {
     ofxJSON settings;
     settings["Title"] = getTitle();
@@ -63,15 +73,16 @@ public:
     settings["Settings"][useRaw.getName()] = useRaw.get();
     return settings;
   };
+  
 protected:
+  ofImage cpy;
+  ofxPanel localGui;
+  std::string title;
+  
+private:
   ofParameter<bool> bypass;
   ofParameter<bool> close;
   ofParameter<bool> useRaw;
-  ofImage cpy;
-  ofxOscSender *sender;
-  ofxPanel localGui;
 };
   
 }
-
-#endif /* Component_h */

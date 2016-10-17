@@ -389,6 +389,8 @@
 		BF7779868805133E65784F9F /* directx.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = directx.hpp; path = ../openFrameworks/addons/ofxOpenCv/libs/opencv/include/opencv2/core/directx.hpp; sourceTree = SOURCE_ROOT; };
 		C01EC02CAD75F5386947EAA3 /* ofxOscBundle.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxOscBundle.cpp; path = ../openFrameworks/addons/ofxOsc/src/ofxOscBundle.cpp; sourceTree = SOURCE_ROOT; };
 		C03E64BF1D6D241E00B79AFA /* PixelSender.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PixelSender.cpp; sourceTree = "<group>"; };
+		C080524E1DB57ED0006CAA97 /* Morphologic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Morphologic.h; sourceTree = "<group>"; };
+		C080524F1DB586A6006CAA97 /* OscSender.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OscSender.h; sourceTree = "<group>"; };
 		C09D717F5CF081D34D773A85 /* matchers.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = matchers.hpp; path = ../openFrameworks/addons/ofxOpenCv/libs/opencv/include/opencv2/stitching/detail/matchers.hpp; sourceTree = SOURCE_ROOT; };
 		C0E4565D1D73664600C09B28 /* ObjectTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ObjectTracker.cpp; sourceTree = "<group>"; };
 		C0E4565E1D73664600C09B28 /* ObjectTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectTracker.h; sourceTree = "<group>"; };
@@ -1224,17 +1226,13 @@
 			isa = PBXGroup;
 			children = (
 				64D31F0818BD6C0D005543CF /* constants.h */,
-				6C74F164674D2FA4D45AD9B5 /* Component.h */,
-				CB9983F9A88D8F7C1D707DD2 /* Contours.h */,
-				28F74B6AD90967DF75B397CB /* EdgeDetect.h */,
+				C080524C1DB57E4C006CAA97 /* filters */,
+				C080524D1DB57E5B006CAA97 /* io */,
 				26392D1501441535E6A35EF1 /* Gui.h */,
 				217C06CB5453D6FB36E3D8E5 /* Helpers.h */,
-				6469022C1250BD948BDA5D65 /* Input.cpp */,
-				C6898E45B42DD6E2688E5727 /* Input.h */,
-				4585622F5C383AB940DFAF33 /* Output.cpp */,
-				2CE4597CDD7B9885AF3EAA73 /* Output.h */,
 				C6D5EDC86B1069C8A5C62C8E /* Periscope.cpp */,
 				D4E9AE6E32CFF332CCED01B5 /* Periscope.h */,
+				C080524F1DB586A6006CAA97 /* OscSender.h */,
 				604F9820CACB0B98133B1AD1 /* PixelSender.h */,
 				C03E64BF1D6D241E00B79AFA /* PixelSender.cpp */,
 				B199C8058C3365E5F55B04C5 /* ShapeDetector.cpp */,
@@ -1243,6 +1241,28 @@
 				C0E4565E1D73664600C09B28 /* ObjectTracker.h */,
 			);
 			name = Periscope;
+			sourceTree = "<group>";
+		};
+		C080524C1DB57E4C006CAA97 /* filters */ = {
+			isa = PBXGroup;
+			children = (
+				6C74F164674D2FA4D45AD9B5 /* Component.h */,
+				CB9983F9A88D8F7C1D707DD2 /* Contours.h */,
+				28F74B6AD90967DF75B397CB /* EdgeDetect.h */,
+				C080524E1DB57ED0006CAA97 /* Morphologic.h */,
+			);
+			name = filters;
+			sourceTree = "<group>";
+		};
+		C080524D1DB57E5B006CAA97 /* io */ = {
+			isa = PBXGroup;
+			children = (
+				6469022C1250BD948BDA5D65 /* Input.cpp */,
+				C6898E45B42DD6E2688E5727 /* Input.h */,
+				4585622F5C383AB940DFAF33 /* Output.cpp */,
+				2CE4597CDD7B9885AF3EAA73 /* Output.h */,
+			);
+			name = io;
 			sourceTree = "<group>";
 		};
 		C58CC92A5283B95AA31D50FB /* video */ = {

@@ -96,8 +96,8 @@ void Periscope::loadGui() {
 
 //--------------------------------------------------------------
 void Periscope::addComponent(Component *c_) {
-	c_->loadGui(&gui);
-	c_->loadOsc(&sender);
+	c_->loadGui( &gui );
+	c_->loadOsc( &sender );
 	unique_ptr<Component> c( c_ );
 	components.push_back(move(c));
 }

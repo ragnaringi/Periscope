@@ -10,9 +10,11 @@
 #define Periscope_h
 
 #include "Gui.h"
+#include "OscSender.h"
 #include "Component.h"
 #include "Contours.h"
 #include "EdgeDetect.h"
+#include "Morphologic.h"
 
 #define LOCAL_HOST "localhost" //"10.2.65.114"
 #define LOCAL_PORT 9991
@@ -314,64 +316,6 @@ protected:
 	ofParameter<float> fbPyrScale, lkQualityLevel, fbPolySigma;
 	ofParameter<int> fbLevels, lkWinSize, fbIterations, fbPolyN, fbWinSize, lkMaxLevel, lkMaxFeatures, lkMinDistance;
 	ofParameter<bool> fbUseGaussian, usefb;
-};
-
-#pragma mark - Erode
-class Erode : public Component
-{
-public:
-	Erode() {
-		iterations.set("Erode", 1, 0, 5);
-	}
-	void loadGui(ofxPanel *gui) {
-		gui->add(iterations);
-	};
-	void compute(cv::Mat &src) {
-		ofxCv::erode(src, iterations.get());
-    ofxCv::copy(src, cpy);
-	};
-	string getTitle() {
-		return "Erode";
-	}
-	void loadSettings(Json::Value settings) {
-		iterations = settings["Settings"][iterations.getName()].asInt();
-	}
-	ofxJSON getSettings() {
-		ofxJSON settings = Component::getSettings();
-		settings["Settings"][iterations.getName()] = iterations.get();
-		return settings;
-	};
-protected:
-	ofParameter<int> iterations;
-};
-
-#pragma mark - Dilate
-class Dilate : public Component
-{
-public:
-	Dilate() {
-		iterations.set("Dilate", 1, 0, 5);
-	}
-	void loadGui(ofxPanel *gui) {
-		gui->add(iterations);
-	};
-	void compute(cv::Mat &src) {
-		ofxCv::dilate(src, iterations.get());
-    ofxCv::copy(src, cpy);
-	};
-	string getTitle() {
-		return "Dilate";
-	}
-	void loadSettings(Json::Value settings) {
-		iterations = settings["Settings"][iterations.getName()].asInt();
-	}
-	ofxJSON getSettings() {
-		ofxJSON settings = Component::getSettings();
-		settings["Settings"][iterations.getName()] = iterations.get();
-		return settings;
-	};
-protected:
-		ofParameter<int> iterations;
 };
 	
 #pragma mark - HoughLines
