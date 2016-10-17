@@ -85,4 +85,7 @@ private:
   ofParameter<bool> useRaw;
 };
   
+  
+using ComponentRef = std::shared_ptr<Component>;
+  
 }

@@ -58,10 +58,10 @@ void Periscope::loadFromFile(string file) {
 		ofLogNotice("Periscope::loadFromFile") << result.getRawString();
 		
 		const Json::Value& periscope = result["Periscope"];
-		if (periscope.isArray()) {
+		if ( periscope.isArray() ) {
 			for (Json::ArrayIndex i = 0; i < periscope.size(); ++i) {
 				std::string title = periscope[i]["Title"].asString();
-				Component* c = loadFromString(title);
+				ComponentRef c( loadFromString( title ) );
 				c->loadSettings(periscope[i]);
 				addComponent(c);
 			}
@@ -95,11 +95,10 @@ void Periscope::loadGui() {
 }
 
 //--------------------------------------------------------------
-void Periscope::addComponent(Component *c_) {
-	c_->loadGui( &gui );
-	c_->loadOsc( &sender );
-	unique_ptr<Component> c( c_ );
-	components.push_back(move(c));
+void Periscope::addComponent(ComponentRef c) {
+	c->loadGui( &gui );
+  c->loadOsc( &sender );
+	components.push_back(c);
 }
 
 //--------------------------------------------------------------
@@ -110,7 +109,7 @@ void Periscope::setDebug(bool debug) {
 //--------------------------------------------------------------
 void Periscope::compute(cv::Mat &src_) {
   
-  if (src_.data == NULL) return;
+  if ( src_.data == NULL ) return;
   
   ofxCv::copy(src_, input);
 	input.update();
@@ -120,8 +119,8 @@ void Periscope::compute(cv::Mat &src_) {
 	
 	for (int i = 0; i < components.size(); ++i) {
 		auto const &c = components[i].get();
-		if (!c->isBypassed()) {
-			if (c->shouldUseRaw()) {
+		if ( !c->isBypassed() ) {
+			if ( c->shouldUseRaw() ) {
 				ofxCv::copy(input, src);
 			}
 			c->compute(src);
@@ -267,7 +266,8 @@ void Periscope::mouseReleased(int x, int y, int button) {
 	for (int i = thumbnails.size(); i --> 0;) {
 		auto const &t = thumbnails[i];
 		if (t->pointInside(x, y)) {
-			addComponent(loadFromString(t->getTitle()));
+      ComponentRef c( loadFromString( t->getTitle() ) );
+			addComponent( c );
 			loadGui();
 			break;
 		}

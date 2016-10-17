@@ -26,13 +26,21 @@ class Periscope {
 public:
 	Periscope();
 	~Periscope();
+  //!
 	void loadFromFile(string filePath);
+  //!
 	void saveToFile(string filePath);
+  //!
 	void loadGui();
-	void addComponent(Component *c);
+  //!
+	void addComponent(ComponentRef c);
+  //!
 	void setDebug(bool debug);
+  //!
 	bool& getDebug() { return debugMode; };
+  //!
   void compute(cv::Mat &src);
+  //!
 	void draw();
 	
 	void mouseDragged(int x, int y, int button);
@@ -46,7 +54,7 @@ private:
 	bool debugMode;
 	ofxPanel  gui;
 	vector<unique_ptr<Thumbnail>> thumbnails;
-	vector<unique_ptr<Component>> components;
+	vector<ComponentRef> components;
   cv::Mat src;
 	ofxOscSender sender;
 	int mouseX, mouseY = 0;
