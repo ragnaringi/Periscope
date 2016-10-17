@@ -7,6 +7,7 @@
 //
 
 #include "ofxGui.h"
+#include "ofGraphics.h"
 #include "ObjectTracker.h"
 
 const float dyingTime = 1;

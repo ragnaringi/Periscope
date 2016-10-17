@@ -127,7 +127,7 @@ void Input::draw(bool fitToSize) {
           ofTranslate((input.getWidth() - input.getHeight()) * 0.5, input.getWidth() / 8);
         }
       }
-      ofScale(scale);
+      ofScale( scale, scale );
     }
     
     {
@@ -135,7 +135,7 @@ void Input::draw(bool fitToSize) {
     ofRectangle rect(0, 0, input.getWidth() * zoom, input.getHeight() * zoom);
     center(rect, angle);
     applyRotation(rect, angle);
-    ofScale( zoom );
+    ofScale( zoom, zoom );
     input.draw(0, 0);
     ofPopMatrix(); /* Center images */
     }
@@ -250,7 +250,7 @@ void Input::updateTextureIfNeeded() {
   ofRectangle rect(0, 0, texture.getWidth() * zoom, texture.getHeight() * zoom);
   center(rect, frameBuffer, angle);
   applyRotation(rect, angle);
-  ofScale( zoom );
+  ofScale( zoom, zoom );
   switch (angle) {
     case RotateNone:
       ofTranslate(-x, -y); break;

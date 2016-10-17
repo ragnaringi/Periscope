@@ -1223,8 +1223,8 @@
 		C03E64CE1D720DCA00B79AFA /* Periscope */ = {
 			isa = PBXGroup;
 			children = (
-				6C74F164674D2FA4D45AD9B5 /* Component.h */,
 				64D31F0818BD6C0D005543CF /* constants.h */,
+				6C74F164674D2FA4D45AD9B5 /* Component.h */,
 				CB9983F9A88D8F7C1D707DD2 /* Contours.h */,
 				28F74B6AD90967DF75B397CB /* EdgeDetect.h */,
 				26392D1501441535E6A35EF1 /* Gui.h */,
