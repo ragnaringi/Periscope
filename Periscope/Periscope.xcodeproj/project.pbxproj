@@ -395,6 +395,8 @@
 		C0E4565D1D73664600C09B28 /* ObjectTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ObjectTracker.cpp; sourceTree = "<group>"; };
 		C0E4565E1D73664600C09B28 /* ObjectTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectTracker.h; sourceTree = "<group>"; };
 		C0FF265C1DB685B1002243C9 /* OpticalFlow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpticalFlow.h; sourceTree = "<group>"; };
+		C0FF265D1DB686EF002243C9 /* FeatureDetect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FeatureDetect.h; sourceTree = "<group>"; };
+		C0FF265E1DB68922002243C9 /* Blur.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Blur.h; sourceTree = "<group>"; };
 		C1EBFCC314E3AEA4CF0CB639 /* motion_stabilizing.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = motion_stabilizing.hpp; path = ../openFrameworks/addons/ofxOpenCv/libs/opencv/include/opencv2/videostab/motion_stabilizing.hpp; sourceTree = SOURCE_ROOT; };
 		C246B53C7472573EBE1437A1 /* videoio.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = videoio.hpp; path = ../openFrameworks/addons/ofxOpenCv/libs/opencv/include/opencv2/videoio.hpp; sourceTree = SOURCE_ROOT; };
 		C2B819BF173C454CBC03BFD7 /* imgcodecs.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = imgcodecs.hpp; path = ../openFrameworks/addons/ofxOpenCv/libs/opencv/include/opencv2/imgcodecs.hpp; sourceTree = SOURCE_ROOT; };
@@ -1227,7 +1229,7 @@
 			isa = PBXGroup;
 			children = (
 				64D31F0818BD6C0D005543CF /* constants.h */,
-				C080524C1DB57E4C006CAA97 /* filters */,
+				C080524C1DB57E4C006CAA97 /* components */,
 				C080524D1DB57E5B006CAA97 /* io */,
 				26392D1501441535E6A35EF1 /* Gui.h */,
 				217C06CB5453D6FB36E3D8E5 /* Helpers.h */,
@@ -1244,16 +1246,18 @@
 			name = Periscope;
 			sourceTree = "<group>";
 		};
-		C080524C1DB57E4C006CAA97 /* filters */ = {
+		C080524C1DB57E4C006CAA97 /* components */ = {
 			isa = PBXGroup;
 			children = (
 				6C74F164674D2FA4D45AD9B5 /* Component.h */,
+				C0FF265E1DB68922002243C9 /* Blur.h */,
 				CB9983F9A88D8F7C1D707DD2 /* Contours.h */,
 				28F74B6AD90967DF75B397CB /* EdgeDetect.h */,
+				C0FF265D1DB686EF002243C9 /* FeatureDetect.h */,
 				C080524E1DB57ED0006CAA97 /* Morphologic.h */,
 				C0FF265C1DB685B1002243C9 /* OpticalFlow.h */,
 			);
-			name = filters;
+			name = components;
 			sourceTree = "<group>";
 		};
 		C080524D1DB57E5B006CAA97 /* io */ = {

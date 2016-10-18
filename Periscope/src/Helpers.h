@@ -9,7 +9,13 @@
 #ifndef Helpers_h
 #define Helpers_h
 
-#include "Periscope.h"
+#include "Blur.h"
+#include "Contours.h"
+#include "EdgeDetect.h"
+#include "FeatureDetect.h"
+#include "Morphologic.h"
+#include "OpticalFlow.h"
+#include "Component.h"
 
 PScope::Component* loadFromString(string title) {
 	if      (title == "Resize")     return new Resize;
