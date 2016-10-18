@@ -394,6 +394,7 @@
 		C09D717F5CF081D34D773A85 /* matchers.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = matchers.hpp; path = ../openFrameworks/addons/ofxOpenCv/libs/opencv/include/opencv2/stitching/detail/matchers.hpp; sourceTree = SOURCE_ROOT; };
 		C0E4565D1D73664600C09B28 /* ObjectTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ObjectTracker.cpp; sourceTree = "<group>"; };
 		C0E4565E1D73664600C09B28 /* ObjectTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectTracker.h; sourceTree = "<group>"; };
+		C0FF265C1DB685B1002243C9 /* OpticalFlow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpticalFlow.h; sourceTree = "<group>"; };
 		C1EBFCC314E3AEA4CF0CB639 /* motion_stabilizing.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = motion_stabilizing.hpp; path = ../openFrameworks/addons/ofxOpenCv/libs/opencv/include/opencv2/videostab/motion_stabilizing.hpp; sourceTree = SOURCE_ROOT; };
 		C246B53C7472573EBE1437A1 /* videoio.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = videoio.hpp; path = ../openFrameworks/addons/ofxOpenCv/libs/opencv/include/opencv2/videoio.hpp; sourceTree = SOURCE_ROOT; };
 		C2B819BF173C454CBC03BFD7 /* imgcodecs.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = imgcodecs.hpp; path = ../openFrameworks/addons/ofxOpenCv/libs/opencv/include/opencv2/imgcodecs.hpp; sourceTree = SOURCE_ROOT; };
@@ -1250,6 +1251,7 @@
 				CB9983F9A88D8F7C1D707DD2 /* Contours.h */,
 				28F74B6AD90967DF75B397CB /* EdgeDetect.h */,
 				C080524E1DB57ED0006CAA97 /* Morphologic.h */,
+				C0FF265C1DB685B1002243C9 /* OpticalFlow.h */,
 			);
 			name = filters;
 			sourceTree = "<group>";
