@@ -1,4 +1,9 @@
-# Periscope
+<p align="center">
+  <img src="periscope-illustration.png" width="606" />
+</p>
+<h1 align="center">Periscope</h1>
+
+<p>&nbsp;</p>
 
 ## Setup
 
