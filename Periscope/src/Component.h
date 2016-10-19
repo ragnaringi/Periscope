@@ -34,6 +34,8 @@ public:
   //!
   virtual void compute(cv::Mat &src) = 0;
   //!
+  virtual void compute( ofTexture &src ) {}
+  //!
   virtual void draw(int x, int y) {
     bounds.set(x, y, cpy.getWidth(), cpy.getHeight());
     ofSetColor(ofColor::white);
@@ -76,6 +78,7 @@ protected:
   ofImage cpy;
   ofxPanel localGui;
   std::string title;
+  std::vector<ofParameter<float>> output;
   
 private:
   ofParameter<bool> bypass;
@@ -91,55 +94,31 @@ using ComponentRef = std::shared_ptr<Component>;
 // Misc components
 //============================================================
   
-const float MAX_SIZE = 320.f;
-  
-#pragma mark - Resize
-class Resize : public Component
-{
-public:
-void loadGui(ofxPanel *gui) {
-  gui->add(scale.set("Scale", 1, 0, 1));
-};
-void compute(cv::Mat &src) {
-  float newW = scale * src.cols;
-  float newH = scale * src.rows;
-  if (newW > MAX_SIZE ||
-      newH > MAX_SIZE) {
-    // Force resize if scaled output is larger than MAX_SIZE
-    float greater = newW > newH ? newW : newH;
-    float wScale = MAX_SIZE / greater;
-    cv::resize(src, src, cv::Size(), wScale, wScale);
-  }
-  else if (scale < 1.f) {
-    cv::resize(src, src, cv::Size(), scale, scale);
-  }
-  ofxCv::copy(src, cpy);
-};
-string getTitle() {
-  return "Resize";
-}
-protected:
-  ofParameter<float> scale;
-};
-
 #pragma mark - Grayscale
 class Colours : public Component
 {
 public:
+  Colours() {
+//    output.push_back( ofParameter<float>("red", float) );
+  }
   //!
-  void loadGui(ofxPanel *gui) {};
+  void loadGui( ofxPanel *gui ) {};
   //!
-  void compute(cv::Mat &src) {
-    cv::Scalar colours = cv::mean(src);
-    ofxCv::copy(src, cpy);
+  void compute( cv::Mat &src ) {
+    cv::Scalar colours = cv::mean( src );
+    ofxCv::copy( src, cpy );
+    
+//    for ( auto const &s : output ) {
+//      s = colours[0];
+//    }
     
     // Send Osc
     ofxOscMessage m;
-    m.setAddress("/colours");
-    m.addFloatArg(colours[0]);
-    m.addFloatArg(colours[1]);
-    m.addFloatArg(colours[2]);
-    sender->sendMessage(m);
+    m.setAddress( "/" + getTitle() );
+    m.addFloatArg( colours[0] );
+    m.addFloatArg( colours[1] );
+    m.addFloatArg( colours[2] );
+    sender->sendMessage( m );
   };
   //!
   string getTitle() {
@@ -154,9 +133,9 @@ public:
   //!
   void loadGui(ofxPanel *gui) {};
   //!
-  void compute(cv::Mat &src) {
-    ofxCv::copyGray(src, cpy);
-    ofxCv::copy(cpy, src);
+  void compute( cv::Mat &src ) {
+    ofxCv::copyGray( src, cpy );
+    ofxCv::copy( cpy, src );
   };
   //!
   string getTitle() {

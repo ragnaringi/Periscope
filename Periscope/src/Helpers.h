@@ -10,6 +10,7 @@
 #define Helpers_h
 
 #include "Blur.h"
+#include "Resize.h"
 #include "Contours.h"
 #include "EdgeDetect.h"
 #include "FeatureDetect.h"

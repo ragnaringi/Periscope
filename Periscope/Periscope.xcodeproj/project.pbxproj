@@ -57,6 +57,7 @@
 		BB18EA69789B6CBCA40B6AEF /* ContourFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B51452C46CEFFDEC675DD0B9 /* ContourFinder.cpp */; };
 		BB5E214B32E344F8B7A26B29 /* ofxCvContourFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B1C1A67EA6897D61AD1A1013 /* ofxCvContourFinder.cpp */; };
 		C03E64C01D6D241E00B79AFA /* PixelSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C03E64BF1D6D241E00B79AFA /* PixelSender.cpp */; };
+		C0AFBA521DB764DA001BD148 /* Resize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0AFBA501DB764DA001BD148 /* Resize.cpp */; };
 		C0E4565F1D73664600C09B28 /* ObjectTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0E4565D1D73664600C09B28 /* ObjectTracker.cpp */; };
 		D106D0CD3C2AB4D3D5CF9CAA /* ofxOscMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA04A5C303D50204D3AFF029 /* ofxOscMessage.cpp */; };
 		D140A468938D7BA4F3FE2DAB /* ofxOscBundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C01EC02CAD75F5386947EAA3 /* ofxOscBundle.cpp */; };
@@ -392,6 +393,8 @@
 		C080524E1DB57ED0006CAA97 /* Morphologic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Morphologic.h; sourceTree = "<group>"; };
 		C080524F1DB586A6006CAA97 /* OscSender.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OscSender.h; sourceTree = "<group>"; };
 		C09D717F5CF081D34D773A85 /* matchers.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = matchers.hpp; path = ../openFrameworks/addons/ofxOpenCv/libs/opencv/include/opencv2/stitching/detail/matchers.hpp; sourceTree = SOURCE_ROOT; };
+		C0AFBA501DB764DA001BD148 /* Resize.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Resize.cpp; sourceTree = "<group>"; };
+		C0AFBA511DB764DA001BD148 /* Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Resize.h; sourceTree = "<group>"; };
 		C0E4565D1D73664600C09B28 /* ObjectTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ObjectTracker.cpp; sourceTree = "<group>"; };
 		C0E4565E1D73664600C09B28 /* ObjectTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectTracker.h; sourceTree = "<group>"; };
 		C0FF265C1DB685B1002243C9 /* OpticalFlow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpticalFlow.h; sourceTree = "<group>"; };
@@ -1250,6 +1253,8 @@
 			isa = PBXGroup;
 			children = (
 				6C74F164674D2FA4D45AD9B5 /* Component.h */,
+				C0AFBA501DB764DA001BD148 /* Resize.cpp */,
+				C0AFBA511DB764DA001BD148 /* Resize.h */,
 				C0FF265E1DB68922002243C9 /* Blur.h */,
 				CB9983F9A88D8F7C1D707DD2 /* Contours.h */,
 				28F74B6AD90967DF75B397CB /* EdgeDetect.h */,
@@ -1651,6 +1656,7 @@
 				665ABDAF6F89FB81AC3D7874 /* ofxLabel.cpp in Sources */,
 				DA927660FD0C61FEBC8BD11D /* ofxPanel.cpp in Sources */,
 				A364421C952CE9BC2C5D2336 /* ofxSlider.cpp in Sources */,
+				C0AFBA521DB764DA001BD148 /* Resize.cpp in Sources */,
 				AFFEE699393CC7B6FB1571BA /* ofxSliderGroup.cpp in Sources */,
 				E87CEFBC7BE262267078D0DD /* ofxToggle.cpp in Sources */,
 				219F55F6B5C928EEF87D6C97 /* ofxJSONElement.cpp in Sources */,
