@@ -23,10 +23,18 @@ public:
   //!
   void compute( cv::Mat &src ) override;
   //!
-  void compute( ofTexture &src ) override;
+//  void compute( ofTexture &src ) override;
   //!
   string getTitle() override {
     return "Resize";
+  }
+  //!
+  void setScale( float scale ) {
+    this->scale = scale;
+  }
+  //!
+  float getScale() {
+    return scale;
   }
 protected:
   ofParameter<float> scale;

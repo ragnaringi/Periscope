@@ -26,8 +26,7 @@ void Resize::compute( cv::Mat &src ) {
   ofxCv::copy( src, cpy );
 };
   
-void Resize::compute( ofTexture &src ) {
-  
-}
+//void Resize::compute( ofTexture &src ) {
+//}
 
 }

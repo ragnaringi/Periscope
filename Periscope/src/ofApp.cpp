@@ -3,7 +3,7 @@
 #include "constants.h"
 
 //--------------------------------------------------------------
-void ofApp::setup(){
+void ofApp::setup() {
   
   gui.setup();
   gui.add( load.set("Load Periscope", false) );
@@ -21,7 +21,7 @@ void ofApp::setup(){
   gui.add( y.set("y", 240, -MAX_WIDTH, MAX_WIDTH) );
   gui.add( w.set("w", MAX_WIDTH, 0, MAX_WIDTH) );
   gui.add( h.set("h", MAX_HEIGHT, 0, MAX_HEIGHT) );
-  gui.add( angle.set("angle", Rotate90, 0, Rotate270) );
+//  gui.add( angle.set("angle", Rotate90, 0, Rotate270) );
   gui.add( debug.set("debug", true) );
   gui.add( sendOsc.set("Send OSC on Port 9997", false) );
   gui.add( zoom.set("zoom", 1.f, 1.f, 6.f) );
@@ -39,8 +39,8 @@ void ofApp::setup(){
   timeBeginPeriod(1);
 #endif
 
-  input.crop(0, 0, 720, 720);
-  input.rotate( Rotate90 );
+//  input.crop(0, 0, 720, 720);
+//  input.rotate( Rotate90 );
   updateGui();
 	
   // Classic background subtraction
@@ -62,28 +62,30 @@ void ofApp::exit() {
 }
 
 //--------------------------------------------------------------
-void ofApp::update(){
+void ofApp::update() {
   processGui();
   processOscMessages();
   
-  input.crop(x, y, w, h);
-  input.rotate( (InputRotate)angle.get() );
-  input.setZoom( zoom );
-	input.update();
+  input.update();
   
-	ofPixels &src = input.processed();
-	if (src.isAllocated()) {
-    cv::Mat mat = ofxCv::toCv(src);
-    periscope.compute(mat);
-    objectTracker.update(mat);
-	}
+//  crop->set( x, y, w, h );
+//  input.crop(x, y, w, h);
+//  input.rotate( (InputRotate)angle.get() );
+//  input.setZoom( zoom );
   
-	output.send(periscope.getOutput());
-	output.sendMain(periscope.getInput().getTexture());
+//	ofPixels &src = input.processed();
+//	if ( src.isAllocated() ) {
+//    cv::Mat mat = ofxCv::toCv(src);
+//    periscope.compute(mat);
+//    objectTracker.update(mat);
+//	}
   
-  shapeDetector.update();
+//	output.send(periscope.getOutput());
+//	output.sendMain(periscope.getInput().getTexture());
   
-  pixelSender.send(src);
+//  shapeDetector.update();
+  
+//  pixelSender.send(src);
   
   if ( sendOsc )
     sendOscMessages();
@@ -101,7 +103,9 @@ void ofApp::draw(){
     case 3:
       shapeDetector.draw(); break;
     default:
-      input.draw(fitToScreen); break;
+      input.getTexture().draw( 0, 0 );
+      break;
+//      input.draw(fitToScreen); break;
   }
   
   if ( !debug ) return;
@@ -195,22 +199,20 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 //--------------------------------------------------------------
 void ofApp::loadPeriscope(){
 	ofFileDialogResult result = ofSystemLoadDialog();
-	cout << result.getPath() << endl;
-	periscope.loadFromFile(result.getPath());
+	periscope.loadFromFile( result.getPath() );
 }
 
 //--------------------------------------------------------------
 void ofApp::savePeriscope(){
-	ofFileDialogResult result = ofSystemSaveDialog("Periscope.json", "Save your Periscope");
-	cout << result.getPath() << endl;
-	periscope.saveToFile(result.getPath());
+	ofFileDialogResult result
+  = ofSystemSaveDialog("Periscope.json", "Save your Periscope");
+	periscope.saveToFile( result.getPath() );
 }
 
 //--------------------------------------------------------------
 void ofApp::loadMovieFile() {
 	ofFileDialogResult result = ofSystemLoadDialog();
-	cout << result.getPath() << endl;
-	input.loadMovie(result.getPath());
+	input.loadMovie( result.getPath() );
 }
 
 //--------------------------------------------------------------
@@ -252,12 +254,14 @@ void ofApp::processGui() {
     hero4 = false;
   }
   else if ( center ) {
-    input.centerCrop();
+//    input.centerCrop();
+    // crop->center();
     updateGui();
     center = false;
   }
   else if ( fitCrop ) {
-    input.fitCrop();
+//    input.fitCrop();
+    // crop->fit();
     updateGui();
     fitCrop = false;
   }
@@ -265,17 +269,18 @@ void ofApp::processGui() {
   input.presentationMode = presentationMode;
   
   // Tilting
-  ofTexture &src = input.raw();
+  ofTexture &src = input.getTexture();
   float delta = ( src.getWidth() - h ) * 0.5;
   y = ( (src.getWidth() - h) * (1 - tilt) ) - delta;
 }
 
 //--------------------------------------------------------------
 void ofApp::updateGui() {
-  x = input.getCrop().getX();
-  y = input.getCrop().getY();
-  w = input.getCrop().getWidth();
-  h = input.getCrop().getHeight();
+#warning TODO
+//  x = input.getCrop().getX();
+//  y = input.getCrop().getY();
+//  w = input.getCrop().getWidth();
+//  h = input.getCrop().getHeight();
 }
 
 void ofApp::processOscMessages() {
@@ -297,20 +302,19 @@ void ofApp::processOscMessages() {
 void ofApp::sendOscMessages() {
   // Send Orientation
   {
-  ofxOscMessage m;
-  m.setAddress("/periscope/orientation");
-  m.addFloatArg(heading); // TODO: Receive from Periscope
-  m.addFloatArg(tilt);
-  sender.sendMessage(m);
+    ofxOscMessage m;
+    m.setAddress("/periscope/orientation");
+    m.addFloatArg(heading); // TODO: Receive from Periscope
+    m.addFloatArg(tilt);
+    sender.sendMessage(m);
   }
   // Send Zoom
   {
-  ofxOscMessage m;
-  m.setAddress("/periscope/zoom");
-  m.addFloatArg(zoom);
-  sender.sendMessage(m);
+    ofxOscMessage m;
+    m.setAddress("/periscope/zoom");
+    m.addFloatArg(zoom);
+    sender.sendMessage(m);
   }
-  
   // Send Number Of Objects
   {
     const vector<cv::Rect>& boundingRects = objectTracker.getBoundingRects();

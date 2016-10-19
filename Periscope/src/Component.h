@@ -34,7 +34,7 @@ public:
   //!
   virtual void compute(cv::Mat &src) = 0;
   //!
-  virtual void compute( ofTexture &src ) {}
+//  virtual void compute( ofTexture &src ) {}
   //!
   virtual void draw(int x, int y) {
     bounds.set(x, y, cpy.getWidth(), cpy.getHeight());
@@ -45,18 +45,6 @@ public:
     ofDrawBitmapString(getTitle(), x + 10, y + 10);
     localGui.setPosition(x, y);
     localGui.draw();
-  }
-  //!
-  bool selected = false;
-  //!
-  bool shouldClose() { return close; };
-  //!
-  bool shouldUseRaw() { return useRaw; };
-  //!
-  bool isBypassed() { return bypass; };
-  ofTexture& getTexture() {
-    cpy.update();
-    return cpy.getTexture();
   }
   //!
   virtual void loadSettings( Json::Value settings ) {
@@ -72,7 +60,24 @@ public:
     settings["Settings"][close.getName()]  = close.get();
     settings["Settings"][useRaw.getName()] = useRaw.get();
     return settings;
-  };
+  }
+  //!
+  bool selected = false;
+  //!
+  bool shouldClose() { return close; };
+  //!
+  bool shouldUseRaw() { return useRaw; };
+  //!
+  bool isBypassed() { return bypass; };
+  ofTexture& getTexture() {
+    cpy.update();
+    return cpy.getTexture();
+  }
+  //!
+  bool operator >> ( Component& rhs ) {
+    printf("Connect");https:
+    return true;
+  }
   
 protected:
   ofImage cpy;

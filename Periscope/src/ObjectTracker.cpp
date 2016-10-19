@@ -50,11 +50,11 @@ void Glow::draw() {
   ofPopStyle();
 }
 
-extern void center(const ofRectangle &rect, int angle);
-extern void applyRotation(const ofTexture &image, int angle);
-extern void applyRotation(const ofRectangle &rect, int angle);
-extern void center(const ofRectangle& rect, ofFbo& container, int angle);
-extern void center(const ofTexture& texture, ofFbo& container, int angle);
+//extern void center(const ofRectangle &rect, int angle);
+//extern void applyRotation(const ofTexture &image, int angle);
+//extern void applyRotation(const ofRectangle &rect, int angle);
+//extern void center(const ofRectangle& rect, ofFbo& container, int angle);
+//extern void center(const ofTexture& texture, ofFbo& container, int angle);
 
 void ObjectTracker::setup(ofxPanel *gui) {
   gui->add( minRadius.set("Min Radius", 1, 0, 200) );
@@ -80,8 +80,9 @@ void ObjectTracker::draw() {
   ofSetColor(255);
   ofPushMatrix();
   ofRectangle rect(0, 0, image.getWidth(), image.getHeight());
-  center(rect, 0);
-  applyRotation(rect, 0);
+#warning TODO
+//  center(rect, 0);
+//  applyRotation(rect, 0);
   image.update();
   image.draw(0, 0);
   vector<Glow>& followers = tracker.getFollowers();

@@ -6,9 +6,9 @@
 //
 //
 
-#ifndef Input_h
-#define Input_h
+#pragma once
 
+#include "Resize.h"
 #include "ofxBlackmagic.h"
 #include "ofxGui.h"
 #ifdef __APPLE__
@@ -20,12 +20,12 @@
 inline namespace PScope
 {
 	
-enum InputRotate {
-	RotateNone,
-	Rotate90,
-	Rotate180,
-	Rotate270
-};
+//enum InputRotate {
+//	RotateNone,
+//	Rotate90,
+//	Rotate180,
+//	Rotate270
+//};
 
 class Input {
 public:
@@ -34,19 +34,19 @@ public:
 	void selectWebCam();
   void selectBlackmagic(BMDDisplayMode mode);
 	void selectSyphon(std::string server);
-	void rotate(InputRotate angle);
-  ofRectangle getCrop();
-	void crop(int x, int y, int w, int h);
-  void centerCrop();
-  void fitCrop();
-  void setCenter(int x, int y);
-  void setZoom(float zoom);
+//	void rotate(InputRotate angle);
+//  ofRectangle getCrop();
+//	void crop(int x, int y, int w, int h);
+//  void centerCrop();
+//  void fitCrop();
+//  void setCenter(int x, int y);
+//  void setZoom(float zoom);
 	void update();
-	void draw(bool fitToSize);
+//	void draw(bool fitToSize);
   bool& isEnabled() { return enabled; }
   void setEnabled(bool enable) { enabled = enable; }
-	ofTexture& raw();
-	ofPixels& processed();
+	ofTexture& getTexture();
+//	ofPixels& processed();
 #ifdef __APPLE__
   string& syphonServer() {
     return syphonClient.getApplicationName();
@@ -54,7 +54,6 @@ public:
 #endif
   bool presentationMode = false;
 private:
-	ofFbo frameBuffer;
   std::unique_ptr<ofxBlackmagic::Input> input;
 #ifdef __APPLE__
 	ofxSyphonClient syphonClient;
@@ -63,16 +62,14 @@ private:
 #endif
 	bool isSetup;
   bool enabled;
-  float zoom;
-	int x, y, w, h, angle;
+//  float zoom;
+//	int angle;
 	unique_ptr<ofBaseVideoDraws> source;
-	ofPixels result;
 	ofParameter<bool> enableClient, enableServer;
 	void updateGui();
-  void updateTextureIfNeeded();
-  bool textureNeedsUpdate;
+//  void updateTextureIfNeeded();
+//  bool textureNeedsUpdate;
 };
 	
 } /* namespace PScope */
 
-#endif /* Input_h */

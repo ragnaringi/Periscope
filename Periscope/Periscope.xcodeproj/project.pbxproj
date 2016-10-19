@@ -395,6 +395,7 @@
 		C09D717F5CF081D34D773A85 /* matchers.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = matchers.hpp; path = ../openFrameworks/addons/ofxOpenCv/libs/opencv/include/opencv2/stitching/detail/matchers.hpp; sourceTree = SOURCE_ROOT; };
 		C0AFBA501DB764DA001BD148 /* Resize.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Resize.cpp; sourceTree = "<group>"; };
 		C0AFBA511DB764DA001BD148 /* Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Resize.h; sourceTree = "<group>"; };
+		C0AFBA531DB76D32001BD148 /* Crop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Crop.h; sourceTree = "<group>"; };
 		C0E4565D1D73664600C09B28 /* ObjectTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ObjectTracker.cpp; sourceTree = "<group>"; };
 		C0E4565E1D73664600C09B28 /* ObjectTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectTracker.h; sourceTree = "<group>"; };
 		C0FF265C1DB685B1002243C9 /* OpticalFlow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpticalFlow.h; sourceTree = "<group>"; };
@@ -1270,6 +1271,7 @@
 			children = (
 				6469022C1250BD948BDA5D65 /* Input.cpp */,
 				C6898E45B42DD6E2688E5727 /* Input.h */,
+				C0AFBA531DB76D32001BD148 /* Crop.h */,
 				4585622F5C383AB940DFAF33 /* Output.cpp */,
 				2CE4597CDD7B9885AF3EAA73 /* Output.h */,
 			);

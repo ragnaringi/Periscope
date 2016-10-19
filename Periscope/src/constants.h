@@ -9,7 +9,7 @@
 #ifndef constants_h
 #define constants_h
 
-static const int MAX_WIDTH = 1080;
-static const int MAX_HEIGHT = 720;
+static const int MAX_WIDTH  = 1080;
+static const int MAX_HEIGHT = 1080;
 
 #endif /* constants_h */
