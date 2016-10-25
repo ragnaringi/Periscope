@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "Crop.h"
 #include "Input.h"
 #include "Output.h"
 #include "Periscope.h"
@@ -46,6 +47,7 @@ class ofApp : public ofBaseApp{
     int drawingMode;
 	
 		PScope::Input input;
+    PScope::Crop crop;
 		PScope::Output output;
 		PScope::Periscope periscope;
     PScope::ShapeDetector shapeDetector;

@@ -19,13 +19,6 @@
 
 inline namespace PScope
 {
-	
-//enum InputRotate {
-//	RotateNone,
-//	Rotate90,
-//	Rotate180,
-//	Rotate270
-//};
 
 class Input {
 public:

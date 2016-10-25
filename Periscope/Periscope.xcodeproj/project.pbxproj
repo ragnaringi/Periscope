@@ -58,6 +58,7 @@
 		BB5E214B32E344F8B7A26B29 /* ofxCvContourFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B1C1A67EA6897D61AD1A1013 /* ofxCvContourFinder.cpp */; };
 		C03E64C01D6D241E00B79AFA /* PixelSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C03E64BF1D6D241E00B79AFA /* PixelSender.cpp */; };
 		C0AFBA521DB764DA001BD148 /* Resize.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0AFBA501DB764DA001BD148 /* Resize.cpp */; };
+		C0AFBA581DB7D5D6001BD148 /* Crop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0AFBA571DB7D5D6001BD148 /* Crop.cpp */; };
 		C0E4565F1D73664600C09B28 /* ObjectTracker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0E4565D1D73664600C09B28 /* ObjectTracker.cpp */; };
 		D106D0CD3C2AB4D3D5CF9CAA /* ofxOscMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA04A5C303D50204D3AFF029 /* ofxOscMessage.cpp */; };
 		D140A468938D7BA4F3FE2DAB /* ofxOscBundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C01EC02CAD75F5386947EAA3 /* ofxOscBundle.cpp */; };
@@ -396,6 +397,7 @@
 		C0AFBA501DB764DA001BD148 /* Resize.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Resize.cpp; sourceTree = "<group>"; };
 		C0AFBA511DB764DA001BD148 /* Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Resize.h; sourceTree = "<group>"; };
 		C0AFBA531DB76D32001BD148 /* Crop.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Crop.h; sourceTree = "<group>"; };
+		C0AFBA571DB7D5D6001BD148 /* Crop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Crop.cpp; sourceTree = "<group>"; };
 		C0E4565D1D73664600C09B28 /* ObjectTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ObjectTracker.cpp; sourceTree = "<group>"; };
 		C0E4565E1D73664600C09B28 /* ObjectTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectTracker.h; sourceTree = "<group>"; };
 		C0FF265C1DB685B1002243C9 /* OpticalFlow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpticalFlow.h; sourceTree = "<group>"; };
@@ -1271,6 +1273,7 @@
 			children = (
 				6469022C1250BD948BDA5D65 /* Input.cpp */,
 				C6898E45B42DD6E2688E5727 /* Input.h */,
+				C0AFBA571DB7D5D6001BD148 /* Crop.cpp */,
 				C0AFBA531DB76D32001BD148 /* Crop.h */,
 				4585622F5C383AB940DFAF33 /* Output.cpp */,
 				2CE4597CDD7B9885AF3EAA73 /* Output.h */,
@@ -1647,6 +1650,7 @@
 				205B87445605CA6483769CDC /* Flow.cpp in Sources */,
 				17B2E63D22C42733F7F4053C /* Helpers.cpp in Sources */,
 				7580B2C5B013AC882D425BA5 /* Kalman.cpp in Sources */,
+				C0AFBA581DB7D5D6001BD148 /* Crop.cpp in Sources */,
 				8036B3970F848021B97A1AC5 /* ObjectFinder.cpp in Sources */,
 				DD644AF8B76F5ADCAF781929 /* RunningBackground.cpp in Sources */,
 				DC0FA398D1C3D71F963CCD9E /* Tracker.cpp in Sources */,

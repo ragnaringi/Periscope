@@ -8,50 +8,47 @@
 
 #pragma once
 
+#include "ofMain.h"
 #include "constants.h"
 
-/*
- void center(const ofRectangle &rect, int angle);
- void applyRotation(const ofTexture &image, int angle);
- void applyRotation(const ofRectangle &rect, int angle);
- void center(const ofRectangle& rect, ofFbo& container, int angle);
- void center(const ofTexture& texture, ofFbo& container, int angle);
- */
+inline namespace PScope {
+  
+namespace utils {
+
+void center(const ofRectangle &rect, int angle);
+void applyRotation(const ofTexture &image, int angle);
+void applyRotation(const ofRectangle &rect, int angle);
+void center(const ofRectangle& rect, ofFbo& container, int angle);
+void center(const ofTexture& texture, ofFbo& container, int angle);
+  
+}
+
+enum InputRotate {
+	RotateNone,
+	Rotate90,
+	Rotate180,
+	Rotate270
+};
 
 class Crop {
 public:
   //!
-  Crop() {
-    result.allocate( MAX_WIDTH, MAX_HEIGHT, OF_IMAGE_COLOR );
+  Crop() : zoom( 1.f ), angle( RotateNone ) {
+    setCrop( MAX_WIDTH, MAX_HEIGHT );
+    pixels.allocate( MAX_WIDTH, MAX_HEIGHT, OF_IMAGE_COLOR );
     frameBuffer.allocate( MAX_WIDTH, MAX_HEIGHT );
   }
   //!
   void compute( ofTexture &src ) {
     
-  }
-  //!
-  void setCrop( ofRect &rect ) {
-    setCrop( rect.getX(), rect.getY(), rect.getW(), rect.getH() );
-  }
-  //!
-  void setCrop( float x, y, w, h ){
-    this->x = x;
-    this->y = y;
-    this->w = w;
-    this->h = h;
-  }
-  //!
-  ofPixels& processed() {
-    return result;
-  }
-  //!
-  ofTexture& raw() {
-    return frameBuffer.getTexture();
-  }
-  /*
-  //--------------------------------------------------------------
-  void Input::updateTextureIfNeeded() {
-    if ( !textureNeedsUpdate ) return;
+    if ( shouldFit ) {
+      int w = src.getWidth();
+      int h = src.getHeight();
+      if ( angle % 2 ) std::swap( w, h );
+      setCrop( w, h );
+      setCenter( 0, 0 );
+      shouldFit = false;
+    }
     
     if ( frameBuffer.getWidth() != w
         || frameBuffer.getHeight() != h) {
@@ -59,138 +56,103 @@ public:
     }
     
     // Rotate
-    const ofTexture& texture = raw();
+    const ofTexture& texture = src;
     frameBuffer.begin();
-    ofClear(0);
+    ofClear( 0 );
     ofSetColor( ofColor::white );
     
-    ofRectangle rect(0, 0, texture.getWidth() * zoom, texture.getHeight() * zoom);
-    center(rect, frameBuffer, angle);
-    applyRotation(rect, angle);
+    ofRectangle rect( 0, 0, texture.getWidth() * zoom, texture.getHeight() * zoom );
+    utils::center( rect, frameBuffer, angle );
+    utils::applyRotation( rect, angle );
     ofScale( zoom, zoom );
+    
     switch (angle) {
       case RotateNone:
-        ofTranslate(-x, -y); break;
+        ofTranslate( -x, -y ); break;
       case Rotate180:
-        ofTranslate(x, y); break;
+        ofTranslate( x, y ); break;
       case Rotate90:
-        ofTranslate(-y, x); break;
+        ofTranslate( -y, x ); break;
       case Rotate270:
-        ofTranslate(y, -x); break;
+        ofTranslate( y, -x ); break;
       default: break;
     }
-    texture.draw(0, 0);
+    
+    texture.draw( 0, 0 );
     frameBuffer.end();
-    frameBuffer.readToPixels( result );
-    
-    textureNeedsUpdate = false;
+    frameBuffer.readToPixels( pixels );
+  }
+  
+  void drawCrop() {
+    // Draw bounding box for crop
+    ofPushMatrix();
+    ofRectangle rect = getCrop();
+    utils::center( rect, RotateNone );
+    ofNoFill();
+    ofSetColor( ofColor::red );
+    ofDrawRectangle( rect );
+    ofPopMatrix();
   }
   
   //--------------------------------------------------------------
-  void center(const ofRectangle& rect, int angle) {
-    if (angle % 2 == 0) {
-      ofTranslate(ofGetWidth()  * 0.5f - rect.getWidth()  * 0.5f,
-                  ofGetHeight() * 0.5f - rect.getHeight() * 0.5f);
-    }
-    else {
-      ofTranslate(ofGetWidth()  * 0.5f - rect.getHeight() * 0.5f,
-                  ofGetHeight() * 0.5f - rect.getWidth()  * 0.5f);
-    }
+  ofRectangle getCrop() {
+    return ofRectangle(x, y, w, h);
   }
   
   //--------------------------------------------------------------
-  void center(const ofRectangle& rect, ofFbo& container, int angle) {
-    if (angle % 2 == 0) {
-      ofTranslate(container.getWidth()  * 0.5f - rect.getWidth()  * 0.5f,
-                  container.getHeight() * 0.5f - rect.getHeight() * 0.5f);
-    }
-    else {
-      ofTranslate(container.getWidth()  * 0.5f - rect.getHeight() * 0.5f,
-                  container.getHeight() * 0.5f - rect.getWidth()  * 0.5f);
-    }
+  void setCrop( ofRectangle& rect ) {
+//    setCenter( rect.getX(), rect.getY() );
+//    setC
   }
   
-  //--------------------------------------------------------------
-  void center(const ofTexture& texture, ofFbo& container,  int angle) {
-    if (angle % 2 == 0) {
-      ofTranslate(container.getWidth() * 0.5f - texture.getWidth()  * 0.5f,
-                  container.getHeight() * 0.5f - texture.getHeight() * 0.5f);
-    }
-    else {
-      ofTranslate(container.getWidth() * 0.5f - texture.getHeight() * 0.5f,
-                  container.getHeight() * 0.5f - texture.getWidth()  * 0.5f);
-    }
+  //!
+  void setCrop( int w, int h ) {
+    this->w = w;
+    this->h = h;
+  }
+  //!
+  void setCenter( int x, int y ) {
+    this->x = x;
+    this->y = y;
   }
   
-  //--------------------------------------------------------------
-  void applyRotation(const ofTexture &texture, int angle) {
-    ofRectangle rect(0, 0, texture.getWidth(), texture.getHeight());
-    applyRotation(rect, angle);
+  //!
+  void center() {
+    setCenter( 0, 0 );
   }
   
-  //--------------------------------------------------------------
-  void applyRotation(const ofRectangle &rect, int angle) {
-    ofRotate(angle * 90);
-    
-    switch (angle) {
-        
-      case Rotate90:
-        ofTranslate( 0, -rect.getHeight() );
-        break;
-        
-      case Rotate180:
-        ofTranslate( -rect.getWidth(), -rect.getHeight() );
-        break;
-        
-      case Rotate270:
-        ofTranslate( -rect.getWidth(), 0 );
-        break;
-        
-      default: break;
-    }
+  //!
+  void fit() {
+    shouldFit = true;
   }
-  */
+  
+  //!
+  void setAngle( InputRotate angle ) {
+    this->angle = angle;
+  }
+  
+  //!
+  void setZoom(float zoom_) {
+    zoom = zoom_;
+  }
+  
+  //!
+  ofPixels& getPixels() {
+    return pixels;
+  }
+  //!
+  ofTexture& getTexture() {
+    return frameBuffer.getTexture();
+  }
   
 private:
-  float x, y, w, h;
-  ofPixels  result;
-  ofFbo     frameBuffer;
+  int x, y, w, h;
+  ofPixels pixels;
+  ofFbo    frameBuffer;
+  bool     textureNeedsUpdate;
+  bool     shouldFit;
+  float    zoom;
+  int      angle;
 };
 
-/*
-
- //--------------------------------------------------------------
- ofRectangle Input::getCrop() {
-  return ofRectangle(x, y, w, h);
- }
- 
- //--------------------------------------------------------------
- void Input::crop(int x_, int y_, int w_, int h_) {
-  x = x_;
-  y = y_;
-  w = w_;
-  h = h_;
- }
- 
- void Input::centerCrop() {
-  setCenter(0, 0);
- }
- 
- void Input::setZoom(float zoom_) {
-  zoom = zoom_;
-  resize->setScale( zoom_ );
- }
- 
- void Input::fitCrop() {
-  int w = fmin(raw().getWidth(), MAX_WIDTH);
-  int h = fmin(raw().getHeight(), MAX_HEIGHT);
-  if (angle % 2) std::swap(w, h);
-  crop(0, 0, w, h);
- }
- 
- void Input::setCenter(int x_, int y_) {
-  crop(x_, y_, w, h);
- }
-
-*/
-
+}

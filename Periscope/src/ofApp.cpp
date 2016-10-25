@@ -2,6 +2,15 @@
 #include "ofApp.h"
 #include "constants.h"
 
+void drawCentered( ofTexture& tex, InputRotate angle )
+{
+  ofPushMatrix();
+  ofRectangle rect( 0, 0, tex.getWidth(), tex.getHeight() );
+  utils::center( rect, angle );
+  tex.draw( 0, 0 );
+  ofPopMatrix();
+}
+
 //--------------------------------------------------------------
 void ofApp::setup() {
   
@@ -17,11 +26,11 @@ void ofApp::setup() {
   gui.add( fitCrop.set("Fit Crop", false) );
   gui.add( fitToScreen.set("Fit to Screen", true) );
   gui.add( presentationMode.set("Presentation Mode", false) );
-  gui.add( x.set("x", 320, -MAX_WIDTH, MAX_WIDTH) );
-  gui.add( y.set("y", 240, -MAX_WIDTH, MAX_WIDTH) );
+  gui.add( x.set("x", 0, -MAX_WIDTH, MAX_WIDTH) );
+  gui.add( y.set("y", 0, -MAX_WIDTH, MAX_WIDTH) );
   gui.add( w.set("w", MAX_WIDTH, 0, MAX_WIDTH) );
   gui.add( h.set("h", MAX_HEIGHT, 0, MAX_HEIGHT) );
-//  gui.add( angle.set("angle", Rotate90, 0, Rotate270) );
+  gui.add( angle.set("angle", Rotate90, 0, Rotate270) );
   gui.add( debug.set("debug", true) );
   gui.add( sendOsc.set("Send OSC on Port 9997", false) );
   gui.add( zoom.set("zoom", 1.f, 1.f, 6.f) );
@@ -39,8 +48,6 @@ void ofApp::setup() {
   timeBeginPeriod(1);
 #endif
 
-//  input.crop(0, 0, 720, 720);
-//  input.rotate( Rotate90 );
   updateGui();
 	
   // Classic background subtraction
@@ -68,10 +75,11 @@ void ofApp::update() {
   
   input.update();
   
-//  crop->set( x, y, w, h );
-//  input.crop(x, y, w, h);
-//  input.rotate( (InputRotate)angle.get() );
-//  input.setZoom( zoom );
+  crop.setAngle( (InputRotate)angle.get() );
+  crop.setCrop( w, h );
+  crop.setCenter( x, y );
+  crop.setZoom( zoom );
+  crop.compute( input.getTexture() );
   
 //	ofPixels &src = input.processed();
 //	if ( src.isAllocated() ) {
@@ -89,11 +97,14 @@ void ofApp::update() {
   
   if ( sendOsc )
     sendOscMessages();
+  
+  updateGui();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 	ofClear(0);
+  ofSetColor(ofColor::white);
   
   switch(drawingMode) {
     case 1:
@@ -103,14 +114,16 @@ void ofApp::draw(){
     case 3:
       shapeDetector.draw(); break;
     default:
-      input.getTexture().draw( 0, 0 );
+      drawCentered( input.getTexture(), (InputRotate)angle );
+//      crop.drawCrop();
+//      ofSetColor( ofColor::white );
+//      crop.getTexture().draw( 0, 0 );
       break;
-//      input.draw(fitToScreen); break;
   }
   
   if ( !debug ) return;
   ofSetColor(ofColor::white);
-  ofDrawBitmapString("1,2,3 = Change Drawing Mode", 10, ofGetHeight() - 100);
+  ofDrawBitmapString("1, 2, 3 = Change Drawing Mode", 10, ofGetHeight() - 100);
   ofDrawBitmapString(ofGetFrameRate(), 10, ofGetHeight() - 120);
   gui.draw();
 }
@@ -254,15 +267,11 @@ void ofApp::processGui() {
     hero4 = false;
   }
   else if ( center ) {
-//    input.centerCrop();
-    // crop->center();
-    updateGui();
+    crop.center();
     center = false;
   }
   else if ( fitCrop ) {
-//    input.fitCrop();
-    // crop->fit();
-    updateGui();
+    crop.fit();
     fitCrop = false;
   }
   
@@ -270,17 +279,17 @@ void ofApp::processGui() {
   
   // Tilting
   ofTexture &src = input.getTexture();
-  float delta = ( src.getWidth() - h ) * 0.5;
-  y = ( (src.getWidth() - h) * (1 - tilt) ) - delta;
+//  float delta = ( src.getWidth() - h ) * 0.5;
+//  y = ( (src.getWidth() - h) * (1 - tilt) ) - delta;
 }
 
 //--------------------------------------------------------------
 void ofApp::updateGui() {
-#warning TODO
-//  x = input.getCrop().getX();
-//  y = input.getCrop().getY();
-//  w = input.getCrop().getWidth();
-//  h = input.getCrop().getHeight();
+  ofRectangle rect = crop.getCrop();
+  x = rect.getX();
+  y = rect.getY();
+  w = rect.getWidth();
+  h = rect.getHeight();
 }
 
 void ofApp::processOscMessages() {
